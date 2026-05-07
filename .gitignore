@@ -23,3 +23,12 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+
+# tests
+
+run_flask.py
+test_app.py
+README.md
+README_FLASK.md
+iniciar.bat

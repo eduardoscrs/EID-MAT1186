@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAT1186 – Introducción al Cálculo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>MAT1186 – Introducción al Cálculo</h1>
+      <p>Evaluación Integrada de Desempeño</p>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab active">Ecuación</button>
+    <button class="tab">Desarrollo Matemático</button>
+    <button class="tab">Gráfica</button>
+    <button class="tab">Funciones</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Left Panel - RUT Validation -->
+    <aside>
+      <div class="card">
+        <h2 class="card-title">Validación RUT</h2>
+        
+        <div class="input-group">
+          <label>Ingrese RUT (sin puntos ni guión)</label>
+          <input type="text" id="rutInput" placeholder="Ej: 123456789">
+        </div>
+        
+        <button class="btn btn-primary">Validar RUT</button>
+        
+        <div class="result-box success">
+          <div class="result-title">Resultado</div>
+          <div class="result-value">RUT Válido <span class="badge badge-success">OK</span></div>
+        </div>
+
+        <div class="steps">
+          <h3 style="font-size: 0.9rem; color: #1e3a5f; margin: 16px 0 12px;">Desarrollo Módulo 11</h3>
+          
+          <div class="step">
+            <span class="step-number">1</span>
+            <span class="step-content">Multiplicación: 1×2 + 2×3 + 3×4 + ...</span>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-content">Suma total: ___</span>
+          </div>
+          <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-content">Módulo 11: ___ mod 11 = ___</span>
+          </div>
+          <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-content">Dígito verificador: ___</span>
+          </div>
+        </div>
+
+        <div class="result-box" style="margin-top: 16px;">
+          <div class="result-title">Dígitos Extraídos</div>
+          <div class="result-value" style="font-family: monospace; letter-spacing: 4px;">_ _ _ _ _ _ _ _</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Central Panel - Conic Section -->
+    <section class="central-panel">
+      
+      <!-- Equation Display -->
+      <div class="equation-display">
+        <div class="equation-label">Ecuación General de la Cónica</div>
+        <div class="equation-formula">Ax² + Bxy + Cy² + Dx + Ey + F = 0</div>
+      </div>
+
+      <!-- Classification -->
+      <div class="card">
+        <h2 class="card-title">Clasificación de la Cónica</h2>
+        <div class="classification-grid">
+          <div class="classification-item active">
+            <div class="classification-icon">○</div>
+            <div class="classification-name">Circunferencia</div>
+          </div>
+          <div class="classification-item">
+            <div class="classification-icon">⬭</div>
+            <div class="classification-name">Elipse</div>
+          </div>
+          <div class="classification-item">
+            <div class="classification-icon">⌓</div>
+            <div class="classification-name">Parábola</div>
+          </div>
+          <div class="classification-item">
+            <div class="classification-icon">⋈</div>
+            <div class="classification-name">Hipérbola</div>
+          </div>
+        </div>
+
+        <!-- Transformations -->
+        <div class="transformations">
+          <div class="transform-card">
+            <div class="transform-label">General → Canónica</div>
+            <div class="transform-formula">x² + y² + Dx + Ey + F = 0</div>
+            <div class="arrow">↓</div>
+            <div class="transform-formula">(x - h)² + (y - k)² = r²</div>
+          </div>
+          <div class="transform-card">
+            <div class="transform-label">Canónica → General</div>
+            <div class="transform-formula">(x - h)² + (y - k)² = r²</div>
+            <div class="arrow">↓</div>
+            <div class="transform-formula">x² + y² - 2hx - 2ky + (h² + k² - r²) = 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph -->
+      <div class="graph-container">
+        <h2 class="card-title">Gráfico Cartesiano</h2>
+        <div class="graph-area">
+          <div class="graph-grid"></div>
+          <div class="axis-x"></div>
+          <div class="axis-y"></div>
+          <div class="conic-shape"></div>
+          <div class="center-point"></div>
+          <div class="point-label">C(h, k)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Panel - Geometric Elements -->
+    <aside class="right-panel">
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot red"></span>
+          Centro
+        </div>
+        <div class="element-value">C( ___ , ___ )</div>
+      </div>
+
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot blue"></span>
+          Focos
+        </div>
+        <div class="element-value">F₁( ___ , ___ )</div>
+        <div class="element-value" style="margin-top: 4px;">F₂( ___ , ___ )</div>
+      </div>
+
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot green"></span>
+          Vértices
+        </div>
+        <div class="element-value">V₁( ___ , ___ )</div>
+        <div class="element-value" style="margin-top: 4px;">V₂( ___ , ___ )</div>
+      </div>
+
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot purple"></span>
+          Ejes
+        </div>
+        <div class="element-value">a = ___</div>
+        <div class="element-value" style="margin-top: 4px;">b = ___</div>
+        <div class="element-value" style="margin-top: 4px;">c = ___</div>
+      </div>
+
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot orange"></span>
+          Directriz
+        </div>
+        <div class="element-value">y = ___</div>
+      </div>
+
+      <div class="element-card">
+        <div class="element-title">
+          <span class="element-dot blue"></span>
+          Radio / Excentricidad
+        </div>
+        <div class="element-value">r = ___</div>
+        <div class="element-value" style="margin-top: 4px;">e = ___</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bottom Section - Functions -->
+  <section class="bottom-section">
+    <div class="functions-container">
+      <h2 class="card-title">Funciones por Tramos</h2>
+      
+      <div class="functions-grid">
+        <div class="function-box">
+          <div class="function-label">Función Generada</div>
+          <div class="function-content">
+            f(x) = {<br>
+            &nbsp;&nbsp;___ si x &lt; ___<br>
+            &nbsp;&nbsp;___ si x = ___<br>
+            &nbsp;&nbsp;___ si x &gt; ___<br>
+            }
+          </div>
+        </div>
+
+        <div class="function-box">
+          <div class="function-label">Límites Laterales</div>
+          <div class="function-content">
+            lim x→a⁻ f(x) = ___<br><br>
+            lim x→a⁺ f(x) = ___<br><br>
+            f(a) = ___
+          </div>
+        </div>
+
+        <div class="function-box">
+          <div class="function-label">Análisis de Continuidad</div>
+          <div class="function-content">
+            <div style="margin-bottom: 8px;">
+              <span class="badge badge-info">Continuidad</span>
+            </div>
+            La función es: ___<br><br>
+            <div style="margin-bottom: 8px;">
+              <span class="badge badge-info">Tipo de Discontinuidad</span>
+            </div>
+            ___
+          </div>
+        </div>
+
+        <div class="function-box">
+          <div class="function-label">Mini Gráfico</div>
+          <div class="mini-graph">
+            <div class="mini-grid"></div>
+            <div class="mini-axis-x"></div>
+            <div class="mini-axis-y"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <span>Integrantes:</span>
+        <strong>Eduardo Escares, Patricio Benavides, Marcelo Santana</strong>
+      </div>
+      <div class="footer-section">
+        <a href="https://github.com/eduardoscrs/EID-MAT1186" target="_blank" class="github-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12C0 17.3 3.44 21.8 8.21 23.39C8.81 23.5 9 23.13 9 22.82V20.77C5.66 21.5 4.97 19.24 4.97 19.24C4.42 17.85 3.63 17.5 3.63 17.5C2.55 16.76 3.71 16.78 3.71 16.78C4.91 16.86 5.54 18 5.54 18C6.61 19.83 8.34 19.3 9.03 19C9.14 18.22 9.45 17.69 9.79 17.39C7.13 17.09 4.33 15.79 4.33 11.2C4.33 9.89 4.8 8.82 5.57 7.98C5.45 7.68 5.03 6.45 5.69 4.8C5.69 4.8 6.7 4.48 9 6.09C9.96 5.82 10.98 5.68 12 5.68C13.02 5.68 14.04 5.82 15 6.09C17.3 4.48 18.31 4.8 18.31 4.8C18.97 6.45 18.55 7.68 18.43 7.98C19.2 8.82 19.67 9.89 19.67 11.2C19.67 15.8 16.86 17.08 14.2 17.38C14.63 17.75 15 18.48 15 19.6V22.82C15 23.13 15.19 23.51 15.8 23.39C20.56 21.8 24 17.3 24 12C24 5.37 18.63 0 12 0Z"/>
+            </svg>
+
+            GitHub
+            </a>
+        </div>
+    </div>
+  </footer>
+
+  <script>
+    let currentData = null;
+    const conicTypes = {
+      'Circunferencia': 0,
+      'Elipse': 1,
+      'Parábola': 2,
+      'Hipérbola': 3
+    };
+
+    async function validarRUT() {
+      const rutInput = document.getElementById('rutInput').value.trim();
+      
+      if (!rutInput) {
+        alert('Por favor ingrese un RUT');
+        return;
+      }
+
+      try {
+        console.log('Validando RUT:', rutInput);
+        const response = await fetch('/api/validar_rut', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rut: rutInput })
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+
+        if (data.valido) {
+          document.getElementById('resultBox').style.display = 'block';
+          document.getElementById('rutResult').textContent = 'RUT Válido';
+          document.getElementById('rutBadge').textContent = 'OK';
+          document.getElementById('rutBadge').className = 'badge badge-success';
+          document.getElementById('digitsDisplay').textContent = data.rut_limpio.split('').join(' ');
+          
+          mostrarPasos(data.pasos);
+          procesarEcuacion(data.cuerpo, data.digito_verificador);
+        } else {
+          document.getElementById('resultBox').style.display = 'block';
+          document.getElementById('rutResult').textContent = 'RUT Inválido';
+          document.getElementById('rutBadge').textContent = 'ERROR';
+          document.getElementById('rutBadge').className = 'badge badge-danger';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error en la validación: ' + error.message);
+      }
+    }
+
+    function mostrarPasos(pasos) {
+      const container = document.getElementById('stepsContainer');
+      container.innerHTML = '';
+      
+      pasos.forEach((paso, index) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'step';
+        stepDiv.innerHTML = `
+          <span class="step-number">${index + 1}</span>
+          <span class="step-content">${paso}</span>
+        `;
+        container.appendChild(stepDiv);
+      });
+    }
+
+    async function procesarEcuacion(cuerpo, dv) {
+      try {
+        const response = await fetch('/api/procesar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            cuerpo: data.cuerpo, 
+            digito_verificador: data.digito_verificador 
+          })
+        });
+        
+        const respData = await response.json();
+        
+        if (respData.error) {
+          alert('Error: ' + respData.error);
+          console.error('Error details:', respData.traceback);
+          return;
+        }
+
+        currentData = respData;
+        actualizarUI(respData);
+        dibujarGrafica(respData);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error procesando la ecuación: ' + error.message);
+      }
+    }
+
+    function actualizarUI(data) {
+      document.getElementById('equationDisplay').textContent = data.ecuacion;
+      
+      const tipo = data.tipo_conica;
+      const items = document.querySelectorAll('.classification-item');
+      items.forEach((item, index) => {
+        item.classList.remove('active');
+        if (index === conicTypes[tipo]) {
+          item.classList.add('active');
+        }
+      });
+
+      const h = data.h !== undefined ? data.h : 0;
+      const k = data.k !== undefined ? data.k : 0;
+      document.getElementById('params').innerHTML = `h = ${h.toFixed(2)}<br>k = ${k.toFixed(2)}`;
+
+      // Limpiar valores previos
+      document.getElementById('centroVal').textContent = 'C( ___ , ___ )';
+      document.getElementById('focos1Val').textContent = 'F₁( ___ , ___ )';
+      document.getElementById('focos2Val').textContent = 'F₂( ___ , ___ )';
+      document.getElementById('vert1Val').textContent = 'V₁( ___ , ___ )';
+      document.getElementById('vert2Val').textContent = 'V₂( ___ , ___ )';
+      document.getElementById('aVal').textContent = 'a = ___';
+      document.getElementById('bVal').textContent = 'b = ___';
+      document.getElementById('cVal').textContent = 'c = ___';
+      document.getElementById('rVal').textContent = 'r = ___';
+      document.getElementById('eVal').textContent = 'e = ___';
+      document.getElementById('directrizVal').textContent = 'y = ___';
+
+      if (tipo === 'Circunferencia') {
+        document.getElementById('centroVal').textContent = `C( ${data.centro[0].toFixed(2)}, ${data.centro[1].toFixed(2)} )`;
+        document.getElementById('rVal').textContent = `r = ${data.radio.toFixed(2)}`;
+      } else if (tipo === 'Elipse') {
+        document.getElementById('centroVal').textContent = `C( ${data.centro[0].toFixed(2)}, ${data.centro[1].toFixed(2)} )`;
+        if (data.focos && data.focos.length >= 2) {
+          document.getElementById('focos1Val').textContent = `F₁( ${data.focos[0][0].toFixed(2)}, ${data.focos[0][1].toFixed(2)} )`;
+          document.getElementById('focos2Val').textContent = `F₂( ${data.focos[1][0].toFixed(2)}, ${data.focos[1][1].toFixed(2)} )`;
+        }
+        if (data.vertices && data.vertices.length >= 2) {
+          document.getElementById('vert1Val').textContent = `V₁( ${data.vertices[0][0].toFixed(2)}, ${data.vertices[0][1].toFixed(2)} )`;
+          document.getElementById('vert2Val').textContent = `V₂( ${data.vertices[1][0].toFixed(2)}, ${data.vertices[1][1].toFixed(2)} )`;
+        }
+        document.getElementById('aVal').textContent = `a = ${data.a.toFixed(2)}`;
+        document.getElementById('bVal').textContent = `b = ${data.b.toFixed(2)}`;
+        document.getElementById('cVal').textContent = `c = ${data.c.toFixed(2)}`;
+        document.getElementById('eVal').textContent = `e = ${data.excentricidad.toFixed(2)}`;
+      } else if (tipo === 'Hipérbola') {
+        document.getElementById('centroVal').textContent = `C( ${data.centro[0].toFixed(2)}, ${data.centro[1].toFixed(2)} )`;
+        if (data.focos && data.focos.length >= 2) {
+          document.getElementById('focos1Val').textContent = `F₁( ${data.focos[0][0].toFixed(2)}, ${data.focos[0][1].toFixed(2)} )`;
+          document.getElementById('focos2Val').textContent = `F₂( ${data.focos[1][0].toFixed(2)}, ${data.focos[1][1].toFixed(2)} )`;
+        }
+        if (data.vertices && data.vertices.length >= 2) {
+          document.getElementById('vert1Val').textContent = `V₁( ${data.vertices[0][0].toFixed(2)}, ${data.vertices[0][1].toFixed(2)} )`;
+          document.getElementById('vert2Val').textContent = `V₂( ${data.vertices[1][0].toFixed(2)}, ${data.vertices[1][1].toFixed(2)} )`;
+        }
+        document.getElementById('aVal').textContent = `a = ${data.a.toFixed(2)}`;
+        document.getElementById('bVal').textContent = `b = ${data.b.toFixed(2)}`;
+        document.getElementById('cVal').textContent = `c = ${data.c.toFixed(2)}`;
+        document.getElementById('eVal').textContent = `e = ${data.excentricidad.toFixed(2)}`;
+      } else if (tipo === 'Parábola') {
+        document.getElementById('centroVal').textContent = `V( ${data.vertice[0].toFixed(2)}, ${data.vertice[1].toFixed(2)} )`;
+        document.getElementById('focos1Val').textContent = `F( ${data.foco[0].toFixed(2)}, ${data.foco[1].toFixed(2)} )`;
+        document.getElementById('directrizVal').textContent = `${data.directriz.toFixed(2)}`;
+        document.getElementById('aVal').textContent = `p = ${data.p.toFixed(2)}`;
+      }
+    }
+
+    function dibujarGrafica(data) {
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const scale = 30;
+
+      // Limpiar canvas
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0, 0, width, height);
+
+      // Dibujar cuadrícula
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 0.5;
+      for (let i = -8; i <= 8; i++) {
+        ctx.beginPath();
+        ctx.moveTo(centerX + i * scale, 0);
+        ctx.lineTo(centerX + i * scale, height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, centerY + i * scale);
+        ctx.lineTo(width, centerY + i * scale);
+        ctx.stroke();
+      }
+
+      // Dibujar ejes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(centerX, 0);
+      ctx.lineTo(centerX, height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, centerY);
+      ctx.lineTo(width, centerY);
+      ctx.stroke();
+
+      // Etiquetas de ejes
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      for (let i = -8; i <= 8; i += 2) {
+        if (i !== 0) {
+          ctx.fillText(i, centerX + i * scale, centerY + 15);
+          ctx.fillText(i, centerX - 15, centerY - i * scale + 4);
+        }
+      }
+
+      const tipo = data.tipo_conica;
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 2.5;
+      ctx.fillStyle = 'rgba(37, 99, 235, 0.1)';
+
+      if (!data.puntos_grafica) {
+        console.warn('No se generaron puntos para la gráfica');
+        return;
+      }
+
+      if (tipo === 'Circunferencia' || tipo === 'Elipse') {
+        const puntos = data.puntos_grafica;
+        if (puntos.x && puntos.y_pos && puntos.y_neg) {
+          ctx.beginPath();
+          for (let i = 0; i < puntos.x.length; i++) {
+            const x = centerX + puntos.x[i] * scale;
+            const y = centerY - puntos.y_pos[i] * scale;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          for (let i = puntos.x.length - 1; i >= 0; i--) {
+            const x = centerX + puntos.x[i] * scale;
+            const y = centerY - puntos.y_neg[i] * scale;
+            ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+      } else if (tipo === 'Parábola') {
+        const puntos = data.puntos_grafica;
+        if (puntos.x && puntos.y_pos) {
+          ctx.beginPath();
+          for (let i = 0; i < puntos.x.length; i++) {
+            const x = centerX + puntos.x[i] * scale;
+            const y = centerY - puntos.y_pos[i] * scale;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+      } else if (tipo === 'Hipérbola') {
+        const puntos = data.puntos_grafica;
+        if (puntos.rama_izq && puntos.rama_izq.x) {
+          ctx.beginPath();
+          for (let i = 0; i < puntos.rama_izq.x.length; i++) {
+            const x = centerX + puntos.rama_izq.x[i] * scale;
+            const y = centerY - puntos.rama_izq.y[i] * scale;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        if (puntos.rama_der && puntos.rama_der.x) {
+          ctx.beginPath();
+          for (let i = 0; i < puntos.rama_der.x.length; i++) {
+            const x = centerX + puntos.rama_der.x[i] * scale;
+            const y = centerY - puntos.rama_der.y[i] * scale;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+      }
+
+      // Dibujar centro/vértice
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      let cx, cy;
+      if (tipo === 'Parábola') {
+        cx = data.vertice[0] * scale;
+        cy = data.vertice[1] * scale;
+      } else {
+        cx = (data.h !== undefined ? data.h : 0) * scale;
+        cy = (data.k !== undefined ? data.k : 0) * scale;
+      }
+      ctx.arc(centerX + cx, centerY - cy, 4, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Dibujar focos si existen
+      ctx.fillStyle = '#0ea5e9';
+      if (tipo !== 'Parábola' && data.focos && data.focos.length >= 2) {
+        data.focos.forEach(foco => {
+          ctx.beginPath();
+          ctx.arc(centerX + foco[0] * scale, centerY - foco[1] * scale, 3, 0, 2 * Math.PI);
+          ctx.fill();
+        });
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
