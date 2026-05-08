@@ -5,6 +5,42 @@
 
 Este proyecto representa el **25%** de la calificación final del curso MAT1186 - Introducción al Cálculo. Integra contenidos matemáticos con programación, razonamiento lógico y trabajo colaborativo.
 
+### Estructura del Proyecto
+
+La aplicación vive directamente en la raíz del repositorio para que GitHub muestre la estructura principal sin una carpeta intermedia genérica.
+
+```text
+.
+├── app.py                  # Aplicación web Flask
+├── main.py                 # Ejecución por consola
+├── requirements.txt        # Dependencias directas del proyecto
+├── algebra/                # Transformaciones algebraicas
+├── core/                   # Validación de RUT, ecuación y clasificación
+├── geometria/              # Análisis geométrico por tipo de cónica
+├── visualizacion/          # Generación de puntos y gráficos auxiliares
+├── templates/              # Vistas HTML
+├── static/                 # CSS y JavaScript de la interfaz
+├── utils/                  # Utilidades compartidas
+└── docs/                   # Enunciado y documentación de apoyo
+```
+
+### Ejecución Local
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+flask --app app run --debug
+```
+
+Luego abra `http://127.0.0.1:5000` en el navegador.
+
+Para ejecutar la versión por consola:
+
+```bash
+python main.py
+```
+
 ### Objetivo Principal
 
 Desarrollar una aplicación en **Python** que:
@@ -58,6 +94,9 @@ Requerimientos principales:
 - Implementa, conoce y maneja elementos de geometría analítica y límites aplicando aprendizaje autónomo
 
 ### Tecnologías Permitidas
-- Python (lenguaje principal)
-- Framework web o librería de interfaz a elección (Django, Flask, Streamlit, etc.)
+- Python
+- Flask para la interfaz web
+- Matplotlib para gráficos auxiliares de la versión por consola
 - Git/GitHub para control de versiones
+
+El código del proyecto no importa `numpy`, `math` ni `sympy`; los cálculos matemáticos se implementan manualmente.
