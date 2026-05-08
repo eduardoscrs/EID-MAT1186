@@ -2,22 +2,43 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Directorios de entorno virtual
+.venv/
 venv/
 env/
 ENV/
-.venv
+
+# Carpeta local antigua, conservada solo si quedó un venv/cache después de mover el código a la raíz
+/Programa/
 
 # Archivos de IDE
 .vscode/
 .idea/
+.ropeproject/
 *.swp
 *.swo
 
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+
+# Variables locales y logs
+.env
+.env.*
+*.log
+
+# Flask
+instance/
+.webassets-cache
+
+# Herramientas frontend locales
+node_modules/
 
 # Archivos de distribución
 build/
