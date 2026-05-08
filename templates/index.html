@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MAT1186 – Introducción al Cálculo</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='style.css') }}"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-content">
+                <h1>MAT1186 – Introducción al Cálculo</h1>
+                <p>Evaluación Integrada de Desempeño</p>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active">Ecuación</button>
+            <button class="tab">Desarrollo Matemático</button>
+            <button class="tab">Gráfica</button>
+            <button class="tab">Funciones</button>
+        </nav>
+
+        <main class="main-content">
+            <aside>
+                <div class="card">
+                    <h2 class="card-title">Validación RUT</h2>
+                    <div class="input-group">
+                        <label>Ingrese RUT (sin puntos ni guión)</label>
+                        <input
+                            type="text"
+                            id="rutInput"
+                            placeholder="Ej: 123456789"
+                        />
+                    </div>
+                    <button class="btn btn-primary" onclick="validarRUT()">
+                        Validar RUT
+                    </button>
+
+                    <div
+                        class="result-box success"
+                        id="resultBox"
+                        style="display: none"
+                    >
+                        <div class="result-title">Resultado</div>
+                        <div class="result-value">
+                            <span id="rutResult">RUT Válido</span>
+                            <span class="badge badge-success" id="rutBadge"
+                                >OK</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="steps">
+                        <h3
+                            style="
+                                font-size: 0.9rem;
+                                color: #1e3a5f;
+                                margin: 16px 0 12px;
+                            "
+                        >
+                            Desarrollo Módulo 11
+                        </h3>
+                        <div id="stepsContainer"></div>
+                    </div>
+
+                    <div class="result-box" style="margin-top: 16px">
+                        <div class="result-title">Dígitos Extraídos</div>
+                        <div
+                            class="result-value"
+                            id="digitsDisplay"
+                            style="font-family: monospace; letter-spacing: 4px"
+                        >
+                            _ _ _ _ _ _ _ _
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="central-panel">
+                <div class="equation-display">
+                    <div class="equation-label">
+                        Ecuación General de la Cónica
+                    </div>
+                    <div class="equation-formula" id="equationDisplay">
+                        Ax² + Bxy + Cy² + Dx + Ey + F = 0
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Clasificación de la Cónica</h2>
+                    <div class="classification-grid">
+                        <div class="classification-item active">
+                            <div class="classification-icon">○</div>
+                            <div class="classification-name">
+                                Circunferencia
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="classification-icon">⬭</div>
+                            <div class="classification-name">Elipse</div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="classification-icon">⌓</div>
+                            <div class="classification-name">Parábola</div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="classification-icon">⋈</div>
+                            <div class="classification-name">Hipérbola</div>
+                        </div>
+                    </div>
+
+                    <div class="transformations">
+                        <div class="transform-card">
+                            <div class="transform-label">
+                                General → Canónica
+                            </div>
+                            <div class="transform-formula">
+                                x² + y² + Dx + Ey + F = 0
+                            </div>
+                            <div class="arrow">↓</div>
+                            <div class="transform-formula">
+                                (x - h)² + (y - k)² = r²
+                            </div>
+                        </div>
+                        <div class="transform-card">
+                            <div class="transform-label">
+                                Canónica → General
+                            </div>
+                            <div class="transform-formula">
+                                (x - h)² + (y - k)² = r²
+                            </div>
+                            <div class="arrow">↓</div>
+                            <div class="transform-formula">
+                                x² + y² - 2hx - 2ky + (h² + k² - r²) = 0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <h2 class="card-title">Gráfico Cartesiano</h2>
+                    <div
+                        class="graph-area"
+                        style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        "
+                    >
+                        <canvas
+                            id="graphCanvas"
+                            width="600"
+                            height="350"
+                        ></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="right-panel">
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot red"></span>Centro
+                    </div>
+                    <div class="element-value" id="centroVal">
+                        C( ___ , ___ )
+                    </div>
+                    <div
+                        class="element-value"
+                        id="params"
+                        style="font-size: 0.8rem; margin-top: 4px; color: gray"
+                    >
+                        h = __ <br />
+                        k = __
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot blue"></span>Focos
+                    </div>
+                    <div class="element-value" id="focos1Val">
+                        F₁( ___ , ___ )
+                    </div>
+                    <div
+                        class="element-value"
+                        id="focos2Val"
+                        style="margin-top: 4px"
+                    >
+                        F₂( ___ , ___ )
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot green"></span>Vértices
+                    </div>
+                    <div class="element-value" id="vert1Val">
+                        V₁( ___ , ___ )
+                    </div>
+                    <div
+                        class="element-value"
+                        id="vert2Val"
+                        style="margin-top: 4px"
+                    >
+                        V₂( ___ , ___ )
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot purple"></span>Ejes
+                    </div>
+                    <div class="element-value" id="aVal">a = ___</div>
+                    <div
+                        class="element-value"
+                        id="bVal"
+                        style="margin-top: 4px"
+                    >
+                        b = ___
+                    </div>
+                    <div
+                        class="element-value"
+                        id="cVal"
+                        style="margin-top: 4px"
+                    >
+                        c = ___
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot orange"></span>Directriz
+                    </div>
+                    <div class="element-value" id="directrizVal">y = ___</div>
+                </div>
+
+                <div class="element-card">
+                    <div class="element-title">
+                        <span class="element-dot blue"></span>Radio /
+                        Excentricidad
+                    </div>
+                    <div class="element-value" id="rVal">r = ___</div>
+                    <div
+                        class="element-value"
+                        id="eVal"
+                        style="margin-top: 4px"
+                    >
+                        e = ___
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <span>Integrantes:</span>
+                    <strong
+                        >Eduardo Escares, Patricio Benavides, Marcelo
+                        Santana</strong
+                    >
+                </div>
+            </div>
+        </footer>
+
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+</html>
