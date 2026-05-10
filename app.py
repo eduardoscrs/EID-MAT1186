@@ -1,3 +1,6 @@
+import os
+import subprocess
+import threading
 import traceback
 
 from algebra.canonica import transformar_a_canonica
@@ -209,5 +212,30 @@ def procesar_api():
         return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
 
 
+def ejecutar_npm_dev(): # Función para ejecutar "npm run dev" en el directorio frontend 
+    frontend_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'frontend'
+    )
+
+    print(frontend_path)
+
+    try:
+        subprocess.run(
+            'npm run dev',
+            cwd=frontend_path,
+            shell=True,
+            check=True
+        )
+
+    except Exception as e:
+        print(f"Error: {e}")
+
 if __name__ == "__main__":
+    # Iniciar npm dev en un thread daemon
+    thread = threading.Thread(target=ejecutar_npm_dev, daemon=True)
+    thread.start()
+    
+    # Ejecutar Flask
+    print("Iniciando servidor Flask en http://localhost:5000")
     app.run(debug=True)

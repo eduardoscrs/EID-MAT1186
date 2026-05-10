@@ -56,7 +56,8 @@ function drawPath(ctx, points, width, height, scale) {
   });
   ctx.stroke();
 }
-
+// DIBUJAR GRAFICO
+// DIBUJAR GRAFICO
 function drawGraph(ctx, data, width, height) {
   const scale = 28;
   drawGrid(ctx, width, height, scale);
@@ -73,6 +74,9 @@ function drawGraph(ctx, data, width, height) {
   const tipo = data.tipo_conica;
   const puntos = data.puntos_grafica;
 
+  console.log("TIPO:", tipo);
+  console.log("PUNTOS:", puntos);
+
   ctx.strokeStyle = "#2563eb";
   ctx.lineWidth = 3;
 
@@ -81,38 +85,62 @@ function drawGraph(ctx, data, width, height) {
     drawPath(ctx, { x: puntos.x, y: puntos.y_neg }, width, height, scale);
   }
 
-  if (tipo === "Parabola") {
+  // CAMBIO AQUÍ
+  if (tipo === "Parábola") {
     drawPath(ctx, { x: puntos.x, y: puntos.y_pos }, width, height, scale);
-    drawPath(ctx, { x: puntos.x, y: puntos.y_neg }, width, height, scale);
+
+    if (puntos.y_neg) {
+      drawPath(ctx, { x: puntos.x, y: puntos.y_neg }, width, height, scale);
+    }
   }
 
-  if (tipo === "Hiperbola") {
+  // CAMBIO AQUÍ
+  if (tipo === "Hipérbola") {
     drawPath(ctx, puntos.rama_izq, width, height, scale);
+
     drawPath(
       ctx,
-      puntos.rama_izq ? { x: puntos.rama_izq.x, y: puntos.rama_izq.y_neg } : null,
+      puntos.rama_izq
+        ? { x: puntos.rama_izq.x, y: puntos.rama_izq.y_neg }
+        : null,
       width,
       height,
       scale,
     );
+
     drawPath(ctx, puntos.rama_der, width, height, scale);
+
     drawPath(
       ctx,
-      puntos.rama_der ? { x: puntos.rama_der.x, y: puntos.rama_der.y_neg } : null,
+      puntos.rama_der
+        ? { x: puntos.rama_der.x, y: puntos.rama_der.y_neg }
+        : null,
       width,
       height,
       scale,
     );
   }
 
-  const point = tipo === "Parabola" ? data.vertice : data.centro;
+  // CAMBIO AQUÍ
+  const point = tipo === "Parábola"
+    ? data.vertice
+    : data.centro;
 
   if (point) {
     const centerX = width / 2;
     const centerY = height / 2;
+
     ctx.fillStyle = "#dc2626";
     ctx.beginPath();
-    ctx.arc(centerX + point[0] * scale, centerY - point[1] * scale, 5, 0, Math.PI * 2);
+
+    ctx.arc(
+      centerX + point[0] * scale,
+      centerY - point[1] * scale,
+      5,
+      0,
+      Math.PI * 2
+    );
+
     ctx.fill();
   }
 }
