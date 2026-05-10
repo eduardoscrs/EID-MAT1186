@@ -162,14 +162,22 @@ def procesar_api():
                     orientacion,
                     puntos=500,
                 )
+
+                rama_izq, rama_der = puntos
                 resultado["puntos_grafica"] = {
-                    "rama_izq": {
-                        "x": [float(x) for x in puntos[0][0]],
-                        "y": [float(y) for y in puntos[0][1]],
-                    },
+                    "rama_izq": (
+                        {
+                            "x": [float(x) for x in rama_izq[0]],
+                            "y": [float(y) for y in rama_izq[1]],
+                            "y_neg": [float(y) for y in rama_izq[2]],
+                        }
+                        if rama_izq
+                        else None
+                    ),
                     "rama_der": {
-                        "x": [float(x) for x in puntos[1][0]],
-                        "y": [float(y) for y in puntos[1][1]],
+                        "x": [float(x) for x in rama_der[0]],
+                        "y": [float(y) for y in rama_der[1]],
+                        "y_neg": [float(y) for y in rama_der[2]],
                     },
                 }
         else:

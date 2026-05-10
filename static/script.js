@@ -350,6 +350,17 @@ function dibujarGrafica(data) {
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
+
+      if (puntos.rama_izq.y_neg) {
+        ctx.beginPath();
+        for (let i = 0; i < puntos.rama_izq.x.length; i++) {
+          const x = centerX + puntos.rama_izq.x[i] * scale;
+          const y = centerY - puntos.rama_izq.y_neg[i] * scale;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
     }
     if (puntos.rama_der && puntos.rama_der.x) {
       ctx.beginPath();
@@ -360,6 +371,17 @@ function dibujarGrafica(data) {
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
+
+      if (puntos.rama_der.y_neg) {
+        ctx.beginPath();
+        for (let i = 0; i < puntos.rama_der.x.length; i++) {
+          const x = centerX + puntos.rama_der.x[i] * scale;
+          const y = centerY - puntos.rama_der.y_neg[i] * scale;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
     }
   }
 
