@@ -6,7 +6,10 @@ La estructura recomendada queda dentro del mismo repositorio:
 ```text
 EID-MAT1186/
   backend/            # Backend Flask y logica Python
-    app.py            # Endpoints /api
+    app.py            # Punto de entrada de Flask
+    api/              # Endpoints /api
+    services/         # Casos de uso del backend
+    infra/            # Arranque del frontend de desarrollo
     requirements.txt  # Dependencias Python
   frontend/           # Aplicacion React + Vite
     package.json      # Dependencias JavaScript
