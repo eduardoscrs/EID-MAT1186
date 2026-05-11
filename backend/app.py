@@ -10,7 +10,7 @@ from geometria.circunferencia import analizar_circunferencia
 from geometria.elipse import analizar_elipse
 from geometria.hiperbola import analizar_hiperbola
 from geometria.parabola import analizar_parabola
-from visualizacion.grafica import (
+from geometria.puntos import (
     generar_puntos_circunferencia,
     generar_puntos_elipse,
     generar_puntos_hiperbola,

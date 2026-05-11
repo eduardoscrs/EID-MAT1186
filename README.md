@@ -17,9 +17,8 @@ La aplicacion separa el backend Flask del frontend React para que cada parte ten
 |   |-- requirements.txt    # Dependencias Python
 |   |-- algebra/            # Transformaciones algebraicas
 |   |-- core/               # Validacion de RUT, ecuacion y clasificacion
-|   |-- geometria/          # Analisis geometrico por tipo de conica
-|   |-- utils/              # Utilidades compartidas
-|   `-- visualizacion/      # Generacion de puntos y graficos auxiliares
+|   |-- geometria/          # Analisis geometrico y puntos para graficar en React
+|   `-- utils/              # Utilidades compartidas
 |-- frontend/               # Interfaz React + Vite
 `-- docs/                   # Enunciado y documentacion de apoyo
 ```
@@ -109,7 +108,6 @@ Requerimientos principales:
 - Python
 - Flask para el backend/API
 - React + Vite para la interfaz web
-- Matplotlib para graficos auxiliares de la version por consola
 - Git/GitHub para control de versiones
 
 El codigo del proyecto no importa `numpy`, `math` ni `sympy`; los calculos matematicos se implementan manualmente.
