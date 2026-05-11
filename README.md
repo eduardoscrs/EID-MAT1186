@@ -13,7 +13,6 @@ La aplicacion separa el backend Flask del frontend React para que cada parte ten
 .
 |-- backend/                # API Flask, consola y logica matematica
 |   |-- app.py              # Backend Flask y endpoints /api
-|   |-- main.py             # Ejecucion por consola
 |   |-- requirements.txt    # Dependencias Python
 |   |-- algebra/            # Transformaciones algebraicas
 |   |-- core/               # Validacion de RUT, ecuacion y clasificacion
@@ -45,13 +44,6 @@ npm install
 ```
 
 Luego abra la URL que muestre Vite en el navegador. El frontend se comunica con Flask mediante el proxy configurado en Vite.
-
-Para ejecutar la version por consola:
-
-```bash
-cd backend
-python main.py
-```
 
 ### Objetivo Principal
 
