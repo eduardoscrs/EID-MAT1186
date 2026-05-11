@@ -5,8 +5,9 @@ La estructura recomendada queda dentro del mismo repositorio:
 
 ```text
 EID-MAT1186/
-  app.py              # Backend Flask y endpoints /api
-  requirements.txt    # Dependencias Python
+  backend/            # Backend Flask y logica Python
+    app.py            # Endpoints /api
+    requirements.txt  # Dependencias Python
   frontend/           # Aplicacion React + Vite
     package.json      # Dependencias JavaScript
     src/
@@ -29,8 +30,8 @@ Abrir dos terminales.
 Terminal 1, backend Flask:
 
 ```bash
-cd EID-MAT1186
-.\.venv\Scripts\python.exe app.py
+cd EID-MAT1186\backend
+..\.venv\Scripts\python.exe app.py
 ```
 
 Terminal 2, frontend React:
@@ -82,4 +83,3 @@ npm run build
 
 Esto genera `frontend/dist/`. Esa carpeta no debe subirse a GitHub porque se
 puede regenerar.
-

@@ -7,19 +7,20 @@ Este proyecto representa el **25%** de la calificacion final del curso MAT1186 -
 
 ### Estructura del Proyecto
 
-La aplicacion vive directamente en la raiz del repositorio para que GitHub muestre la estructura principal sin una carpeta intermedia generica.
+La aplicacion separa el backend Flask del frontend React para que cada parte tenga sus dependencias y comandos propios.
 
 ```text
 .
-|-- app.py                  # Backend Flask y endpoints /api
-|-- main.py                 # Ejecucion por consola
-|-- requirements.txt        # Dependencias directas del proyecto
-|-- algebra/                # Transformaciones algebraicas
-|-- core/                   # Validacion de RUT, ecuacion y clasificacion
-|-- geometria/              # Analisis geometrico por tipo de conica
-|-- visualizacion/          # Generacion de puntos y graficos auxiliares
+|-- backend/                # API Flask, consola y logica matematica
+|   |-- app.py              # Backend Flask y endpoints /api
+|   |-- main.py             # Ejecucion por consola
+|   |-- requirements.txt    # Dependencias Python
+|   |-- algebra/            # Transformaciones algebraicas
+|   |-- core/               # Validacion de RUT, ecuacion y clasificacion
+|   |-- geometria/          # Analisis geometrico por tipo de conica
+|   |-- utils/              # Utilidades compartidas
+|   `-- visualizacion/      # Generacion de puntos y graficos auxiliares
 |-- frontend/               # Interfaz React + Vite
-|-- utils/                  # Utilidades compartidas
 `-- docs/                   # Enunciado y documentacion de apoyo
 ```
 
@@ -30,7 +31,8 @@ Backend Flask:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install -r backend/requirements.txt
+cd backend
 flask --app app run --debug
 ```
 
@@ -47,6 +49,7 @@ Luego abra `http://127.0.0.1:5173` en el navegador. El frontend se comunica con 
 Para ejecutar la version por consola:
 
 ```bash
+cd backend
 python main.py
 ```
 
