@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-
-
 def generar_puntos_circunferencia(h, k, r, puntos=1000):
     """
     Genera listas de coordenadas X e Y sin usar math ni numpy.
@@ -9,6 +6,9 @@ def generar_puntos_circunferencia(h, k, r, puntos=1000):
     x_vals = []
     y_vals_pos = []
     y_vals_neg = []
+
+    if r <= 0 or puntos <= 0:
+        return [h], [k], [k]
 
     # Generar 'puntos' cantidad de pasos entre h-r y h+r
     paso = (2 * r) / puntos
@@ -34,6 +34,8 @@ def generar_puntos_circunferencia(h, k, r, puntos=1000):
 
 
 def graficar_circunferencia(h, k, r):
+    import matplotlib.pyplot as plt
+
     x, y_pos, y_neg = generar_puntos_circunferencia(h, k, r)
 
     plt.figure(figsize=(6, 6))
@@ -58,6 +60,10 @@ def graficar_circunferencia(h, k, r):
 
 def generar_puntos_elipse(h, k, rx, ry, puntos=1000):
     x_vals, y_pos, y_neg = [], [], []
+
+    if rx <= 0 or ry <= 0 or puntos <= 0:
+        return [h], [k], [k]
+
     paso = (2 * rx) / puntos
     x_actual = h - rx
 
@@ -76,6 +82,8 @@ def generar_puntos_elipse(h, k, rx, ry, puntos=1000):
 
 
 def graficar_elipse(h, k, rx, ry, focos, vertices):
+    import matplotlib.pyplot as plt
+
     x, y_pos, y_neg = generar_puntos_elipse(h, k, rx, ry)
 
     plt.figure(figsize=(7, 7))
@@ -118,6 +126,9 @@ def graficar_elipse(h, k, rx, ry, focos, vertices):
 def generar_puntos_parabola(h, k, p, orientacion, puntos=1000):
     x_vals, y_pos, y_neg = [], [], []
 
+    if p == 0 or puntos <= 0:
+        return [h], [k], None
+
     if orientacion == "Vertical":
         ancho = 4 * abs(p) if p != 0 else 10
         paso = (2 * ancho) / puntos
@@ -149,6 +160,8 @@ def generar_puntos_parabola(h, k, p, orientacion, puntos=1000):
 
 
 def graficar_parabola(h, k, p, orientacion, foco, directriz):
+    import matplotlib.pyplot as plt
+
     x, y_pos, y_neg = generar_puntos_parabola(h, k, p, orientacion)
 
     plt.figure(figsize=(7, 7))
@@ -193,6 +206,9 @@ def graficar_parabola(h, k, p, orientacion, foco, directriz):
 def generar_puntos_hiperbola(h, k, a, b, orientacion, puntos=500):
     x_izq, y_pos_izq, y_neg_izq = [], [], []
     x_der, y_pos_der, y_neg_der = [], [], []
+
+    if a <= 0 or b <= 0 or puntos <= 0:
+        return None, ([h], [k], [k])
 
     if orientacion == "Horizontal":
         largo = 3 * a
@@ -243,6 +259,8 @@ def generar_puntos_hiperbola(h, k, a, b, orientacion, puntos=500):
 
 
 def graficar_hiperbola(h, k, a, b, orientacion, focos, vertices):
+    import matplotlib.pyplot as plt
+
     ramas_izq, ramas_der = generar_puntos_hiperbola(h, k, a, b, orientacion)
 
     plt.figure(figsize=(7, 7))

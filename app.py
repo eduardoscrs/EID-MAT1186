@@ -1,6 +1,7 @@
 import traceback
 
 from algebra.canonica import transformar_a_canonica
+from algebra.procedimiento_inverso import generar_procedimiento_inverso
 from core.clasificacion import clasificar_conica
 from core.ecuacion import construir_ecuacion_general
 from core.rut import limpiar_rut, validar_rut_paso_a_paso
@@ -15,6 +16,7 @@ from visualizacion.grafica import (
     generar_puntos_hiperbola,
     generar_puntos_parabola,
 )
+from utils.formato import formatear_ecuacion_general, formatear_forma_canonica
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
@@ -65,7 +67,7 @@ def procesar_api():
         tipo_conica = clasificar_conica(A, B)
 
         resultado = {
-            "ecuacion": f"{A}x² + {B}xy + {C}y² + {D}x + {E}y + F = 0",
+            "ecuacion": formatear_ecuacion_general(A, B, C, D, E),
             "A": A,
             "B": B,
             "C": C,
@@ -187,6 +189,7 @@ def procesar_api():
             p_val = float(p)
             resultado.update(
                 {
+                    "pasos_canonica": pasos_par,
                     "pasos_parabola": pasos_par,
                     "vertice": [float(vertice[0]), float(vertice[1])],
                     "foco": [float(foco[0]), float(foco[1])],
@@ -203,6 +206,11 @@ def procesar_api():
                 "y_pos": [float(y) for y in puntos[1]],
                 "y_neg": [float(y) for y in puntos[2]] if puntos[2] else None,
             }
+
+        resultado["forma_canonica"] = formatear_forma_canonica(resultado)
+        resultado["pasos_inverso"] = generar_procedimiento_inverso(
+            A, B, C, D, E, resultado
+        )
 
         return jsonify(resultado)
     except Exception as e:
