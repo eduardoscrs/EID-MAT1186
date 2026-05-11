@@ -5,7 +5,7 @@ from algebra.procedimiento_inverso import generar_procedimiento_inverso
 from core.clasificacion import clasificar_conica
 from core.ecuacion import construir_ecuacion_general
 from core.rut import limpiar_rut, validar_rut_paso_a_paso
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, request
 from geometria.circunferencia import analizar_circunferencia
 from geometria.elipse import analizar_elipse
 from geometria.hiperbola import analizar_hiperbola
@@ -18,12 +18,17 @@ from visualizacion.grafica import (
 )
 from utils.formato import formatear_ecuacion_general, formatear_forma_canonica
 
-app = Flask(__name__, template_folder="templates", static_folder="static")
+app = Flask(__name__)
 
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return jsonify(
+        {
+            "status": "ok",
+            "message": "Backend Flask activo. Use el frontend React/Vite para la interfaz.",
+        }
+    )
 
 
 @app.route("/api/validar_rut", methods=["POST"])
