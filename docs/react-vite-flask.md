@@ -25,16 +25,16 @@ npm install
 
 ## Ejecutar en desarrollo
 
-Abrir dos terminales.
-
-Terminal 1, backend Flask:
+Desde una sola terminal:
 
 ```bash
 cd EID-MAT1186\backend
 ..\.venv\Scripts\python.exe app.py
 ```
 
-Terminal 2, frontend React:
+Ese comando inicia Flask en `http://127.0.0.1:5000` y React/Vite. Vite mostrara en consola la URL disponible, normalmente `http://127.0.0.1:5173`.
+
+Si solo necesita iniciar el frontend manualmente:
 
 ```bash
 cd EID-MAT1186\frontend

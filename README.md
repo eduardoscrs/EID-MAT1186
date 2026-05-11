@@ -32,18 +32,19 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r backend/requirements.txt
 cd backend
-flask --app app run --debug
+python app.py
 ```
 
-Frontend React:
+Ese comando inicia el backend Flask en `http://127.0.0.1:5000` y el frontend React/Vite. Vite mostrara en consola la URL disponible, normalmente `http://127.0.0.1:5173`.
+
+Para instalar las dependencias del frontend la primera vez:
 
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
-Luego abra `http://127.0.0.1:5173` en el navegador. El frontend se comunica con Flask mediante el proxy configurado en Vite.
+Luego abra la URL que muestre Vite en el navegador. El frontend se comunica con Flask mediante el proxy configurado en Vite.
 
 Para ejecutar la version por consola:
 
