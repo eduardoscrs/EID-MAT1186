@@ -7,3 +7,12 @@ export function formatPoint(point) {
   if (!point?.length) return "--";
   return `(${formatNumber(point[0])}, ${formatNumber(point[1])})`;
 }
+
+export function formatPointList(points) {
+  if (!points?.length) return "--";
+  return points.map(formatPoint).join("  ");
+}
+
+export function formatLine(line) {
+  return line?.ecuacion || "--";
+}

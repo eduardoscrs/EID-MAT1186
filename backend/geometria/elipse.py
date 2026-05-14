@@ -1,25 +1,26 @@
 def analizar_elipse(h_x, h_y, constante_derecha, A, B):
-    """Calcula centro, vértices y focos de la elipse."""
-    a_cuadrado = constante_derecha / A
-    b_cuadrado = constante_derecha / B
-    
-    # Raíces sin usar math
-    val_a = a_cuadrado ** 0.5 if a_cuadrado > 0 else 0
-    val_b = b_cuadrado ** 0.5 if b_cuadrado > 0 else 0
-    
-    # Focos: c^2 = |a^2 - b^2|
-    c_cuadrado = abs(a_cuadrado - b_cuadrado)
-    c = c_cuadrado ** 0.5
-    
+    """Calcula los componentes geometricos de la elipse."""
+    radio_x_cuadrado = constante_derecha / A
+    radio_y_cuadrado = constante_derecha / B
+
+    radio_x = radio_x_cuadrado**0.5 if radio_x_cuadrado > 0 else 0
+    radio_y = radio_y_cuadrado**0.5 if radio_y_cuadrado > 0 else 0
+    c = abs(radio_x_cuadrado - radio_y_cuadrado) ** 0.5
     centro = (h_x, h_y)
-    
-    if a_cuadrado > b_cuadrado:
-        # Eje mayor horizontal
+
+    if radio_x >= radio_y:
+        orientacion = "Horizontal"
+        a = radio_x
+        b = radio_y
         focos = [(h_x - c, h_y), (h_x + c, h_y)]
-        vertices = [(h_x - val_a, h_y), (h_x + val_a, h_y)]
+        vertices = [(h_x - a, h_y), (h_x + a, h_y)]
+        covertices = [(h_x, h_y - b), (h_x, h_y + b)]
     else:
-        # Eje mayor vertical
+        orientacion = "Vertical"
+        a = radio_y
+        b = radio_x
         focos = [(h_x, h_y - c), (h_x, h_y + c)]
-        vertices = [(h_x, h_y - val_b), (h_x, h_y + val_b)]
-        
-    return centro, vertices, focos, val_a, val_b
+        vertices = [(h_x, h_y - a), (h_x, h_y + a)]
+        covertices = [(h_x - b, h_y), (h_x + b, h_y)]
+
+    return centro, vertices, covertices, focos, a, b, c, radio_x, radio_y, orientacion

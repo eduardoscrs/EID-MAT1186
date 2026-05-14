@@ -24,6 +24,8 @@ export function GraphPanel({ canvasRef, large = false }) {
           <LegendItem color="bg-rose-600" label="Centro" />
           <LegendItem color="bg-violet-600" label="Vértice" />
           <LegendItem color="bg-amber-500" label="Foco" />
+          <LegendItem color="bg-blue-600" label="Eje" />
+          <LegendItem color="bg-red-600" label="Directriz / asíntota" />
         </div>
       </div>
       <div className="flex justify-center bg-slate-100 p-3 sm:p-5">

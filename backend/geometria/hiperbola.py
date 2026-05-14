@@ -1,24 +1,29 @@
 def analizar_hiperbola(h_x, h_y, constante_derecha, A, B):
-    """Calcula centro, vértices y focos de la hipérbola."""
-    a_cuadrado = constante_derecha / A
-    b_cuadrado = constante_derecha / B
-    
-    # c^2 = a^2 + b^2 (usamos abs() por los signos opuestos)
-    c_cuadrado = abs(a_cuadrado) + abs(b_cuadrado)
-    c = c_cuadrado ** 0.5
-    
-    val_a = abs(a_cuadrado) ** 0.5
-    val_b = abs(b_cuadrado) ** 0.5
-    
+    """Calcula los componentes geometricos de la hiperbola."""
+    denom_x = constante_derecha / A
+    denom_y = constante_derecha / B
+    radio_x = abs(denom_x) ** 0.5
+    radio_y = abs(denom_y) ** 0.5
     centro = (h_x, h_y)
-    
-    # Si A y la constante tienen el mismo signo, abre en el eje X
+
     if (A * constante_derecha) > 0:
-        focos = [(h_x - c, h_y), (h_x + c, h_y)]
-        vertices = [(h_x - val_a, h_y), (h_x + val_a, h_y)]
+        orientacion = "Horizontal"
+        a = radio_x
+        b = radio_y
+        focos = [(h_x - _calcular_c(a, b), h_y), (h_x + _calcular_c(a, b), h_y)]
+        vertices = [(h_x - a, h_y), (h_x + a, h_y)]
+        extremos_conjugados = [(h_x, h_y - b), (h_x, h_y + b)]
     else:
-        # Abre en el eje Y
-        focos = [(h_x, h_y - c), (h_x, h_y + c)]
-        vertices = [(h_x, h_y - val_b), (h_x, h_y + val_b)]
-        
-    return centro, vertices, focos, val_a, val_b
+        orientacion = "Vertical"
+        a = radio_y
+        b = radio_x
+        focos = [(h_x, h_y - _calcular_c(a, b)), (h_x, h_y + _calcular_c(a, b))]
+        vertices = [(h_x, h_y - a), (h_x, h_y + a)]
+        extremos_conjugados = [(h_x - b, h_y), (h_x + b, h_y)]
+
+    c = _calcular_c(a, b)
+    return centro, vertices, extremos_conjugados, focos, a, b, c, orientacion
+
+
+def _calcular_c(a, b):
+    return (a**2 + b**2) ** 0.5
