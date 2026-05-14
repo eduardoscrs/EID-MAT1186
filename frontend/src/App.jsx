@@ -11,7 +11,6 @@ import { normalizeConicName } from "./utils/conics";
 function App() {
   const canvasRef = useRef(null);
   const [activePage, setActivePage] = useState("conicas");
-  const [activeConicTab, setActiveConicTab] = useState("ecuacion");
   const [rut, setRut] = useState("");
   const [status, setStatus] = useState(initialMessage);
   const [validation, setValidation] = useState(null);
@@ -22,14 +21,14 @@ function App() {
   const extractedDigits = useMemo(() => rut.replace(/[^0-9kK]/g, "").toUpperCase().split(""), [rut]);
 
   useEffect(() => {
-    if (activePage !== "conicas" || activeConicTab !== "grafica") return;
+    if (activePage !== "conicas") return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
     drawGraph(ctx, result, canvas.width, canvas.height);
-  }, [activePage, activeConicTab, result]);
+  }, [activePage, result]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -59,7 +58,6 @@ function App() {
         tipo_conica: normalizeConicName(procesarData.tipo_conica),
       });
       setActivePage("conicas");
-      setActiveConicTab("ecuacion");
       setStatus("Cónica calculada correctamente.");
     } catch (error) {
       setStatus(error.message);
@@ -74,7 +72,6 @@ function App() {
 
       {activePage === "conicas" ? (
         <ConicsPage
-          activeTab={activeConicTab}
           activeType={activeType}
           canvasRef={canvasRef}
           extractedDigits={extractedDigits}
@@ -84,7 +81,6 @@ function App() {
           validation={validation}
           onRutChange={setRut}
           onSubmit={handleSubmit}
-          onTabChange={setActiveConicTab}
         />
       ) : (
         <LimitsPage />
