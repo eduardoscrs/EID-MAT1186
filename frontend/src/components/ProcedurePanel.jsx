@@ -1,3 +1,5 @@
+import { MathText } from "./MathText";
+
 const procedureBlocks = [
   { title: "Construcción de la ecuación general", key: "pasos_ecuacion" },
   { title: "Transformación a forma canónica", key: "pasos_canonica" },
@@ -20,7 +22,7 @@ export function ProcedurePanel({ result }) {
                   {steps.map((step, index) => (
                     <li key={`${block.title}-${index}`} className="rounded-xl bg-white px-3 py-2 shadow-sm">
                       <span className="mr-2 font-black text-blue-900">{index + 1}.</span>
-                      {step}
+                      <MathText value={step} />
                     </li>
                   ))}
                 </ol>

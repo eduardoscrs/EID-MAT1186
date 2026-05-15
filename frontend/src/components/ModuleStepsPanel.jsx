@@ -1,3 +1,5 @@
+import { MathText } from "./MathText";
+
 export function ModuleStepsPanel({ validation }) {
   return (
     <section className="rounded-3xl bg-white p-5 shadow-md ring-1 ring-slate-200">
@@ -8,12 +10,12 @@ export function ModuleStepsPanel({ validation }) {
             {validation.pasos.map((step, index) => (
               <li key={`${step}-${index}`} className="rounded-xl bg-white px-3 py-2 shadow-sm">
                 <span className="mr-2 font-black text-blue-900">{index + 1}.</span>
-                {step}
+                <MathText value={step} />
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-slate-500">Cuando valides un RUT, aparecerá aquí</p>
+          <p className="text-slate-500">Cuando valides un RUT, aparecerá aquí.</p>
         )}
       </div>
     </section>

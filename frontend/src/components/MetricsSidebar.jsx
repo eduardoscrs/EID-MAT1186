@@ -1,5 +1,6 @@
 import { defenseFields } from "../constants/ui";
 import { formatLine, formatNumber, formatPoint, formatPointList } from "../utils/formatters";
+import { MathText } from "./MathText";
 
 const accentByIndex = [
   "bg-rose-500",
@@ -29,10 +30,7 @@ function getMetrics(result) {
   }
 
   if (result.tipo_conica === "Circunferencia") {
-    return [
-      metric("Centro C(h,k)", formatPoint(result.centro)),
-      metric("Radio r", formatNumber(result.radio)),
-    ];
+    return [metric("Centro C(h,k)", formatPoint(result.centro)), metric("Radio r", formatNumber(result.radio))];
   }
 
   if (result.tipo_conica === "Parabola") {
@@ -86,7 +84,9 @@ export function MetricsPanel({ result }) {
             <span className={`h-3 w-3 rounded-full ${accentByIndex[index % accentByIndex.length]}`} />
             {item.label}
           </div>
-          <div className="mt-3 break-words text-xl font-black text-blue-950">{item.value}</div>
+          <div className="mt-3 overflow-x-auto text-xl font-black text-blue-950">
+            <MathText value={item.value} />
+          </div>
         </section>
       ))}
     </div>
