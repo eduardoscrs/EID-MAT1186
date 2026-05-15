@@ -43,7 +43,13 @@ Para instalar las dependencias del frontend la primera vez:
 
 ```bash
 cd frontend
-npm install
+pnpm install
+```
+
+Si `pnpm` no esta disponible como comando directo, use Corepack:
+
+```bash
+corepack pnpm install
 ```
 
 Luego abra la URL que muestre Vite en el navegador. El frontend se comunica con Flask mediante el proxy configurado en Vite.

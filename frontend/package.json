@@ -3,10 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
+    "preinstall": "node ./scripts/only-pnpm.cjs",
+    "predev": "node ./scripts/only-pnpm.cjs",
     "dev": "vite",
+    "prebuild": "node ./scripts/only-pnpm.cjs",
     "build": "vite build",
+    "prelint": "node ./scripts/only-pnpm.cjs",
     "lint": "eslint .",
+    "prepreview": "node ./scripts/only-pnpm.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

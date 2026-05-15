@@ -21,9 +21,9 @@ EID-MAT1186/
 La carpeta `frontend/` fue creada con:
 
 ```bash
-npm create vite@latest frontend -- --template react
+pnpm create vite frontend --template react
 cd frontend
-npm install
+pnpm install
 ```
 
 ## Ejecutar en desarrollo
@@ -41,7 +41,7 @@ Si solo necesita iniciar el frontend manualmente:
 
 ```bash
 cd EID-MAT1186\frontend
-npm run dev
+pnpm run dev
 ```
 
 Luego abrir:
@@ -81,7 +81,7 @@ Para verificar que React compila:
 
 ```bash
 cd EID-MAT1186\frontend
-npm run build
+pnpm run build
 ```
 
 Esto genera `frontend/dist/`. Esa carpeta no debe subirse a GitHub porque se
