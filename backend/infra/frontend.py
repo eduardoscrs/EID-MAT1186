@@ -10,18 +10,23 @@ frontend_process = None
 
 
 def crear_proceso_frontend():
-    npm = shutil.which("npm.cmd") or shutil.which("npm")
-
-    if npm is None:
-        print("[WARN] No se encontro npm. Inicia el frontend manualmente con npm run dev.")
-        return None
+    pnpm = shutil.which("pnpm.cmd") or shutil.which("pnpm")
+    corepack = shutil.which("corepack.cmd") or shutil.which("corepack")
 
     if not FRONTEND_DIR.exists():
         print(f"[WARN] No se encontro la carpeta frontend: {FRONTEND_DIR}")
         return None
 
+    if pnpm is not None:
+        comando = [pnpm, "run", "dev"]
+    elif corepack is not None:
+        comando = [corepack, "pnpm", "run", "dev"]
+    else:
+        print("[WARN] No se encontro pnpm ni Corepack. Inicia el frontend manualmente con pnpm run dev.")
+        return None
+
     print("[INFO] Iniciando frontend React/Vite. Vite mostrara la URL disponible.")
-    return subprocess.Popen([npm, "run", "dev"], cwd=FRONTEND_DIR)
+    return subprocess.Popen(comando, cwd=FRONTEND_DIR)
 
 
 def detener_frontend():
