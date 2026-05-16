@@ -1,9 +1,5 @@
 # S2-03 Riesgos del modulo de conicas
 
-Alcance: revision breve del modulo de conicas contra el enunciado. Esta tarea
-no resuelve los 4 RUTs de auditoria completa; esa validacion queda separada para
-S2-07 en la rama correspondiente.
-
 ## Riesgos principales
 
 | Riesgo | Archivo asociado | Impacto | Revision recomendada |
@@ -29,7 +25,7 @@ S2-07 en la rama correspondiente.
 - Parabola vertical con `D = 0`.
 - Parabola horizontal con `C = 0`.
 
-## RUTs validos documentados para revision posterior
+## RUTs validos recomendados para auditoria
 
 | Tipo esperado | RUT valido | Uso recomendado |
 | --- | --- | --- |

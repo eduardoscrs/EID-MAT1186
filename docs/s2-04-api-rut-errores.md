@@ -1,8 +1,7 @@
 # S2-04 Manejo de errores en API de RUT
 
-Alcance: mejorar la respuesta del backend ante entradas invalidas o uso
-incorrecto de los endpoints de RUT, sin cambiar las formulas matematicas del
-modulo de conicas.
+Este documento resume el formato de respuesta del backend ante entradas
+invalidas o uso incorrecto de los endpoints de RUT.
 
 ## Endpoints revisados
 

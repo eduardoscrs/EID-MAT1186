@@ -3,12 +3,6 @@
 Fuente de requisitos: enunciado EID MAT1186, fases de trabajo, modulo de conicas,
 modulo de limites, restricciones de implementacion y desarrollo profesional.
 
-Estado usado en esta revision:
-
-- Rama local revisada: `santana`.
-- Alcance de esta tarea: levantar evidencia del estado actual del proyecto.
-- No incluye acciones en GitHub, porque deben confirmarse antes.
-
 ## Matriz
 
 | ID | Requisito del enunciado | Estado actual | Evidencia en el proyecto | Accion pendiente |
@@ -29,20 +23,20 @@ Estado usado en esta revision:
 | R-14 | Mostrar procedimiento inverso desde forma canonica a general. | Cumple | `backend/conicas/algebra/procedimiento_inverso.py` | Auditar consistencia con cada tipo de conica. |
 | R-15 | Graficar correctamente la conica en el plano cartesiano. | Cumple parcial | `backend/conicas/services/graficas.py`, `frontend/src/canvas` | Validar visualmente los 4 casos documentados. |
 | R-16 | Mostrar elementos geometricos: centro, vertices, focos, ejes y directriz cuando corresponda. | Cumple parcial | `backend/conicas/geometria`, `backend/conicas/services/analisis_conicas.py` | Confirmar que cada campo aparece para el tipo correcto. |
-| R-17 | Incluir campos vacios para que el estudiante complete elementos durante la defensa oral. | Cumple parcial | `docs/revision-geometria-analitica.md` indica alcance; frontend debe confirmarse | Revisar interfaz y documentar campos disponibles. |
+| R-17 | Incluir campos vacios para que el estudiante complete elementos durante la defensa oral. | Cumple parcial | `docs/revision-geometria-analitica.md`; componentes de interfaz en `frontend/src` | Revisar interfaz y documentar campos disponibles. |
 | R-18 | Interfaz intuitiva, ordenada y visualmente adecuada. | Cumple parcial | `frontend/src/pages/ConicsPage`, `frontend/src/index.css` | Validar con ejecucion local y captura. |
-| R-19 | Incorporar modulo de funciones por tramos generado desde el RUT. | Pendiente | `backend/limites` existe como estructura base | Implementar en rama asignada fuera de `santana`. |
-| R-20 | Construir funcion por tramos con punto principal `a = d3`. | Pendiente | `backend/limites/constructor.py` es placeholder | Definir contrato JSON en S2-06, fuera de `santana`. |
-| R-21 | Seleccionar caso por `d8 % 3`: removible, salto o infinita. | Pendiente | No hay implementacion activa | Implementar en rama asignada fuera de `santana`. |
-| R-22 | Calcular limites laterales en puntos criticos. | Pendiente | `backend/limites/analisis.py` es placeholder | Implementar en rama asignada fuera de `santana`. |
-| R-23 | Determinar continuidad y tipo de discontinuidad. | Pendiente | `backend/limites/continuidad.py` es placeholder | Implementar en rama asignada fuera de `santana`. |
-| R-24 | Mostrar tabla de valores cercanos al punto de analisis `a`. | Pendiente | `backend/limites/tablas.py` es placeholder | Implementar en rama asignada fuera de `santana`. |
-| R-25 | Graficar la funcion por tramos y evidenciar el comportamiento cerca del punto critico. | Pendiente | `backend/limites/graficas.py` y pagina de limites aun sin logica completa | Implementar en rama asignada fuera de `santana`. |
-| R-26 | Campos vacios en interfaz de limites para defensa oral. | Pendiente | `frontend/src/pages/LimitsPage` requiere revision especifica | Implementar en rama asignada fuera de `santana`. |
-| R-27 | No usar librerias matematicas o algebraicas prohibidas: `numpy`, `math`, `sympy`, `scipy`, `pandas`. | Cumple en revision inicial | `requirements.txt` solo incluye Flask; no hay imports detectados en backend revisado | Mantener auditoria antes de entrega. |
+| R-19 | Incorporar modulo de funciones por tramos generado desde el RUT. | Pendiente | `backend/limites` existe como estructura base | Implementar logica de generacion de funciones por tramos. |
+| R-20 | Construir funcion por tramos con punto principal `a = d3`. | Pendiente | `backend/limites/constructor.py` es placeholder | Definir contrato JSON del modulo de limites. |
+| R-21 | Seleccionar caso por `d8 % 3`: removible, salto o infinita. | Pendiente | No hay implementacion activa | Implementar regla de seleccion y exponerla en la respuesta. |
+| R-22 | Calcular limites laterales en puntos criticos. | Pendiente | `backend/limites/analisis.py` es placeholder | Implementar calculo de limites por izquierda y derecha. |
+| R-23 | Determinar continuidad y tipo de discontinuidad. | Pendiente | `backend/limites/continuidad.py` es placeholder | Implementar conclusion de continuidad y tipo de discontinuidad. |
+| R-24 | Mostrar tabla de valores cercanos al punto de analisis `a`. | Pendiente | `backend/limites/tablas.py` es placeholder | Generar tabla con valores por izquierda y derecha. |
+| R-25 | Graficar la funcion por tramos y evidenciar el comportamiento cerca del punto critico. | Pendiente | `backend/limites/graficas.py` y pagina de limites aun sin logica completa | Generar puntos para grafica y marcar el comportamiento en `x = a`. |
+| R-26 | Campos vacios en interfaz de limites para defensa oral. | Pendiente | `frontend/src/pages/LimitsPage` requiere revision especifica | Incorporar campos vacios para respuestas manuales durante la defensa. |
+| R-27 | No usar librerias matematicas o algebraicas prohibidas: `numpy`, `math`, `sympy`, `scipy`, `pandas`. | Cumple | `requirements.txt` solo incluye Flask; no hay imports detectados en backend revisado | Mantener auditoria antes de entrega. |
 | R-28 | Codigo modular, no un unico archivo desordenado. | Cumple | Carpetas `backend/api`, `backend/common`, `backend/conicas`, `backend/limites`, `frontend/src` | Mantener separacion de responsabilidades. |
 | R-29 | Manejo basico de errores de entrada, especialmente RUT mal ingresado o invalido. | Cumple | `backend/common/rut.py`, `backend/api/conicas_routes.py` | Mantener casos de prueba para entrada vacia, no JSON, empresa, largo incorrecto, caracteres invalidos y uso directo de `/api/procesar`. |
-| R-30 | Uso obligatorio de GitHub y evidencia de participacion por commits. | Pendiente de gestion | Repositorio Git remoto configurado | Requiere confirmacion antes de crear issues, ramas o PRs. |
+| R-30 | Uso obligatorio de GitHub y evidencia de participacion por commits. | Cumple parcial | Repositorio Git remoto configurado; issues de semana 2 creados; PR de trabajo abierto | Mantener commits verificables por integrante y revisar cambios antes de fusionar. |
 
 ## Resumen de brechas principales
 
@@ -53,5 +47,5 @@ Estado usado en esta revision:
 - La API de RUT valida correctamente los casos principales y ahora expone un
   contrato de error mas claro para entradas invalidas y uso incorrecto de
   endpoints.
-- La gestion de GitHub debe organizarse con issues, ramas y PRs, pero esa accion
-  queda pendiente hasta confirmacion del integrante responsable.
+- La gestion de GitHub ya cuenta con issues semanales y PR de trabajo; falta
+  completar la evidencia de commits por integrante antes de la entrega.
