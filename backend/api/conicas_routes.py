@@ -4,19 +4,73 @@ from common.rut import (
     validar_cuerpo_dv_para_procesar,
     validar_rut_paso_a_paso,
 )
-from flask import Blueprint, jsonify, request, session
 from conicas.services.procesador_conicas import procesar_conica
+from flask import Blueprint, current_app, jsonify, request, session
 
 conicas_bp = Blueprint("conicas", __name__)
+
+
+def _leer_json_request():
+    if not request.is_json:
+        raise RutValidationError("La solicitud debe enviarse en formato JSON.")
+
+    data = request.get_json(silent=True)
+    if data is None:
+        raise RutValidationError("El cuerpo JSON no pudo ser leido.")
+
+    if not isinstance(data, dict):
+        raise RutValidationError("El cuerpo JSON debe ser un objeto.")
+
+    return data
+
+
+def _codigo_error_rut(mensaje):
+    mensaje_normalizado = str(mensaje).lower()
+
+    if "json" in mensaje_normalizado:
+        return "request_json_invalido"
+    if "antes de validar" in mensaje_normalizado:
+        return "rut_vacio"
+    if "caracteres invalidos" in mensaje_normalizado:
+        return "rut_caracteres_invalidos"
+    if "7 u 8" in mensaje_normalizado:
+        return "rut_largo_incorrecto"
+    if "empresa" in mensaje_normalizado:
+        return "rut_empresa"
+    if "cero" in mensaje_normalizado:
+        return "rut_cuerpo_cero"
+    if "digito verificador" in mensaje_normalizado:
+        return "rut_dv_incorrecto"
+    if "validacion previa" in mensaje_normalizado:
+        return "rut_dv_incorrecto"
+    if "valida el rut antes" in mensaje_normalizado:
+        return "rut_no_validado"
+
+    return "rut_invalido"
+
+
+def _respuesta_error(mensaje, status=400, codigo=None):
+    codigo_error = codigo or _codigo_error_rut(mensaje)
+    return (
+        jsonify(
+            {
+                "valido": False,
+                "codigo": codigo_error,
+                "error": str(mensaje),
+                "mensaje": str(mensaje),
+                "pasos": [],
+            }
+        ),
+        status,
+    )
 
 
 @conicas_bp.route("/api/validar_rut", methods=["POST"])
 def validar_rut_api():
     """Endpoint para validar RUT usando algoritmo Modulo 11."""
-    data = request.json or {}
-    rut_input = data.get("rut", "")
-
     try:
+        data = _leer_json_request()
+        rut_input = data.get("rut", "")
         rut_limpio = limpiar_rut(rut_input)
         es_valido, pasos_rut, cuerpo, dv = validar_rut_paso_a_paso(rut_limpio)
 
@@ -28,6 +82,7 @@ def validar_rut_api():
         return jsonify(
             {
                 "valido": es_valido,
+                "codigo": "rut_valido" if es_valido else "rut_dv_incorrecto",
                 "mensaje": "RUT valido."
                 if es_valido
                 else "El digito verificador no coincide.",
@@ -39,17 +94,22 @@ def validar_rut_api():
         )
     except RutValidationError as e:
         session.pop("rut_validado", None)
-        return jsonify({"valido": False, "error": str(e), "pasos": []}), 400
-    except Exception as e:
-        return jsonify({"error": "No se pudo validar el RUT."}), 500
+        return _respuesta_error(str(e))
+    except Exception:
+        session.pop("rut_validado", None)
+        current_app.logger.exception("Error inesperado validando RUT")
+        return _respuesta_error(
+            "No se pudo validar el RUT.",
+            status=500,
+            codigo="rut_error_interno",
+        )
 
 
 @conicas_bp.route("/api/procesar", methods=["POST"])
 def procesar_api():
     """Endpoint que procesa el RUT completo y calcula la conica."""
-    data = request.json or {}
-
     try:
+        data = _leer_json_request()
         cuerpo, dv, _ = validar_cuerpo_dv_para_procesar(
             data.get("cuerpo"),
             data.get("digito_verificador") or data.get("dv"),
@@ -63,6 +123,11 @@ def procesar_api():
         )
         return jsonify(resultado)
     except RutValidationError as e:
-        return jsonify({"error": str(e)}), 400
-    except Exception as e:
-        return jsonify({"error": "No se pudo procesar la conica."}), 500
+        return _respuesta_error(str(e))
+    except Exception:
+        current_app.logger.exception("Error inesperado procesando conica")
+        return _respuesta_error(
+            "No se pudo procesar la conica.",
+            status=500,
+            codigo="conica_error_interno",
+        )
