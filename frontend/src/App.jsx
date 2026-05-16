@@ -42,7 +42,9 @@ function App() {
       setValidation(validarData);
 
       if (!validarData.valido) {
-        setStatus("El RUT no es válido. Revisa el dígito verificador.");
+        setStatus(
+          validarData.mensaje || "El RUT no es valido. Revisa el digito verificador."
+        );
         return;
       }
 

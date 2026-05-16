@@ -2,12 +2,14 @@ from algebra.canonica import transformar_a_canonica
 from algebra.procedimiento_inverso import generar_procedimiento_inverso
 from core.clasificacion import clasificar_conica
 from core.ecuacion import construir_ecuacion_general
+from core.rut import validar_cuerpo_dv_para_procesar
 from services.analisis_conicas import agregar_analisis_central, agregar_analisis_parabola
 from utils.formato import formatear_ecuacion_general, formatear_forma_canonica
 
 
 def procesar_conica(cuerpo, dv):
-    cuerpo_normalizado = _normalizar_cuerpo(cuerpo)
+    cuerpo_normalizado, dv_normalizado, _ = validar_cuerpo_dv_para_procesar(cuerpo, dv)
+    dv = dv_normalizado
     A, B, C, D, E, pasos_eq = construir_ecuacion_general(cuerpo_normalizado, dv)
     tipo_conica = clasificar_conica(A, B)
 
@@ -24,13 +26,6 @@ def procesar_conica(cuerpo, dv):
         A, B, C, D, E, resultado
     )
     return resultado
-
-
-def _normalizar_cuerpo(cuerpo):
-    if isinstance(cuerpo, list):
-        return "".join([str(x) for x in cuerpo])
-    return cuerpo
-
 
 def _resultado_base(A, B, C, D, E, tipo_conica, pasos_eq):
     return {

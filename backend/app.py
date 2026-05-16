@@ -1,3 +1,4 @@
+import os
 import sys
 
 from api import api_bp
@@ -7,6 +8,9 @@ from infra.frontend import iniciar_frontend
 
 def crear_app():
     app = Flask(__name__)
+    app.config["SECRET_KEY"] = os.environ.get(
+        "FLASK_SECRET_KEY", "eid-mat1186-dev-secret"
+    )
     app.register_blueprint(api_bp)
     return app
 
