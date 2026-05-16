@@ -1,4 +1,4 @@
-from algebra.completar_cuadrado import completar_cuadrado
+from conicas.algebra.completar_cuadrado import completar_cuadrado
 
 def analizar_parabola(A, B, C, D, E):
     """Calcula vértice, foco y directriz de una parábola."""

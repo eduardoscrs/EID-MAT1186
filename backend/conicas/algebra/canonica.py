@@ -1,4 +1,4 @@
-from algebra.completar_cuadrado import completar_cuadrado
+from conicas.algebra.completar_cuadrado import completar_cuadrado
 
 def transformar_a_canonica(A, B, C, D, E):
     """

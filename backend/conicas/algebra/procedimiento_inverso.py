@@ -1,4 +1,4 @@
-from utils.formato import formatear_ecuacion_general, formatear_numero
+from common.formato import formatear_ecuacion_general, formatear_numero
 
 
 def generar_procedimiento_inverso(A, B, C, D, E, resultado):

@@ -1,0 +1,1 @@
+"""Transformaciones algebraicas para conicas."""

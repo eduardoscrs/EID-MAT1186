@@ -1,7 +1,7 @@
 import os
 import sys
 
-from api import api_bp
+from api import conicas_bp, home_bp, limites_bp
 from flask import Flask
 from infra.frontend import iniciar_frontend
 
@@ -11,7 +11,9 @@ def crear_app():
     app.config["SECRET_KEY"] = os.environ.get(
         "FLASK_SECRET_KEY", "eid-mat1186-dev-secret"
     )
-    app.register_blueprint(api_bp)
+    app.register_blueprint(home_bp)
+    app.register_blueprint(conicas_bp)
+    app.register_blueprint(limites_bp)
     return app
 
 

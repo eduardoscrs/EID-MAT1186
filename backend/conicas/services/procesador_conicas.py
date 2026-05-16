@@ -1,10 +1,13 @@
-from algebra.canonica import transformar_a_canonica
-from algebra.procedimiento_inverso import generar_procedimiento_inverso
-from core.clasificacion import clasificar_conica
-from core.ecuacion import construir_ecuacion_general
-from core.rut import validar_cuerpo_dv_para_procesar
-from services.analisis_conicas import agregar_analisis_central, agregar_analisis_parabola
-from utils.formato import formatear_ecuacion_general, formatear_forma_canonica
+from common.formato import formatear_ecuacion_general, formatear_forma_canonica
+from common.rut import validar_cuerpo_dv_para_procesar
+from conicas.algebra.canonica import transformar_a_canonica
+from conicas.algebra.procedimiento_inverso import generar_procedimiento_inverso
+from conicas.core.clasificacion import clasificar_conica
+from conicas.core.ecuacion import construir_ecuacion_general
+from conicas.services.analisis_conicas import (
+    agregar_analisis_central,
+    agregar_analisis_parabola,
+)
 
 
 def procesar_conica(cuerpo, dv):

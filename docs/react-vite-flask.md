@@ -8,7 +8,9 @@ EID-MAT1186/
   backend/            # Backend Flask y logica Python
     app.py            # Punto de entrada de Flask
     api/              # Endpoints /api
-    services/         # Casos de uso del backend
+    common/           # Validacion de RUT y utilidades compartidas
+    conicas/          # Modulo de secciones conicas
+    limites/          # Modulo de funciones por tramos y limites
     infra/            # Arranque del frontend de desarrollo
     requirements.txt  # Dependencias Python
   frontend/           # Aplicacion React + Vite
