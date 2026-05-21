@@ -5,8 +5,12 @@ La estructura recomendada queda dentro del mismo repositorio:
 
 ```text
 EID-MAT1186/
-  app.py              # Backend Flask y endpoints /api
-  requirements.txt    # Dependencias Python
+  backend/            # Backend Flask y logica Python
+    app.py            # Punto de entrada de Flask
+    api/              # Endpoints /api
+    services/         # Casos de uso del backend
+    infra/            # Arranque del frontend de desarrollo
+    requirements.txt  # Dependencias Python
   frontend/           # Aplicacion React + Vite
     package.json      # Dependencias JavaScript
     src/
@@ -17,27 +21,27 @@ EID-MAT1186/
 La carpeta `frontend/` fue creada con:
 
 ```bash
-npm create vite@latest frontend -- --template react
+pnpm create vite frontend --template react
 cd frontend
-npm install
+pnpm install
 ```
 
 ## Ejecutar en desarrollo
 
-Abrir dos terminales.
-
-Terminal 1, backend Flask:
+Desde una sola terminal:
 
 ```bash
-cd EID-MAT1186
-.\.venv\Scripts\python.exe app.py
+cd EID-MAT1186\backend
+..\.venv\Scripts\python.exe app.py
 ```
 
-Terminal 2, frontend React:
+Ese comando inicia Flask en `http://127.0.0.1:5000` y React/Vite. Vite mostrara en consola la URL disponible, normalmente `http://127.0.0.1:5173`.
+
+Si solo necesita iniciar el frontend manualmente:
 
 ```bash
 cd EID-MAT1186\frontend
-npm run dev
+pnpm run dev
 ```
 
 Luego abrir:
@@ -77,9 +81,8 @@ Para verificar que React compila:
 
 ```bash
 cd EID-MAT1186\frontend
-npm run build
+pnpm run build
 ```
 
 Esto genera `frontend/dist/`. Esa carpeta no debe subirse a GitHub porque se
 puede regenerar.
-
