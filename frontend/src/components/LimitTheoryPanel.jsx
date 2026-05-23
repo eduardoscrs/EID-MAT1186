@@ -71,6 +71,64 @@ export function LimitTheoryPanel({ result }) {
 					</div>
 
 					<div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+						<p className="text-sm font-bold text-slate-600">Evidencia numérica</p>
+						<p className="mt-2 text-sm text-slate-600">Tabla de valores alrededor de a (izquierda → derecha)</p>
+						<div className="mt-3 overflow-auto">
+							<table className="w-full text-sm">
+								<thead>
+									<tr className="text-left text-xs text-slate-500">
+										<th className="pb-2">x</th>
+										<th className="pb-2">f(x)</th>
+									</tr>
+								</thead>
+								<tbody>
+									{result.evidence?.map((row, i) => (
+										<tr key={i} className="odd:bg-white even:bg-slate-50">
+											<td className="py-1 font-mono">{row.x}</td>
+											<td className="py-1 font-mono">{row.y === null ? "—" : row.y}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+						<p className="mt-2 text-sm text-slate-600">Aproximaciones numéricas: <span className="font-bold">izq = {result.numeric_limits?.izq ?? '—'}</span>, <span className="font-bold">der = {result.numeric_limits?.der ?? '—'}</span></p>
+					</div>
+
+					{/* <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+						<p className="text-sm font-bold text-slate-600">Campos para defensa (llenar manualmente)</p>
+						<div className="mt-3 grid gap-3">
+							<label className="text-sm">
+								Límite por la izquierda
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="lim_izq" />
+							</label>
+							<label className="text-sm">
+								Límite por la derecha
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="lim_der" />
+							</label>
+							<label className="text-sm">
+								¿Existe el límite?
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="existe_limite" />
+							</label>
+							<label className="text-sm">
+								Valor de la función en el punto (si existe)
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="valor_funcion" />
+							</label>
+							<label className="text-sm">
+								¿Continua en a?
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="continua_a" />
+							</label>
+							<label className="text-sm">
+								Tipo de discontinuidad
+								<input className="mt-1 w-full rounded-xl border px-3 py-2" name="tipo_disc" />
+							</label>
+							<label className="text-sm">
+								Justificación escrita
+								<textarea className="mt-1 w-full rounded-xl border px-3 py-2" rows={4} name="justificacion_estudiante" />
+							</label>
+						</div>
+					</div> */}
+
+					<div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
 						<p className="text-sm font-bold text-slate-600">Puntos críticos</p>
 						{tramos.length ? (
 							<div className="mt-3 space-y-3">

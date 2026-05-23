@@ -116,6 +116,92 @@ def generar_funcion_limite(rut_ingresado):
     limite_derecho = estructura["limite_derecho"]
     existe_limite = limite_izquierdo == limite_derecho
 
+    # Generar muestras para la gráfica y tabla de valores
+    samples_x = []
+    samples_y = []
+    step = 0.5
+    span = 5
+    start = a - span
+    end = a + span
+
+    def eval_at(x):
+        # devuelve número, float('inf') o None
+        try:
+            if estructura["tipo"] == "removible":
+                # simplificada: x + d1 (excepto en x == a donde está indefinida)
+                if abs(x - a) < 1e-9:
+                    return None
+                return x + d1
+            if estructura["tipo"] == "salto":
+                if x < a:
+                    return x + d2
+                return x + d4
+            # infinita
+            numerador = d5 + 1
+            denom = x - a
+            if abs(denom) < 1e-9:
+                return None
+            return numerador / denom
+        except Exception:
+            return None
+
+    x = start
+    while x <= end + 1e-9:
+        samples_x.append(round(x, 6))
+        y = eval_at(x)
+        # normalizar infinitos a +/-inf string handled later
+        if y is None:
+            samples_y.append(None)
+        elif y == float("inf") or y == float("-inf"):
+            samples_y.append(y)
+        else:
+            samples_y.append(round(float(y), 6))
+        x += step
+
+    # Tabla de evidencia: valores cercanos a a por la izquierda y derecha
+    offsets = [-1, -0.1, -0.01, -0.001, 0.001, 0.01, 0.1, 1]
+    evidence = []
+    for off in offsets:
+        val = eval_at(a + off)
+        if val is None:
+            evidence.append({"x": round(a + off, 6), "y": None})
+        elif val == float("inf"):
+            evidence.append({"x": round(a + off, 6), "y": "+inf"})
+        elif val == float("-inf"):
+            evidence.append({"x": round(a + off, 6), "y": "-inf"})
+        else:
+            evidence.append({"x": round(a + off, 6), "y": round(float(val), 6)})
+
+    # Aproximaciones numéricas de límites laterales (elegir el más cercano no nulo)
+    def _nearest_limit(side_offsets):
+        for off in side_offsets:
+            v = eval_at(a + off)
+            if v is None:
+                continue
+            if v == float("inf") or v == float("-inf"):
+                return v
+            return float(v)
+        return None
+
+    left_numeric = _nearest_limit([-0.001, -0.01, -0.1, -1])
+    right_numeric = _nearest_limit([0.001, 0.01, 0.1, 1])
+
+    # Justificación matemática breve basada en el caso
+    if estructura["discontinuidad"] == "removible":
+        justificacion = (
+            f"La expresión tiene un factor (x - {a}) en numerador y denominador; al cancelarlo la función simplificada vale {a + d1} en x=a, "
+            "pero la expresión original está indefinida en x=a. Por eso es discontinuidad removible."
+        )
+    elif estructura["discontinuidad"] == "salto":
+        justificacion = (
+            f"Los límites laterales son lim_izq = {a + d2} y lim_der = {a + d4}, distintos entre sí; por tanto hay un salto.")
+    else:
+        signo = "positivo" if (d5 + 1) > 0 else "negativo"
+        justificacion = (
+            f"El numerador es {d5 + 1} ({signo}). Al acercarse x->a el denominador tiende a 0, por lo que la función diverge a ±∞ según el lado; resulta en discontinuidad infinita y asíntota vertical."
+        )
+
+
     if existe_limite:
         pasos.append(
             f"Los límites laterales coinciden: lim x-> {a}- f(x) = lim x-> {a}+ f(x) = {_formatear_limite(limite_izquierdo)}"
@@ -131,6 +217,17 @@ def generar_funcion_limite(rut_ingresado):
         pasos.append("La discontinuidad es de salto porque los límites laterales no coinciden.")
     else:
         pasos.append("La discontinuidad es infinita porque la función diverge al acercarse a x = a.")
+
+    # incluir metadatos en samples para facilitar la gráfica
+    samples = {"xs": samples_x, "ys": samples_y, "a": a, "extension": estructura.get("extension_sugerida"), "analytic": {"izq": None, "der": None}}
+    # Analytic limits (si son números) - usar valores exactos de la estructura
+    try:
+        li = estructura.get("limite_izquierdo")
+        ld = estructura.get("limite_derecho")
+        samples["analytic"]["izq"] = None if li in (float("inf"), float("-inf")) else li
+        samples["analytic"]["der"] = None if ld in (float("inf"), float("-inf")) else ld
+    except Exception:
+        pass
 
     return {
         "rut_limpio": rut_limpio,
@@ -167,6 +264,10 @@ def generar_funcion_limite(rut_ingresado):
         },
         "puntos_criticos": estructura["puntos_criticos"],
         "pasos": pasos,
+        "samples": samples,
+        "evidence": evidence,
+        "numeric_limits": {"izq": left_numeric, "der": right_numeric},
+        "justificacion": justificacion,
     }
 
 

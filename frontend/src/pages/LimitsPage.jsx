@@ -1,5 +1,6 @@
 
 import { LimitTheoryPanel } from "../components/LimitTheoryPanel";
+import { LimitGraphPanel } from "../components/LimitGraphPanel";
 
 export function LimitsPage({ loading, result, rut, status, validation, onRutChange, onSubmit }) {
   return (
@@ -59,6 +60,7 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
       </section>
 
       <LimitTheoryPanel result={result} />
+      <LimitGraphPanel samples={result?.samples} />
     </main>
   );
 }
