@@ -93,7 +93,7 @@ export function LimitTheoryPanel({ result }) {
 						</div>
 						<p className="mt-2 text-sm text-slate-600">Aproximaciones numéricas: <span className="font-bold">izq = {result.numeric_limits?.izq ?? '—'}</span>, <span className="font-bold">der = {result.numeric_limits?.der ?? '—'}</span></p>
 					</div>
-
+									
 					{/* <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
 						<p className="text-sm font-bold text-slate-600">Campos para defensa (llenar manualmente)</p>
 						<div className="mt-3 grid gap-3">

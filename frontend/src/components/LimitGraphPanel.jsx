@@ -105,40 +105,15 @@ export function LimitGraphPanel({ samples }) {
       const originX = mapX(0);
       const originY = mapY(0);
 
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = 2;
-
-      ctx.beginPath();
-
-      // eje x
-      ctx.moveTo(pad, originY);
-      ctx.lineTo(w - pad, originY);
-
-      // eje y
-      ctx.moveTo(originX, pad);
-      ctx.lineTo(originX, h - pad);
-
-      ctx.stroke();
-
-      // etiquetas
-      ctx.fillStyle = "#000";
-      ctx.font = "13px Arial";
-
-      ctx.fillText("x", w - pad + 10, originY + 5);
-      ctx.fillText("y", originX + 10, pad - 10);
-
-      // ticks eje Y
+      // ticks / líneas de rejilla horizontales (dibujar antes para que los ejes queden encima)
       const ticks = 8;
 
       for (let i = 0; i <= ticks; i++) {
         const t = i / ticks;
-
         const yVal = minY + (maxY - minY) * t;
-
         const yPos = mapY(yVal);
 
         ctx.strokeStyle = "#cbd5e1";
-
         ctx.beginPath();
         ctx.moveTo(pad, yPos);
         ctx.lineTo(w - pad, yPos);
@@ -147,6 +122,27 @@ export function LimitGraphPanel({ samples }) {
         ctx.fillStyle = "#64748b";
         ctx.fillText(yVal.toFixed(1), pad - 40, yPos + 4);
       }
+
+      // ejes cartesianos en negro (encima de la rejilla)
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      // eje x
+      ctx.moveTo(pad, originY);
+      ctx.lineTo(w - pad, originY);
+      // eje y
+      ctx.moveTo(originX, pad);
+      ctx.lineTo(originX, h - pad);
+      ctx.stroke();
+
+      // etiquetas de ejes
+      ctx.fillStyle = "#000";
+      ctx.font = "13px Arial";
+      ctx.fillText("x", w - pad - 12, originY + 6);
+      ctx.fillText("y", originX + 8, pad - 12);
+
+      // marcar el origen 0,0
+      ctx.fillText("0,0", originX + 6, originY + 6);
     }
 
     function drawCriticalLine() {
@@ -176,6 +172,8 @@ export function LimitGraphPanel({ samples }) {
 
     function drawCurve(side = "left") {
       ctx.lineWidth = 3;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
 
       ctx.strokeStyle =
         side === "left"
@@ -216,6 +214,7 @@ export function LimitGraphPanel({ samples }) {
       }
 
       ctx.stroke();
+      
     }
 
     function drawLimitLines() {
@@ -252,62 +251,102 @@ export function LimitGraphPanel({ samples }) {
       ctx.setLineDash([]);
     }
 
-    function drawOpenCircle(x, y, color = "#0f172a") {
+    function drawOpenCircle(x, y, color = "#111827") {
       const cx = mapX(x);
       const cy = mapY(y);
 
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 3;
+      // sombra
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+
+      // relleno blanco
+      ctx.fillStyle = "#ffffff";
 
       ctx.beginPath();
-      ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // borde
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
       ctx.stroke();
+
+      ctx.shadowBlur = 0;
     }
 
-    function drawClosedCircle(x, y, color = "#0f172a") {
+    function drawClosedCircle(x, y, color = "#111827") {
       const cx = mapX(x);
       const cy = mapY(y);
+
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
 
       ctx.fillStyle = color;
 
       ctx.beginPath();
-      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 9, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.shadowBlur = 0;
     }
 
-    function drawArrows() {
+    function drawLimitDirections() {
       const ax = mapX(a);
 
-      ctx.strokeStyle = "#dc2626";
+      ctx.font = "bold 16px Arial";
 
       // izquierda
+      ctx.fillStyle = "#2563eb";
+
+      ctx.fillText(
+        "x → a⁻",
+        ax - 120,
+        h - 30
+      );
+
+      // flecha
       ctx.beginPath();
-      ctx.moveTo(ax - 80, h - 40);
+      ctx.moveTo(ax - 70, h - 40);
       ctx.lineTo(ax - 20, h - 40);
+      ctx.strokeStyle = "#2563eb";
+      ctx.lineWidth = 3;
       ctx.stroke();
 
       // punta
       ctx.beginPath();
       ctx.moveTo(ax - 20, h - 40);
-      ctx.lineTo(ax - 30, h - 45);
+      ctx.lineTo(ax - 32, h - 48);
 
       ctx.moveTo(ax - 20, h - 40);
-      ctx.lineTo(ax - 30, h - 35);
+      ctx.lineTo(ax - 32, h - 32);
 
       ctx.stroke();
 
       // derecha
+      ctx.fillStyle = "#16a34a";
+
+      ctx.fillText(
+        "x → a⁺",
+        ax + 40,
+        h - 30
+      );
+
       ctx.beginPath();
-      ctx.moveTo(ax + 80, h - 40);
-      ctx.lineTo(ax + 20, h - 40);
+      ctx.moveTo(ax + 20, h - 40);
+      ctx.lineTo(ax + 70, h - 40);
+
+      ctx.strokeStyle = "#16a34a";
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(ax + 20, h - 40);
-      ctx.lineTo(ax + 30, h - 45);
+      ctx.moveTo(ax + 70, h - 40);
+      ctx.lineTo(ax + 58, h - 48);
 
-      ctx.moveTo(ax + 20, h - 40);
-      ctx.lineTo(ax + 30, h - 35);
+      ctx.moveTo(ax + 70, h - 40);
+      ctx.lineTo(ax + 58, h - 32);
 
       ctx.stroke();
     }
@@ -375,7 +414,7 @@ export function LimitGraphPanel({ samples }) {
 
     drawCurve("right");
 
-    drawArrows();
+    drawLimitDirections();
 
     drawDiscontinuity();
 
