@@ -1,6 +1,7 @@
 import traceback
 
 from core.rut import limpiar_rut, validar_rut_paso_a_paso
+from core.limites import generar_funcion_limite
 from flask import Blueprint, jsonify, request
 from services.procesador_conicas import procesar_conica
 
@@ -50,6 +51,18 @@ def procesar_api():
             data.get("cuerpo"),
             data.get("digito_verificador") or data.get("dv"),
         )
+        return jsonify(resultado)
+    except Exception as e:
+        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
+
+
+@api_bp.route("/api/limites", methods=["POST"])
+def limites_api():
+    """Endpoint que construye la función por tramos y analiza sus límites."""
+    data = request.json or {}
+
+    try:
+        resultado = generar_funcion_limite(data.get("rut", ""))
         return jsonify(resultado)
     except Exception as e:
         return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
