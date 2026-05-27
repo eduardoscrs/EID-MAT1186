@@ -1,11 +1,17 @@
-import traceback
-
 from common.rut import limpiar_rut, validar_rut_paso_a_paso
 from conicas.services.procesador import procesar_conica
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 from limites.services.procesador import procesar_limites
 
 api_bp = Blueprint("api", __name__)
+
+
+def _json_body():
+    return request.get_json(silent=True) or {}
+
+
+def _error_response(error, status=400):
+    return jsonify({"error": str(error)}), status
 
 
 @api_bp.route("/", methods=["GET", "POST"])
@@ -29,7 +35,7 @@ def home():
 @api_bp.route("/api/validar_rut", methods=["POST"])
 def validar_rut_api():
     """Endpoint para validar RUT usando algoritmo Modulo 11."""
-    data = request.json or {}
+    data = _json_body()
     rut_input = data.get("rut", "")
 
     try:
@@ -45,14 +51,17 @@ def validar_rut_api():
                 "rut_limpio": rut_limpio,
             }
         )
-    except Exception as e:
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
+    except ValueError as error:
+        return _error_response(error)
+    except Exception as error:
+        current_app.logger.exception("Error inesperado validando RUT")
+        return _error_response(error, 500)
 
 
 @api_bp.route("/api/procesar", methods=["POST"])
 def procesar_api():
     """Endpoint que procesa el RUT completo y calcula la conica."""
-    data = request.json or {}
+    data = _json_body()
 
     try:
         resultado = procesar_conica(
@@ -60,17 +69,23 @@ def procesar_api():
             data.get("digito_verificador") or data.get("dv"),
         )
         return jsonify(resultado)
-    except Exception as e:
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
+    except ValueError as error:
+        return _error_response(error)
+    except Exception as error:
+        current_app.logger.exception("Error inesperado procesando conica")
+        return _error_response(error, 500)
 
 
 @api_bp.route("/api/limites", methods=["POST"])
 def limites_api():
-    """Endpoint que construye la función por tramos y analiza sus límites."""
-    data = request.json or {}
+    """Endpoint que construye la funcion por tramos y analiza sus limites."""
+    data = _json_body()
 
     try:
         resultado = procesar_limites(data.get("rut", ""))
         return jsonify(resultado)
-    except Exception as e:
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 400
+    except ValueError as error:
+        return _error_response(error)
+    except Exception as error:
+        current_app.logger.exception("Error inesperado procesando limites")
+        return _error_response(error, 500)
