@@ -1,4 +1,4 @@
-import { MathText } from "./MathText";
+import { MathText } from "../../../components/MathText";
 
 function badgeClass(kind) {
 	if (kind === "removible") return "bg-emerald-600";
@@ -70,6 +70,13 @@ export function LimitTheoryPanel({ result }) {
 						</p>
 					</div>
 
+					<div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+						<p className="text-sm font-bold text-slate-600">Justificación matemática</p>
+						<p className="mt-2 text-sm leading-6 text-slate-700">
+							<MathText value={result.justificacion} />
+						</p>
+					</div>
+
 					<div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
 						<p className="text-sm font-bold text-slate-600">Evidencia numérica</p>
 						<p className="mt-2 text-sm text-slate-600">Tabla de valores alrededor de a (izquierda → derecha)</p>
@@ -94,7 +101,7 @@ export function LimitTheoryPanel({ result }) {
 						<p className="mt-2 text-sm text-slate-600">Aproximaciones numéricas: <span className="font-bold">izq = {result.numeric_limits?.izq ?? '—'}</span>, <span className="font-bold">der = {result.numeric_limits?.der ?? '—'}</span></p>
 					</div>
 									
-					{/* <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+					<div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
 						<p className="text-sm font-bold text-slate-600">Campos para defensa (llenar manualmente)</p>
 						<div className="mt-3 grid gap-3">
 							<label className="text-sm">
@@ -126,7 +133,7 @@ export function LimitTheoryPanel({ result }) {
 								<textarea className="mt-1 w-full rounded-xl border px-3 py-2" rows={4} name="justificacion_estudiante" />
 							</label>
 						</div>
-					</div> */}
+					</div>
 
 					<div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
 						<p className="text-sm font-bold text-slate-600">Puntos críticos</p>

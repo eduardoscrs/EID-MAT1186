@@ -1,6 +1,6 @@
-import { defenseFields } from "../constants/ui";
+import { defenseFields } from "../../../constants/ui";
 import { formatLine, formatNumber, formatPoint, formatPointList } from "../utils/formatters";
-import { MathText } from "./MathText";
+import { MathText } from "../../../components/MathText";
 
 const accentByIndex = [
   "bg-rose-500",

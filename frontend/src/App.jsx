@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { processRut, validateRut } from "./api/conics";
-import { processLimits } from "./api/limits";
-import { drawGraph } from "./canvas/drawGraph";
 import { AppFooter } from "./components/AppFooter";
 import { AppHeader } from "./components/AppHeader";
 import { initialMessage } from "./constants/ui";
-import { ConicsPage } from "./pages/ConicsPage";
-import { LimitsPage } from "./pages/LimitsPage";
-import { normalizeConicName } from "./utils/conics";
+import { processRut, validateRut } from "./modules/conicas/api/conics";
+import { drawGraph } from "./modules/conicas/canvas/drawGraph";
+import { ConicsPage } from "./modules/conicas/pages/ConicsPage";
+import { normalizeConicName } from "./modules/conicas/utils/conics";
+import { processLimits } from "./modules/limites/api/limits";
+import { LimitsPage } from "./modules/limites/pages/LimitsPage";
 
 function App() {
   const canvasRef = useRef(null);

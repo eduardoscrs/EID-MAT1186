@@ -1,4 +1,4 @@
-from core.rut import limpiar_rut, validar_rut_paso_a_paso
+from common.rut import limpiar_rut, validar_rut_paso_a_paso
 
 
 def _formatear_limite(valor):
@@ -39,19 +39,24 @@ def _construir_piecewise(caso, a, d):
         }
 
     if caso == 2:
+        ajuste_derecho = d4
+        if d2 == d4:
+            ajuste_derecho = d4 + 1
+
         izquierdo = f"x + {d2}"
-        derecho = f"x + {d4}"
+        derecho = f"x + {ajuste_derecho}"
         return {
             "tipo": "salto",
             "funcion_original": f"{{ {izquierdo} , si x < {a}; {derecho} , si x >= {a} }}",
+            "ajuste_salto": ajuste_derecho != d4,
             "tramos": [
                 {"condicion": f"x < {a}", "expresion": izquierdo},
                 {"condicion": f"x >= {a}", "expresion": derecho},
             ],
             "extension_sugerida": None,
             "limite_izquierdo": a + d2,
-            "limite_derecho": a + d4,
-            "valor_funcion": a + d4,
+            "limite_derecho": a + ajuste_derecho,
+            "valor_funcion": a + ajuste_derecho,
             "discontinuidad": "salto",
             "puntos_criticos": [
                 {
@@ -135,7 +140,7 @@ def generar_funcion_limite(rut_ingresado):
             if estructura["tipo"] == "salto":
                 if x < a:
                     return x + d2
-                return x + d4
+                return x + (estructura["limite_derecho"] - a)
             # infinita
             numerador = d5 + 1
             denom = x - a
@@ -193,8 +198,17 @@ def generar_funcion_limite(rut_ingresado):
             "pero la expresión original está indefinida en x=a. Por eso es discontinuidad removible."
         )
     elif estructura["discontinuidad"] == "salto":
+        detalle_ajuste = ""
+        if estructura.get("ajuste_salto"):
+            ajuste_derecho = estructura["limite_derecho"] - a
+            detalle_ajuste = (
+                f" Como d2 y d4 son iguales, se usa d4 + 1 = {ajuste_derecho} "
+                "en el tramo derecho para asegurar un salto real."
+            )
         justificacion = (
-            f"Los límites laterales son lim_izq = {a + d2} y lim_der = {a + d4}, distintos entre sí; por tanto hay un salto.")
+            f"Los límites laterales son lim_izq = {limite_izquierdo} y lim_der = {limite_derecho}, "
+            f"distintos entre sí; por tanto hay un salto.{detalle_ajuste}"
+        )
     else:
         signo = "positivo" if (d5 + 1) > 0 else "negativo"
         justificacion = (

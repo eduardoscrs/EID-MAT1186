@@ -1,4 +1,4 @@
-import { classificationItems } from "../constants/ui";
+import { classificationItems } from "../../../constants/ui";
 
 export function ClassificationPanel({ activeType, result }) {
   return (

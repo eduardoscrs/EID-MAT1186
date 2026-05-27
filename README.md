@@ -11,17 +11,22 @@ La aplicacion separa el backend Flask del frontend React para que cada parte ten
 
 ```text
 .
-|-- backend/                # API Flask, consola y logica matematica
+|-- backend/                # API Flask y logica matematica
 |   |-- app.py              # Punto de entrada de Flask
 |   |-- requirements.txt    # Dependencias Python
 |   |-- api/                # Rutas HTTP y respuestas JSON
-|   |-- algebra/            # Transformaciones algebraicas
-|   |-- core/               # Validacion de RUT, ecuacion y clasificacion
-|   |-- geometria/          # Analisis geometrico y puntos para graficar en React
-|   |-- infra/              # Arranque y cierre del frontend de desarrollo
-|   |-- services/           # Orquestacion de casos de uso del backend
-|   `-- utils/              # Utilidades compartidas
+|   |-- common/             # Validacion de RUT y utilidades compartidas
+|   |-- conicas/            # Secciones conicas: algebra, clasificacion, geometria y servicios
+|   |-- limites/            # Funciones por tramos, limites, continuidad y discontinuidades
+|   `-- infra/              # Arranque y cierre del frontend de desarrollo
 |-- frontend/               # Interfaz React + Vite
+|   `-- src/
+|       |-- components/     # Componentes compartidos
+|       |-- modules/
+|       |   |-- conicas/    # UI, API, canvas y utilidades de conicas
+|       |   `-- limites/    # UI y API del modulo de limites
+|       |-- constants/      # Textos/listas compartidas
+|       `-- utils/          # Render y transformacion de texto matematico
 `-- docs/                   # Enunciado y documentacion de apoyo
 ```
 

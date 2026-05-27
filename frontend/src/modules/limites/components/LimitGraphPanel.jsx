@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { MathText } from "./MathText";
+import { MathText } from "../../../components/MathText";
 
 function formatarFuncionPorRamas(funcionStr) {
   if (!funcionStr) return null;
@@ -15,14 +15,7 @@ function formatarFuncionPorRamas(funcionStr) {
   return latex;
 }
 
-function formatY(y) {
-  if (y === null || y === undefined) return "—";
-  if (y === Infinity) return "+∞";
-  if (y === -Infinity) return "-∞";
-  return Number(y).toFixed(4);
-}
-
-export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites, extensionSugerida }) {
+export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -383,11 +376,6 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites, exte
     }
 
     function drawDiscontinuity() {
-      const sameLimit =
-        typeof analIzq === "number" &&
-        typeof analDer === "number" &&
-        Math.abs(analIzq - analDer) < 0.0001;
-
       // REMOVIBLE
       if (caso === "removible") {
         if (analIzq !== null && isFinite(analIzq)) {

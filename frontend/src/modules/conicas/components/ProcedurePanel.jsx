@@ -1,4 +1,4 @@
-import { MathText } from "./MathText";
+import { MathText } from "../../../components/MathText";
 
 const procedureBlocks = [
   { title: "Construcción de la ecuación general", key: "pasos_ecuacion" },

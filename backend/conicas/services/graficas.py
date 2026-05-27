@@ -1,4 +1,4 @@
-from geometria.puntos import (
+from conicas.geometria.puntos import (
     generar_puntos_circunferencia,
     generar_puntos_elipse,
     generar_puntos_hiperbola,

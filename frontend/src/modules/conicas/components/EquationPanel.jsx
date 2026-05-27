@@ -1,4 +1,4 @@
-import { MathText } from "./MathText";
+import { MathText } from "../../../components/MathText";
 
 export function EquationPanel({ result }) {
   return (

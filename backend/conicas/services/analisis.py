@@ -1,8 +1,8 @@
-from geometria.circunferencia import analizar_circunferencia
-from geometria.elipse import analizar_elipse
-from geometria.hiperbola import analizar_hiperbola
-from geometria.parabola import analizar_parabola
-from services.graficas import (
+from conicas.geometria.circunferencia import analizar_circunferencia
+from conicas.geometria.elipse import analizar_elipse
+from conicas.geometria.hiperbola import analizar_hiperbola
+from conicas.geometria.parabola import analizar_parabola
+from conicas.services.graficas import (
     puntos_circunferencia,
     puntos_elipse,
     puntos_hiperbola,
