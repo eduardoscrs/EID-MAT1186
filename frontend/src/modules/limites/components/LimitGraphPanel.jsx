@@ -1,18 +1,26 @@
 import { useEffect, useRef } from "react";
 import { MathText } from "../../../components/MathText";
 
-function formatarFuncionPorRamas(funcionStr) {
+const CANVAS_WIDTH = 1000;
+const CANVAS_HEIGHT = 600;
+const GRAPH_PADDING = 70;
+const VALUE_CLAMP = 50;
+const TICKS = 10;
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function formatPiecewiseFunction(funcionStr) {
   if (!funcionStr) return null;
-  
+
   const match = funcionStr.match(/f\(x\)\s*=\s*\{\s*(.+?)\s*,\s*si\s+(.+?);\s*(.+?)\s*,\s*si\s+(.+?)\s*\}/);
-  
+
   if (!match) return funcionStr;
-  
+
   const [, expr1, cond1, expr2, cond2] = match;
-  
-  const latex = `f(x) = \\begin{cases} ${expr1.trim()} & \\text{si } ${cond1.trim()} \\\\ ${expr2.trim()} & \\text{si } ${cond2.trim()} \\end{cases}`;
-  
-  return latex;
+
+  return `f(x) = \\begin{cases} ${expr1.trim()} & \\text{si } ${cond1.trim()} \\\\ ${expr2.trim()} & \\text{si } ${cond2.trim()} \\end{cases}`;
 }
 
 export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
@@ -24,13 +32,10 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
 
     const ctx = canvas.getContext("2d");
 
-    const w = (canvas.width = 1000);
-    const h = (canvas.height = 600);
+    const w = (canvas.width = CANVAS_WIDTH);
+    const h = (canvas.height = CANVAS_HEIGHT);
 
     ctx.clearRect(0, 0, w, h);
-
-    const pad = 70;
-    const CLAMP = 50;
 
     const xs = (samples.xs || []).map((v) =>
       v === null || v === undefined ? v : Number(v)
@@ -41,10 +46,10 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
 
       let n = Number(v);
 
-      if (!isFinite(n)) return n;
+      if (!Number.isFinite(n)) return n;
 
-      if (n > CLAMP) n = CLAMP;
-      if (n < -CLAMP) n = -CLAMP;
+      if (n > VALUE_CLAMP) n = VALUE_CLAMP;
+      if (n < -VALUE_CLAMP) n = -VALUE_CLAMP;
 
       return n;
     });
@@ -61,7 +66,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
     // =========================================
 
     const ysValid = ys.filter(
-      (v) => v !== null && v !== undefined && isFinite(v)
+      (v) => isFiniteNumber(v)
     );
 
     let minX = Math.min(...xs, a, 0);
@@ -70,12 +75,12 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
     let minY = ysValid.length ? Math.min(...ysValid) : -10;
     let maxY = ysValid.length ? Math.max(...ysValid) : 10;
 
-    if (typeof analIzq === "number" && isFinite(analIzq)) {
+    if (isFiniteNumber(analIzq)) {
       minY = Math.min(minY, analIzq);
       maxY = Math.max(maxY, analIzq);
     }
 
-    if (typeof analDer === "number" && isFinite(analDer)) {
+    if (isFiniteNumber(analDer)) {
       minY = Math.min(minY, analDer);
       maxY = Math.max(maxY, analDer);
     }
@@ -95,11 +100,11 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
     // =========================================
 
     const mapX = (x) =>
-      ((x - minX) / (maxX - minX || 1)) * (w - pad * 2) + pad;
+      ((x - minX) / (maxX - minX || 1)) * (w - GRAPH_PADDING * 2) + GRAPH_PADDING;
 
     const mapY = (y) =>
       h -
-      (((y - minY) / (maxY - minY || 1)) * (h - pad * 2) + pad);
+      (((y - minY) / (maxY - minY || 1)) * (h - GRAPH_PADDING * 2) + GRAPH_PADDING);
 
     // =========================================
     // FUNCIONES DE DIBUJO
@@ -111,41 +116,39 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
 
       // Fondo del canvas
       ctx.fillStyle = "#f8fafc";
-      ctx.fillRect(pad, pad, w - pad * 2, h - pad * 2);
+      ctx.fillRect(GRAPH_PADDING, GRAPH_PADDING, w - GRAPH_PADDING * 2, h - GRAPH_PADDING * 2);
 
       // ticks / líneas de rejilla horizontales
-      const ticks = 10;
-
-      for (let i = 0; i <= ticks; i++) {
-        const t = i / ticks;
+      for (let i = 0; i <= TICKS; i++) {
+        const t = i / TICKS;
         const yVal = minY + (maxY - minY) * t;
         const yPos = mapY(yVal);
 
         ctx.strokeStyle = "#e2e8f0";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(pad, yPos);
-        ctx.lineTo(w - pad, yPos);
+        ctx.moveTo(GRAPH_PADDING, yPos);
+        ctx.lineTo(w - GRAPH_PADDING, yPos);
         ctx.stroke();
 
         ctx.fillStyle = "#64748b";
         ctx.font = "11px Arial";
         ctx.textAlign = "right";
-        ctx.fillText(yVal.toFixed(2), pad - 15, yPos + 4);
+        ctx.fillText(yVal.toFixed(2), GRAPH_PADDING - 15, yPos + 4);
         ctx.textAlign = "left";
       }
 
       // Líneas de rejilla verticales
-      for (let i = 0; i <= ticks; i++) {
-        const t = i / ticks;
+      for (let i = 0; i <= TICKS; i++) {
+        const t = i / TICKS;
         const xVal = minX + (maxX - minX) * t;
         const xPos = mapX(xVal);
 
         ctx.strokeStyle = "#e2e8f0";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(xPos, pad);
-        ctx.lineTo(xPos, h - pad);
+        ctx.moveTo(xPos, GRAPH_PADDING);
+        ctx.lineTo(xPos, h - GRAPH_PADDING);
         ctx.stroke();
       }
 
@@ -153,40 +156,40 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       ctx.strokeStyle = "#1f2937";
       ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(pad, originY);
-      ctx.lineTo(w - pad, originY);
-      ctx.moveTo(originX, pad);
-      ctx.lineTo(originX, h - pad);
+      ctx.moveTo(GRAPH_PADDING, originY);
+      ctx.lineTo(w - GRAPH_PADDING, originY);
+      ctx.moveTo(originX, GRAPH_PADDING);
+      ctx.lineTo(originX, h - GRAPH_PADDING);
       ctx.stroke();
 
       // Puntas de flecha en los ejes
       ctx.fillStyle = "#1f2937";
       ctx.beginPath();
-      ctx.moveTo(w - pad, originY);
-      ctx.lineTo(w - pad - 8, originY - 6);
-      ctx.lineTo(w - pad - 8, originY + 6);
+      ctx.moveTo(w - GRAPH_PADDING, originY);
+      ctx.lineTo(w - GRAPH_PADDING - 8, originY - 6);
+      ctx.lineTo(w - GRAPH_PADDING - 8, originY + 6);
       ctx.closePath();
       ctx.fill();
 
       ctx.beginPath();
-      ctx.moveTo(originX, pad);
-      ctx.lineTo(originX - 6, pad + 8);
-      ctx.lineTo(originX + 6, pad + 8);
+      ctx.moveTo(originX, GRAPH_PADDING);
+      ctx.lineTo(originX - 6, GRAPH_PADDING + 8);
+      ctx.lineTo(originX + 6, GRAPH_PADDING + 8);
       ctx.closePath();
       ctx.fill();
 
       // etiquetas de ejes
       ctx.fillStyle = "#1f2937";
       ctx.font = "bold 14px Arial";
-      ctx.fillText("x", w - pad - 28, originY + 20);
-      ctx.fillText("y", originX + 12, pad - 15);
+      ctx.fillText("x", w - GRAPH_PADDING - 28, originY + 20);
+      ctx.fillText("y", originX + 12, GRAPH_PADDING - 15);
 
       ctx.font = "11px Arial";
       ctx.fillText("O", originX - 14, originY + 20);
     }
 
     function drawCriticalLineWithGlow() {
-      if (!isFinite(a)) return;
+      if (!Number.isFinite(a)) return;
 
       const ax = mapX(a);
 
@@ -201,8 +204,8 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       ctx.setLineDash([12, 6]);
 
       ctx.beginPath();
-      ctx.moveTo(ax, pad);
-      ctx.lineTo(ax, h - pad);
+      ctx.moveTo(ax, GRAPH_PADDING);
+      ctx.lineTo(ax, h - GRAPH_PADDING);
       ctx.stroke();
 
       ctx.shadowBlur = 0;
@@ -211,8 +214,8 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       // Etiqueta destacada
       ctx.fillStyle = "#dc2626";
       ctx.font = "bold 14px Arial";
-      ctx.fillText(`x = ${a}`, ax + 15, pad + 28);
-      ctx.fillText("Punto crítico", ax + 15, pad + 46);
+      ctx.fillText(`x = ${a}`, ax + 15, GRAPH_PADDING + 28);
+      ctx.fillText("Punto crítico", ax + 15, GRAPH_PADDING + 46);
     }
 
     function drawSmoothCurve(side = "left") {
@@ -235,7 +238,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
         const x = xs[i];
         const y = ys[i];
 
-        if (x === null || y === null || !isFinite(x) || !isFinite(y)) {
+        if (!Number.isFinite(x) || !Number.isFinite(y)) {
           continue;
         }
 
@@ -283,21 +286,21 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       ctx.setLineDash([6, 3]);
       ctx.lineWidth = 2.5;
 
-      if (typeof analIzq === "number" && isFinite(analIzq)) {
+      if (isFiniteNumber(analIzq)) {
         const y = mapY(analIzq);
 
         ctx.strokeStyle = "#2563eb";
         ctx.globalAlpha = 0.5;
 
         ctx.beginPath();
-        ctx.moveTo(pad, y);
-        ctx.lineTo(w - pad, y);
+        ctx.moveTo(GRAPH_PADDING, y);
+        ctx.lineTo(w - GRAPH_PADDING, y);
         ctx.stroke();
 
         ctx.globalAlpha = 1;
         ctx.fillStyle = "#1e40af";
         ctx.font = "bold 12px Arial";
-        ctx.fillText(`← lim x→a⁻ = ${analIzq.toFixed(4)}`, pad + 12, y - 10);
+        ctx.fillText(`← lim x→a⁻ = ${analIzq.toFixed(4)}`, GRAPH_PADDING + 12, y - 10);
 
         // Dibuja punto en el límite si no coincide con f(a)
         if (analDer !== analIzq) {
@@ -305,21 +308,21 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
         }
       }
 
-      if (typeof analDer === "number" && isFinite(analDer)) {
+      if (isFiniteNumber(analDer)) {
         const y = mapY(analDer);
 
         ctx.strokeStyle = "#16a34a";
         ctx.globalAlpha = 0.5;
 
         ctx.beginPath();
-        ctx.moveTo(pad, y);
-        ctx.lineTo(w - pad, y);
+        ctx.moveTo(GRAPH_PADDING, y);
+        ctx.lineTo(w - GRAPH_PADDING, y);
         ctx.stroke();
 
         ctx.globalAlpha = 1;
         ctx.fillStyle = "#15803d";
         ctx.font = "bold 12px Arial";
-        ctx.fillText(`← lim x→a⁺ = ${analDer.toFixed(4)}`, pad + 12, y + 14);
+        ctx.fillText(`← lim x→a⁺ = ${analDer.toFixed(4)}`, GRAPH_PADDING + 12, y + 14);
 
         // Dibuja punto en el límite si no coincide con f(a)
         if (analIzq !== analDer) {
@@ -378,7 +381,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
     function drawDiscontinuity() {
       // REMOVIBLE
       if (caso === "removible") {
-        if (analIzq !== null && isFinite(analIzq)) {
+        if (isFiniteNumber(analIzq)) {
           drawOpenCircle(a, analIzq, "#0f172a");
 
           ctx.fillStyle = "#0f172a";
@@ -393,17 +396,17 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
 
       // SALTO
       else if (caso === "salto") {
-        if (analIzq !== null && isFinite(analIzq)) {
+        if (isFiniteNumber(analIzq)) {
           drawOpenCircle(a, analIzq, "#2563eb");
         }
-        if (analDer !== null && isFinite(analDer)) {
+        if (isFiniteNumber(analDer)) {
           drawClosedCircle(a, analDer, "#16a34a");
         }
 
         ctx.fillStyle = "#000";
         ctx.font = "bold 12px Arial";
 
-        const midY = analIzq && analDer ? (analIzq + analDer) / 2 : analIzq || analDer;
+        const midY = isFiniteNumber(analIzq) && isFiniteNumber(analDer) ? (analIzq + analDer) / 2 : analIzq ?? analDer;
         ctx.fillText(
           "Discontinuidad de salto",
           mapX(a) + 20,
@@ -418,7 +421,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
         ctx.fillText(
           "Asíntota vertical",
           mapX(a) + 20,
-          pad + 70
+          GRAPH_PADDING + 70
         );
       }
     }
@@ -486,7 +489,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
           <p className="text-xs font-black uppercase tracking-wide text-blue-700">Función por ramas</p>
           <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-blue-200">
             <div className="overflow-x-auto flex justify-center">
-              <MathText value={formatarFuncionPorRamas(funcionPorTramos)} />
+              <MathText value={formatPiecewiseFunction(funcionPorTramos)} />
             </div>
           </div>
         </div>
@@ -495,8 +498,8 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       <div className="flex justify-center bg-slate-100 p-6">
         <canvas
           ref={canvasRef}
-          width={1000}
-          height={600}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
           className="w-full max-w-[1000px] rounded-2xl bg-white shadow-inner ring-1 ring-slate-200"
         />
       </div>

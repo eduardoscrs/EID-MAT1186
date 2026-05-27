@@ -5,10 +5,11 @@ export async function postJson(url, payload) {
     body: JSON.stringify(payload),
   });
 
-  const data = await response.json();
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json") ? await response.json() : null;
 
-  if (!response.ok || data.error) {
-    throw new Error(data.error || "No se pudo completar la solicitud.");
+  if (!response.ok || data?.error) {
+    throw new Error(data?.error || "No se pudo completar la solicitud.");
   }
 
   return data;

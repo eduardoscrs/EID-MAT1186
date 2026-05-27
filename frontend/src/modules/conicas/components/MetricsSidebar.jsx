@@ -104,12 +104,3 @@ export function SummaryPanel({ result }) {
     </section>
   );
 }
-
-export function MetricsSidebar({ result }) {
-  return (
-    <aside className="space-y-4">
-      <MetricsPanel result={result} />
-      <SummaryPanel result={result} />
-    </aside>
-  );
-}

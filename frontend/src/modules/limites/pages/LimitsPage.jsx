@@ -65,7 +65,6 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
         funcionPorTramos={result?.funcion_por_tramos}
         caso={result?.caso}
         limites={result?.limites}
-        extensionSugerida={result?.extension_sugerida}
       />
     </main>
   );
