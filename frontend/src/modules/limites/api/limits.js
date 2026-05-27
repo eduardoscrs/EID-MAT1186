@@ -1,19 +1,7 @@
-async function postJson(url, payload) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+import { postJson } from "../../shared/api";
 
-  const data = await response.json();
-
-  if (!response.ok || data.error) {
-    throw new Error(data.error || "No se pudo completar la solicitud.");
-  }
-
-  return data;
-}
+const PROCESAR_LIMITES_URL = "/api/limites";
 
 export function processLimits(rut) {
-  return postJson("/api/limites", { rut });
+  return postJson(PROCESAR_LIMITES_URL, { rut });
 }

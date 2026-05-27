@@ -1,8 +1,14 @@
+import logging
 import sys
 
 from api import api_bp
 from flask import Flask
 from infra.frontend import iniciar_frontend
+
+
+class _SilenciarPostRaiz(logging.Filter):
+    def filter(self, record):
+        return '"POST / HTTP/1.1"' not in record.getMessage()
 
 
 def crear_app():
@@ -11,6 +17,7 @@ def crear_app():
     return app
 
 
+logging.getLogger("werkzeug").addFilter(_SilenciarPostRaiz())
 app = crear_app()
 
 

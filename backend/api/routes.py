@@ -8,8 +8,16 @@ from limites.procesador import procesar_limites
 api_bp = Blueprint("api", __name__)
 
 
-@api_bp.route("/")
+@api_bp.route("/", methods=["GET", "POST"])
 def home():
+    if request.method == "POST":
+        return jsonify(
+            {
+                "status": "ignored",
+                "message": "La API usa rutas /api/*. Revise que el frontend no envie POST a la raiz.",
+            }
+        ), 200
+
     return jsonify(
         {
             "status": "ok",
