@@ -1,26 +1,15 @@
-export const initialMessage = "Ingresa un RUT chileno válido para construir y graficar la cónica.";
+export const initialMessage = "Ingresa un RUT chileno valido para construir y graficar la conica.";
 
 export const conicTabs = [
-  { id: "ecuacion", label: "Ecuación" },
-  { id: "desarrollo", label: "Desarrollo Matemático" },
-  { id: "grafica", label: "Gráfica" },
+  { id: "ecuacion", label: "Ecuacion" },
+  { id: "desarrollo", label: "Desarrollo Matematico" },
+  { id: "grafica", label: "Grafica" },
   { id: "funciones", label: "Funciones" },
 ];
 
 export const classificationItems = [
-  { icon: "○", name: "Circunferencia", keys: ["Circunferencia"] },
-  { icon: "⬭", name: "Elipse", keys: ["Elipse"] },
-  { icon: "⌓", name: "Parábola", keys: ["Parabola"] },
-  { icon: "⋈", name: "Hipérbola", keys: ["Hiperbola"] },
-];
-
-export const defenseFields = [
-  "Centro o vértice",
-  "Foco 1",
-  "Foco 2",
-  "Vértice 1",
-  "Vértice 2",
-  "Eje mayor / transverso",
-  "Eje menor / conjugado",
-  "Directriz",
+  { icon: "o", name: "Circunferencia", keys: ["Circunferencia"] },
+  { icon: "E", name: "Elipse", keys: ["Elipse"] },
+  { icon: "P", name: "Parabola", keys: ["Parabola"] },
+  { icon: "H", name: "Hiperbola", keys: ["Hiperbola"] },
 ];

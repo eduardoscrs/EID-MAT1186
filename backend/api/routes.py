@@ -3,7 +3,7 @@ import traceback
 from common.rut import limpiar_rut, validar_rut_paso_a_paso
 from conicas.services.procesador import procesar_conica
 from flask import Blueprint, jsonify, request
-from limites.procesador import procesar_limites
+from limites.services.procesador import procesar_limites
 
 api_bp = Blueprint("api", __name__)
 

@@ -1,4 +1,4 @@
-from limites.core import generar_funcion_limite
+from limites.core.generador import generar_funcion_limite
 
 
 def procesar_limites(rut):
