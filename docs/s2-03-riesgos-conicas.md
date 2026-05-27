@@ -31,7 +31,7 @@
 | --- | --- | --- |
 | Circunferencia | `11070434-8` | Verificar `A = B`, centro, radio y grafica cerrada. |
 | Elipse | `17439150-5` | Verificar semiejes, focos, vertices y forma canonica. |
-| Parabola | `63170669-K` | Verificar vertice, foco, directriz, lado recto y orientacion. |
+| Parabola | `17010350-5` | Verificar vertice, foco, directriz, lado recto y orientacion. |
 | Hiperbola | `29141777-9` | Verificar vertices, focos, asintotas y ramas. |
 
 ## Checklist breve para auditoria manual

@@ -29,12 +29,10 @@ mostrar variedad de conicas durante la defensa:
 | --- | --- |
 | Circunferencia | `11070434-8` |
 | Elipse | `17439150-5` |
-| Parabola | `63170669-K` |
+| Parabola | `17010350-5` |
 | Hiperbola | `29141777-9` |
 
-## Pendiente fuera de este alcance
+## Relacion con modulo de limites
 
-- Modulo de funciones por tramos.
-- Analisis de limites laterales, continuidad y discontinuidades.
-- Grafica y campos de defensa del modulo de limites.
-
+- El backend de funciones por tramos y limites se documenta en `docs/s3-03-verificacion-api-limites.md`.
+- La integracion visual del modulo de limites debe revisarse como parte de la semana 4.

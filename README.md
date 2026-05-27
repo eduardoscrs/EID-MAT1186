@@ -18,7 +18,7 @@ La aplicacion separa el backend Flask del frontend React para que cada parte ten
 |   |-- common/             # Validacion de RUT y utilidades compartidas
 |   |-- conicas/            # Algebra, geometria y servicios de conicas
 |   |-- infra/              # Arranque y cierre del frontend de desarrollo
-|   `-- limites/            # Base para funciones por tramos y limites
+|   `-- limites/            # Funciones por tramos, limites, continuidad y grafica
 |-- frontend/               # Interfaz React + Vite
 `-- docs/                   # Enunciado y documentacion de apoyo
 ```
@@ -55,7 +55,7 @@ Luego abra la URL que muestre Vite en el navegador. El frontend se comunica con 
 ### Objetivo Principal
 
 Desarrollar una aplicacion en **Python** que:
-1. **Valide RUTs chilenos** usando el algoritmo oficial del modulo 11
+1. **Valide RUTs chilenos de persona natural** usando el algoritmo oficial del modulo 11
 2. **Construya automaticamente** una ecuacion general de segundo grado (Ax^2 + By^2 + Cx + Dy + E = 0) a partir de los digitos del RUT
 3. **Clasifique la conica** (circunferencia, elipse, hiperbola o parabola)
 4. **Transforme a forma canonica** mostrando paso a paso el procedimiento algebraico
@@ -73,7 +73,7 @@ Desarrollar una aplicacion en **Python** que:
 
 #### Fase 2: Desarrollo del Programa
 Requerimientos principales:
-- Ingreso y validacion de RUT chileno valido
+- Ingreso y validacion de RUT chileno valido de persona natural
 - Mostrar procedimiento paso a paso de validacion
 - Extraccion correcta de digitos del RUT
 - Construccion de ecuacion general con procedimiento visible
@@ -83,7 +83,7 @@ Requerimientos principales:
 - Graficacion correcta de la conica
 - Interfaz intuitiva y visualmente cuidada
 
-**Restriccion importante:** Prohibido el uso de librerias matematicas (numpy, math, sympy). Todos los calculos deben ser implementados manualmente.
+**Restriccion importante:** Prohibido el uso de librerias matematicas o de algebra computacional como `numpy`, `math`, `sympy`, `scipy` o `pandas`. Todos los calculos deben ser implementados manualmente.
 
 #### Fase 3: Desarrollo Profesional
 - Codigo modular y organizado (no un unico archivo)
@@ -110,4 +110,4 @@ Requerimientos principales:
 - React + Vite para la interfaz web
 - Git/GitHub para control de versiones
 
-El codigo del proyecto no importa `numpy`, `math` ni `sympy`; los calculos matematicos se implementan manualmente.
+El codigo del proyecto no importa `numpy`, `math`, `sympy`, `scipy` ni `pandas`; los calculos matematicos se implementan manualmente.
