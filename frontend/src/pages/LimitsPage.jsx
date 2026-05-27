@@ -60,7 +60,13 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
       </section>
 
       <LimitTheoryPanel result={result} />
-      <LimitGraphPanel samples={result?.samples} />
+      <LimitGraphPanel 
+        samples={result?.samples} 
+        funcionPorTramos={result?.funcion_por_tramos}
+        caso={result?.caso}
+        limites={result?.limites}
+        extensionSugerida={result?.extension_sugerida}
+      />
     </main>
   );
 }

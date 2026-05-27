@@ -1,4 +1,19 @@
 import { useEffect, useRef } from "react";
+import { MathText } from "./MathText";
+
+function formatarFuncionPorRamas(funcionStr) {
+  if (!funcionStr) return null;
+  
+  const match = funcionStr.match(/f\(x\)\s*=\s*\{\s*(.+?)\s*,\s*si\s+(.+?);\s*(.+?)\s*,\s*si\s+(.+?)\s*\}/);
+  
+  if (!match) return funcionStr;
+  
+  const [, expr1, cond1, expr2, cond2] = match;
+  
+  const latex = `f(x) = \\begin{cases} ${expr1.trim()} & \\text{si } ${cond1.trim()} \\\\ ${expr2.trim()} & \\text{si } ${cond2.trim()} \\end{cases}`;
+  
+  return latex;
+}
 
 function formatY(y) {
   if (y === null || y === undefined) return "—";
@@ -7,7 +22,7 @@ function formatY(y) {
   return Number(y).toFixed(4);
 }
 
-export function LimitGraphPanel({ samples }) {
+export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites, extensionSugerida }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -16,12 +31,12 @@ export function LimitGraphPanel({ samples }) {
 
     const ctx = canvas.getContext("2d");
 
-    const w = (canvas.width = 900);
-    const h = (canvas.height = 500);
+    const w = (canvas.width = 1000);
+    const h = (canvas.height = 600);
 
     ctx.clearRect(0, 0, w, h);
 
-    const pad = 60;
+    const pad = 70;
     const CLAMP = 50;
 
     const xs = (samples.xs || []).map((v) =>
@@ -48,10 +63,8 @@ export function LimitGraphPanel({ samples }) {
     const analIzq = samples?.analytic?.izq;
     const analDer = samples?.analytic?.der;
 
-    const extension = samples?.extension;
-
     // =========================================
-    // CALCULAR RANGOS
+    // CALCULAR RANGOS - MEJORADO ZOOM
     // =========================================
 
     const ysValid = ys.filter(
@@ -64,27 +77,25 @@ export function LimitGraphPanel({ samples }) {
     let minY = ysValid.length ? Math.min(...ysValid) : -10;
     let maxY = ysValid.length ? Math.max(...ysValid) : 10;
 
-    if (typeof analIzq === "number") {
+    if (typeof analIzq === "number" && isFinite(analIzq)) {
       minY = Math.min(minY, analIzq);
       maxY = Math.max(maxY, analIzq);
     }
 
-    if (typeof analDer === "number") {
+    if (typeof analDer === "number" && isFinite(analDer)) {
       minY = Math.min(minY, analDer);
       maxY = Math.max(maxY, analDer);
     }
 
-    if (typeof extension === "number") {
-      minY = Math.min(minY, extension);
-      maxY = Math.max(maxY, extension);
-    }
-
-    minY = Math.min(minY, 0);
-    maxY = Math.max(maxY, 0);
-
-    // margen extra visual
-    minY -= 2;
-    maxY += 2;
+    // Zoom mejorado: centrarse más alrededor del punto crítico
+    const rangoX = maxX - minX;
+    const rangoY = maxY - minY;
+    
+    minX = a - rangoX * 0.6;
+    maxX = a + rangoX * 0.6;
+    
+    minY -= rangoY * 0.2;
+    maxY += rangoY * 0.2;
 
     // =========================================
     // MAPEO
@@ -105,173 +116,245 @@ export function LimitGraphPanel({ samples }) {
       const originX = mapX(0);
       const originY = mapY(0);
 
-      // ticks / líneas de rejilla horizontales (dibujar antes para que los ejes queden encima)
-      const ticks = 8;
+      // Fondo del canvas
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(pad, pad, w - pad * 2, h - pad * 2);
+
+      // ticks / líneas de rejilla horizontales
+      const ticks = 10;
 
       for (let i = 0; i <= ticks; i++) {
         const t = i / ticks;
         const yVal = minY + (maxY - minY) * t;
         const yPos = mapY(yVal);
 
-        ctx.strokeStyle = "#cbd5e1";
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(pad, yPos);
         ctx.lineTo(w - pad, yPos);
         ctx.stroke();
 
         ctx.fillStyle = "#64748b";
-        ctx.fillText(yVal.toFixed(1), pad - 40, yPos + 4);
+        ctx.font = "11px Arial";
+        ctx.textAlign = "right";
+        ctx.fillText(yVal.toFixed(2), pad - 15, yPos + 4);
+        ctx.textAlign = "left";
       }
 
-      // ejes cartesianos en negro (encima de la rejilla)
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = 2;
+      // Líneas de rejilla verticales
+      for (let i = 0; i <= ticks; i++) {
+        const t = i / ticks;
+        const xVal = minX + (maxX - minX) * t;
+        const xPos = mapX(xVal);
+
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(xPos, pad);
+        ctx.lineTo(xPos, h - pad);
+        ctx.stroke();
+      }
+
+      // ejes cartesianos
+      ctx.strokeStyle = "#1f2937";
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      // eje x
       ctx.moveTo(pad, originY);
       ctx.lineTo(w - pad, originY);
-      // eje y
       ctx.moveTo(originX, pad);
       ctx.lineTo(originX, h - pad);
       ctx.stroke();
 
-      // etiquetas de ejes
-      ctx.fillStyle = "#000";
-      ctx.font = "13px Arial";
-      ctx.fillText("x", w - pad - 12, originY + 6);
-      ctx.fillText("y", originX + 8, pad - 12);
+      // Puntas de flecha en los ejes
+      ctx.fillStyle = "#1f2937";
+      ctx.beginPath();
+      ctx.moveTo(w - pad, originY);
+      ctx.lineTo(w - pad - 8, originY - 6);
+      ctx.lineTo(w - pad - 8, originY + 6);
+      ctx.closePath();
+      ctx.fill();
 
-      // marcar el origen 0,0
-      ctx.fillText("0,0", originX + 6, originY + 6);
+      ctx.beginPath();
+      ctx.moveTo(originX, pad);
+      ctx.lineTo(originX - 6, pad + 8);
+      ctx.lineTo(originX + 6, pad + 8);
+      ctx.closePath();
+      ctx.fill();
+
+      // etiquetas de ejes
+      ctx.fillStyle = "#1f2937";
+      ctx.font = "bold 14px Arial";
+      ctx.fillText("x", w - pad - 28, originY + 20);
+      ctx.fillText("y", originX + 12, pad - 15);
+
+      ctx.font = "11px Arial";
+      ctx.fillText("O", originX - 14, originY + 20);
     }
 
-    function drawCriticalLine() {
+    function drawCriticalLineWithGlow() {
       if (!isFinite(a)) return;
 
       const ax = mapX(a);
 
-      ctx.strokeStyle = "#ef4444";
-      ctx.lineWidth = 2;
+      // Efecto glow
+      ctx.shadowColor = "rgba(239, 68, 68, 0.6)";
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
 
-      ctx.setLineDash([8, 6]);
+      ctx.strokeStyle = "#dc2626";
+      ctx.lineWidth = 4;
+      ctx.setLineDash([12, 6]);
 
       ctx.beginPath();
       ctx.moveTo(ax, pad);
       ctx.lineTo(ax, h - pad);
       ctx.stroke();
 
+      ctx.shadowBlur = 0;
       ctx.setLineDash([]);
 
-      ctx.fillStyle = "#ef4444";
+      // Etiqueta destacada
+      ctx.fillStyle = "#dc2626";
       ctx.font = "bold 14px Arial";
-
-      ctx.fillText(`x = ${a}`, ax + 10, pad + 20);
-
-      ctx.fillText("Punto crítico", ax + 10, pad + 40);
+      ctx.fillText(`x = ${a}`, ax + 15, pad + 28);
+      ctx.fillText("Punto crítico", ax + 15, pad + 46);
     }
 
-    function drawCurve(side = "left") {
-      ctx.lineWidth = 3;
+    function drawSmoothCurve(side = "left") {
+      if (side === "left") {
+        ctx.strokeStyle = "#2563eb";
+      } else {
+        ctx.strokeStyle = "#16a34a";
+      }
+
+      ctx.lineWidth = 4;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
 
-      ctx.strokeStyle =
-        side === "left"
-          ? "#2563eb" // azul
-          : "#16a34a"; // verde
+      ctx.shadowColor = ctx.strokeStyle;
+      ctx.shadowBlur = 8;
 
-      ctx.beginPath();
-
-      let started = false;
-
+      // Recolectar puntos del lado
+      const points = [];
       for (let i = 0; i < xs.length; i++) {
         const x = xs[i];
         const y = ys[i];
 
-        if (
-          x === null ||
-          y === null ||
-          !isFinite(x) ||
-          !isFinite(y)
-        ) {
-          started = false;
+        if (x === null || y === null || !isFinite(x) || !isFinite(y)) {
           continue;
         }
 
-        // separar tramos
         if (side === "left" && x >= a) continue;
         if (side === "right" && x < a) continue;
 
-        const cx = mapX(x);
-        const cy = mapY(y);
+        points.push({ x, y, px: mapX(x), py: mapY(y) });
+      }
 
-        if (!started) {
-          ctx.moveTo(cx, cy);
-          started = true;
-        } else {
-          ctx.lineTo(cx, cy);
+      if (points.length < 2) {
+        ctx.shadowBlur = 0;
+        return;
+      }
+
+      // Dibujar con curvas suaves
+      ctx.beginPath();
+      ctx.moveTo(points[0].px, points[0].py);
+
+      for (let i = 1; i < points.length; i++) {
+        const curr = points[i];
+        const prev = points[i - 1];
+
+        if (caso === "infinita") {
+          // En discontinuidades infinitas, separar cerca del punto crítico
+          const distToCritical = Math.abs(curr.x - a);
+          if (distToCritical < 0.5) {
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(curr.px, curr.py);
+            continue;
+          }
         }
+
+        // Usar quadraticCurveTo para curvas suaves
+        const ctrlX = (prev.px + curr.px) / 2;
+        const ctrlY = (prev.py + curr.py) / 2;
+        ctx.quadraticCurveTo(ctrlX, ctrlY, curr.px, curr.py);
       }
 
       ctx.stroke();
-      
+      ctx.shadowBlur = 0;
     }
 
     function drawLimitLines() {
-      ctx.setLineDash([4, 4]);
+      ctx.setLineDash([6, 3]);
+      ctx.lineWidth = 2.5;
 
-      if (typeof analIzq === "number") {
+      if (typeof analIzq === "number" && isFinite(analIzq)) {
         const y = mapY(analIzq);
 
-        ctx.strokeStyle = "#f59e0b";
+        ctx.strokeStyle = "#2563eb";
+        ctx.globalAlpha = 0.5;
 
         ctx.beginPath();
         ctx.moveTo(pad, y);
         ctx.lineTo(w - pad, y);
         ctx.stroke();
 
-        ctx.fillStyle = "#f59e0b";
-        ctx.fillText(`lim⁻ = ${analIzq}`, w - pad - 120, y - 10);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#1e40af";
+        ctx.font = "bold 12px Arial";
+        ctx.fillText(`← lim x→a⁻ = ${analIzq.toFixed(4)}`, pad + 12, y - 10);
+
+        // Dibuja punto en el límite si no coincide con f(a)
+        if (analDer !== analIzq) {
+          drawOpenCircle(a, analIzq, "#2563eb");
+        }
       }
 
-      if (typeof analDer === "number") {
+      if (typeof analDer === "number" && isFinite(analDer)) {
         const y = mapY(analDer);
 
-        ctx.strokeStyle = "#7c3aed";
+        ctx.strokeStyle = "#16a34a";
+        ctx.globalAlpha = 0.5;
 
         ctx.beginPath();
         ctx.moveTo(pad, y);
         ctx.lineTo(w - pad, y);
         ctx.stroke();
 
-        ctx.fillStyle = "#7c3aed";
-        ctx.fillText(`lim⁺ = ${analDer}`, w - pad - 120, y - 10);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#15803d";
+        ctx.font = "bold 12px Arial";
+        ctx.fillText(`← lim x→a⁺ = ${analDer.toFixed(4)}`, pad + 12, y + 14);
+
+        // Dibuja punto en el límite si no coincide con f(a)
+        if (analIzq !== analDer) {
+          drawOpenCircle(a, analDer, "#16a34a");
+        }
       }
 
       ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
     }
 
     function drawOpenCircle(x, y, color = "#111827") {
       const cx = mapX(x);
       const cy = mapY(y);
+      const radius = 9;
 
-      // sombra
       ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 12;
 
-      // relleno blanco
       ctx.fillStyle = "#ffffff";
-
       ctx.beginPath();
-      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // borde
       ctx.strokeStyle = color;
-      ctx.lineWidth = 4;
-
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.shadowBlur = 0;
@@ -280,75 +363,23 @@ export function LimitGraphPanel({ samples }) {
     function drawClosedCircle(x, y, color = "#111827") {
       const cx = mapX(x);
       const cy = mapY(y);
+      const radius = 8;
 
       ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 12;
 
       ctx.fillStyle = color;
-
       ctx.beginPath();
-      ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.fill();
 
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
       ctx.shadowBlur = 0;
-    }
-
-    function drawLimitDirections() {
-      const ax = mapX(a);
-
-      ctx.font = "bold 16px Arial";
-
-      // izquierda
-      ctx.fillStyle = "#2563eb";
-
-      ctx.fillText(
-        "x → a⁻",
-        ax - 120,
-        h - 30
-      );
-
-      // flecha
-      ctx.beginPath();
-      ctx.moveTo(ax - 70, h - 40);
-      ctx.lineTo(ax - 20, h - 40);
-      ctx.strokeStyle = "#2563eb";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // punta
-      ctx.beginPath();
-      ctx.moveTo(ax - 20, h - 40);
-      ctx.lineTo(ax - 32, h - 48);
-
-      ctx.moveTo(ax - 20, h - 40);
-      ctx.lineTo(ax - 32, h - 32);
-
-      ctx.stroke();
-
-      // derecha
-      ctx.fillStyle = "#16a34a";
-
-      ctx.fillText(
-        "x → a⁺",
-        ax + 40,
-        h - 30
-      );
-
-      ctx.beginPath();
-      ctx.moveTo(ax + 20, h - 40);
-      ctx.lineTo(ax + 70, h - 40);
-
-      ctx.strokeStyle = "#16a34a";
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(ax + 70, h - 40);
-      ctx.lineTo(ax + 58, h - 48);
-
-      ctx.moveTo(ax + 70, h - 40);
-      ctx.lineTo(ax + 58, h - 32);
-
-      ctx.stroke();
     }
 
     function drawDiscontinuity() {
@@ -358,83 +389,79 @@ export function LimitGraphPanel({ samples }) {
         Math.abs(analIzq - analDer) < 0.0001;
 
       // REMOVIBLE
-      if (sameLimit && extension === null) {
-        drawOpenCircle(a, analIzq, "#0f172a");
+      if (caso === "removible") {
+        if (analIzq !== null && isFinite(analIzq)) {
+          drawOpenCircle(a, analIzq, "#0f172a");
 
-        ctx.fillStyle = "#0f172a";
-        ctx.fillText(
-          "Discontinuidad removible",
-          mapX(a) + 15,
-          mapY(analIzq) - 15
-        );
+          ctx.fillStyle = "#0f172a";
+          ctx.font = "bold 12px Arial";
+          ctx.fillText(
+            "○ Discontinuidad removible",
+            mapX(a) + 20,
+            mapY(analIzq) - 20
+          );
+        }
       }
 
       // SALTO
-      else if (
-        typeof analIzq === "number" &&
-        typeof analDer === "number" &&
-        analIzq !== analDer
-      ) {
-        drawOpenCircle(a, analIzq, "#2563eb");
-
-        drawClosedCircle(a, analDer, "#16a34a");
+      else if (caso === "salto") {
+        if (analIzq !== null && isFinite(analIzq)) {
+          drawOpenCircle(a, analIzq, "#2563eb");
+        }
+        if (analDer !== null && isFinite(analDer)) {
+          drawClosedCircle(a, analDer, "#16a34a");
+        }
 
         ctx.fillStyle = "#000";
+        ctx.font = "bold 12px Arial";
 
+        const midY = analIzq && analDer ? (analIzq + analDer) / 2 : analIzq || analDer;
         ctx.fillText(
           "Discontinuidad de salto",
-          mapX(a) + 15,
-          mapY((analIzq + analDer) / 2)
+          mapX(a) + 20,
+          mapY(midY)
         );
       }
 
       // INFINITA
-      else {
+      else if (caso === "infinita") {
         ctx.fillStyle = "#dc2626";
-
+        ctx.font = "bold 12px Arial";
         ctx.fillText(
           "Asíntota vertical",
-          mapX(a) + 15,
+          mapX(a) + 20,
           pad + 70
         );
       }
     }
 
     // =========================================
-    // RENDER
+    // RENDER MEJORADO
     // =========================================
 
     drawAxes();
-
     drawLimitLines();
-
-    drawCriticalLine();
-
-    drawCurve("left");
-
-    drawCurve("right");
-
-    drawLimitDirections();
-
+    drawCriticalLineWithGlow();
+    drawSmoothCurve("left");
+    drawSmoothCurve("right");
     drawDiscontinuity();
 
-  }, [samples]);
+  }, [samples, caso]);
 
   if (!samples) return null;
 
   return (
     <section className="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-slate-200">
-      <div className="border-b border-slate-200 bg-slate-50 px-6 py-5">
+      <div className="border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5">
         <h2 className="text-2xl font-black text-slate-900">
           Análisis gráfico de límites
         </h2>
 
         <p className="mt-2 text-sm text-slate-600">
-          Representación visual del comportamiento lateral,
-          discontinuidades y continuidad en torno al punto crítico.
+          Representación visual del comportamiento lateral, discontinuidades y continuidad en torno al punto crítico.
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-5 text-sm font-semibold">
+        <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4 text-sm font-semibold">
           <span className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-blue-600" />
             Tramo izquierdo
@@ -446,21 +473,64 @@ export function LimitGraphPanel({ samples }) {
           </span>
 
           <span className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-red-500" />
+            <span className="h-3 w-3 rounded-full bg-red-600" />
             Punto crítico
           </span>
+
+          <span className="flex items-center gap-2">
+            <span className="inline-block h-3 w-3 rounded-full border-2 border-slate-700" />
+            Punto no definido
+          </span>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-4 md:grid-cols-4 text-xs text-slate-500">
+          <div>
+            <span className="font-semibold">●</span> = Punto definido
+          </div>
+          <div>
+            <span className="font-semibold">○</span> = Punto no definido
+          </div>
         </div>
       </div>
+
+      {funcionPorTramos && (
+        <div className="border-b border-slate-200 bg-blue-50 px-6 py-5">
+          <p className="text-xs font-black uppercase tracking-wide text-blue-700">Función por ramas</p>
+          <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-blue-200">
+            <div className="overflow-x-auto flex justify-center">
+              <MathText value={formatarFuncionPorRamas(funcionPorTramos)} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-center bg-slate-100 p-6">
         <canvas
           ref={canvasRef}
-          width={900}
-          height={500}
-          className="w-full max-w-[900px] rounded-2xl bg-white shadow-inner ring-1 ring-slate-200"
+          width={1000}
+          height={600}
+          className="w-full max-w-[1000px] rounded-2xl bg-white shadow-inner ring-1 ring-slate-200"
         />
       </div>
 
+      {caso && limites && (
+        <div className="border-t border-slate-200 bg-slate-50 px-6 py-5">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Límite izquierdo</p>
+              <p className="mt-2 text-xl font-black text-blue-950">{limites.izquierdo}</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Límite derecho</p>
+              <p className="mt-2 text-xl font-black text-blue-950">{limites.derecho}</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Tipo de discontinuidad</p>
+              <p className="mt-2 text-xl font-black capitalize text-blue-950">{caso}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
