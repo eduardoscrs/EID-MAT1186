@@ -7,7 +7,7 @@
 | Validacion de RUT | Implementado | 90% | Valida formato, modulo 11, RUT vacio, caracteres invalidos, largo incorrecto, RUT de empresa y uso incorrecto de endpoints. |
 | Geometria analitica y conicas | Avanzado | 85% | Construye ecuacion general, clasifica conicas, transforma a forma canonica, genera procedimiento inverso, calcula elementos geometricos y grafica en canvas. |
 | Modulo backend de limites | Implementado | 90% | Expone `POST /api/limites`, genera funcion por tramos, limites laterales, tabla de valores, continuidad, discontinuidad, pasos y puntos de grafica. |
-| Interfaz del modulo de limites | Pendiente de integracion | 30% | Existen referencias de interfaz en ramas de trabajo, pero falta integrarla con el contrato JSON actual del backend. |
+| Interfaz del modulo de limites | Implementacion parcial en ramas de trabajo | 55% | Existen componentes funcionales para limites en otras ramas; falta adaptarlos al contrato JSON final e integrarlos en la version consolidada del proyecto. |
 | Documentacion y evidencia | En progreso | 75% | Hay matriz de requisitos, riesgos, verificacion API y plan semanal; falta cerrar evidencia visual y pruebas completas. |
 | Integracion en `main` | Pendiente | 55% | Hay avances distribuidos entre ramas; antes de fusionar se debe alinear contrato API, interfaz de limites y dependencias frontend. |
 
@@ -36,7 +36,7 @@
 | S2-07 | Auditar el modulo de conicas con los 4 RUTs validos documentados. | Eduardo Escares, Miembro | Ninguna | Evidencia manual de circunferencia, elipse, parabola e hiperbola, verificando ecuacion, forma canonica, grafica y campos de defensa. |
 | S2-08 | Disenar maqueta funcional de la interfaz de limites. | Eduardo Escares, Miembro | S2-06 | Boceto o descripcion de pantalla con funcion generada, procedimiento, tabla de valores, grafica y campos vacios para defensa. |
 
-## Revision de ramas para preparar semana 3
+## Revision de ramas para preparar integracion
 
 | Rama | Estado observado | Avance util | Decision recomendada |
 |---|---|---|---|
@@ -65,9 +65,9 @@ Nota: `main` no es rama personal, pero contiene decisiones vigentes del frontend
 | ID | Issue | Tarea | Responsable | Depende de | Entregable esperado |
 |---|---|---|---|---|---|
 | S4-01 | #12 | Alinear contrato frontend/backend del modulo de limites. | Marcelo Santana, Scrum Master | S3-02, S3-03 | Mapeo definitivo entre campos del backend (`tipo_caso`, `limites_laterales`, `tabla_valores`, `puntos_grafica`) y los componentes React que muestran limites. |
-| S4-02 | #13 | Integrar formulario de limites con `POST /api/limites`. | Patricio Benavides, Sub Lider | S4-01 | Pantalla que permita ingresar RUT, validar, llamar al endpoint de limites y mostrar errores sin romper la navegacion. |
-| S4-03 | #14 | Mostrar funcion por tramos, regla de seleccion y procedimiento. | Patricio Benavides, Sub Lider | S4-01, S4-02 | Panel de resultados con `a = d3`, `d8 % 3`, funcion generada, limites laterales, continuidad, discontinuidad, justificacion y pasos. |
-| S4-04 | #15 | Renderizar tabla de valores y grafica del modulo de limites. | Eduardo Escares, Miembro | S4-01, S4-02 | Tabla alrededor de `a` y grafica que distinga comportamiento removible, salto o infinito cerca del punto critico. |
-| S4-05 | #16 | Incorporar campos vacios para defensa oral en limites. | Eduardo Escares, Miembro | S4-03 | Campos editables vacios para limite izquierdo, limite derecho, existencia del limite, continuidad, tipo de discontinuidad y justificacion escrita. |
+| S4-02 | #13 | Adaptar e integrar la pantalla existente de limites con `POST /api/limites`. | Patricio Benavides, Sub Lider | S4-01 | Pantalla integrada al flujo principal que permita ingresar RUT, validar, llamar al endpoint de limites y mostrar errores sin romper la navegacion. |
+| S4-03 | #14 | Adaptar los paneles de resultados de limites al contrato final. | Patricio Benavides, Sub Lider | S4-01, S4-02 | Panel de resultados conectado al backend con `a = d3`, `d8 % 3`, funcion generada, limites laterales, continuidad, discontinuidad, justificacion y pasos. |
+| S4-04 | #15 | Adaptar tabla de valores y grafica del modulo de limites. | Eduardo Escares, Miembro | S4-01, S4-02 | Tabla alrededor de `a` y grafica integradas al contrato final, distinguiendo comportamiento removible, salto o infinito cerca del punto critico. |
+| S4-05 | #16 | Incorporar o activar campos vacios para defensa oral en limites. | Eduardo Escares, Miembro | S4-03 | Campos editables vacios para limite izquierdo, limite derecho, existencia del limite, continuidad, tipo de discontinuidad y justificacion escrita. |
 | S4-06 | #17 | Verificar dependencias frontend y renderizado matematico. | Marcelo Santana, Scrum Master | S4-02, S4-03 | `pnpm install` y build local funcionando, KaTeX disponible y formulas clave renderizadas de forma legible. |
 | S4-07 | #18 | Actualizar evidencia de auditoria de conicas con RUTs validos. | Marcelo Santana, Scrum Master | S2-07 | Tabla final de cuatro RUTs validos de persona natural para circunferencia, elipse, parabola e hiperbola, con ecuacion, tipo y elementos principales. |
