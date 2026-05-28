@@ -1,4 +1,8 @@
-from conicas.utils.formato import formatear_ecuacion_general, formatear_numero
+from conicas.utils.formato import (
+    formatear_binomio,
+    formatear_ecuacion_general,
+    formatear_numero,
+)
 
 
 def generar_procedimiento_inverso(A, B, C, D, E, resultado):
@@ -11,8 +15,8 @@ def generar_procedimiento_inverso(A, B, C, D, E, resultado):
         constante = resultado["constante_derecha"]
         pasos.append(
             f"Se parte de la forma con centro: "
-            f"{formatear_numero(A)}(x - {formatear_numero(h)})^2 + "
-            f"{formatear_numero(B)}(y - {formatear_numero(k)})^2 = "
+            f"{formatear_numero(A)}{formatear_binomio('x', h)}^2 + "
+            f"{formatear_numero(B)}{formatear_binomio('y', k)}^2 = "
             f"{formatear_numero(constante)}."
         )
         pasos.append(
@@ -35,8 +39,8 @@ def generar_procedimiento_inverso(A, B, C, D, E, resultado):
         h, k = resultado["vertice"]
         if resultado.get("orientacion") == "Vertical":
             pasos.append(
-                f"Se parte de {formatear_numero(A)}(x - {formatear_numero(h)})^2 + "
-                f"{formatear_numero(D)}(y - {formatear_numero(k)}) = 0."
+                f"Se parte de {formatear_numero(A)}{formatear_binomio('x', h)}^2 + "
+                f"{formatear_numero(D)}{formatear_binomio('y', k)} = 0."
             )
             pasos.append(
                 f"Se expande el cuadrado: {formatear_numero(A)}x^2 + "
@@ -46,8 +50,8 @@ def generar_procedimiento_inverso(A, B, C, D, E, resultado):
             )
         else:
             pasos.append(
-                f"Se parte de {formatear_numero(B)}(y - {formatear_numero(k)})^2 + "
-                f"{formatear_numero(C)}(x - {formatear_numero(h)}) = 0."
+                f"Se parte de {formatear_numero(B)}{formatear_binomio('y', k)}^2 + "
+                f"{formatear_numero(C)}{formatear_binomio('x', h)} = 0."
             )
             pasos.append(
                 f"Se expande el cuadrado: {formatear_numero(B)}y^2 + "
