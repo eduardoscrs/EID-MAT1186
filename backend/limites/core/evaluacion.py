@@ -1,5 +1,5 @@
 def evaluar_en(x, a, digitos, estructura):
-    d1, d2, _d3, _d4, d5, _d6, _d7, _d8 = digitos
+    d1, d2, _d3, d4, d5, _d6, _d7, _d8 = digitos
 
     try:
         if estructura["tipo"] == "removible":
@@ -10,8 +10,7 @@ def evaluar_en(x, a, digitos, estructura):
         if estructura["tipo"] == "salto":
             if x < a:
                 return x + d2
-            ajuste_derecho = estructura["limite_derecho"] - a
-            return x + ajuste_derecho
+            return x + d4
 
         numerador = d5 + 1
         denominador = x - a

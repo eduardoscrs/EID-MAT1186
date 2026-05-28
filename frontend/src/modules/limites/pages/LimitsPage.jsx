@@ -63,7 +63,7 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
       <LimitGraphPanel 
         samples={result?.samples} 
         funcionPorTramos={result?.funcion_por_tramos}
-        caso={result?.caso}
+        caso={result?.continuidad?.clasificacion || result?.caso}
         limites={result?.limites}
       />
     </main>

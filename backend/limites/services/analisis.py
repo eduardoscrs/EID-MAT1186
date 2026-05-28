@@ -35,16 +35,15 @@ def generar_justificacion(a, digitos, estructura):
         )
 
     if estructura["discontinuidad"] == "salto":
-        detalle = ""
-        if estructura.get("ajuste_salto"):
-            ajuste_derecho = estructura["limite_derecho"] - a
-            detalle = (
-                f" Como d2 y d4 son iguales, se usa d4 + 1 = {ajuste_derecho} "
-                "en el tramo derecho para asegurar un salto real."
-            )
         return (
             f"Los limites laterales son lim_izq = {izquierdo} y lim_der = {derecho}, "
-            f"distintos entre si; por tanto hay un salto.{detalle}"
+            "distintos entre si; por tanto hay un salto."
+        )
+
+    if estructura["discontinuidad"] == "continua":
+        return (
+            f"Los limites laterales coinciden en {izquierdo} y f({a}) = {derecho}; "
+            "por tanto la funcion es continua en el punto de analisis."
         )
 
     signo = "positivo" if (d5 + 1) > 0 else "negativo"
@@ -73,5 +72,7 @@ def agregar_pasos_conclusion(pasos, a, estructura):
         pasos.append(f"La discontinuidad es removible y la extension continua sugerida es f(a) = {izquierdo}.")
     elif estructura["discontinuidad"] == "salto":
         pasos.append("La discontinuidad es de salto porque los limites laterales no coinciden.")
+    elif estructura["discontinuidad"] == "continua":
+        pasos.append("No hay discontinuidad porque los limites laterales coinciden con el valor de la funcion en x = a.")
     else:
         pasos.append("La discontinuidad es infinita porque la funcion diverge al acercarse a x = a.")

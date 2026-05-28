@@ -42,27 +42,30 @@ def _caso_removible(a, d1):
 
 
 def _caso_salto(a, d2, d4):
-    ajuste_derecho = d4 if d2 != d4 else d4 + 1
     izquierdo = f"x + {d2}"
-    derecho = f"x + {ajuste_derecho}"
+    derecho = f"x + {d4}"
+    es_salto = d2 != d4
 
     return {
         "tipo": "salto",
         "funcion_original": f"{{ {izquierdo} , si x < {a}; {derecho} , si x >= {a} }}",
-        "ajuste_salto": ajuste_derecho != d4,
         "tramos": [
             {"condicion": f"x < {a}", "expresion": izquierdo},
             {"condicion": f"x >= {a}", "expresion": derecho},
         ],
         "extension_sugerida": None,
         "limite_izquierdo": a + d2,
-        "limite_derecho": a + ajuste_derecho,
-        "valor_funcion": a + ajuste_derecho,
-        "discontinuidad": "salto",
+        "limite_derecho": a + d4,
+        "valor_funcion": a + d4,
+        "discontinuidad": "salto" if es_salto else "continua",
         "puntos_criticos": [
             {
                 "x": a,
-                "motivo": "El punto de cambio de tramo produce limites laterales distintos.",
+                "motivo": (
+                    "El punto de cambio de tramo produce limites laterales distintos."
+                    if es_salto
+                    else "Los tramos coinciden en x = a; no se produce discontinuidad."
+                ),
             }
         ],
     }

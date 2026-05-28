@@ -4,11 +4,18 @@ function badgeClass(kind) {
   if (kind === "removible") return "bg-emerald-600";
   if (kind === "salto") return "bg-amber-600";
   if (kind === "infinita") return "bg-rose-600";
+  if (kind === "continua") return "bg-blue-700";
   return "bg-slate-600";
+}
+
+function classificationText(kind) {
+  if (kind === "continua") return "Continua";
+  return `Discontinuidad ${kind || "--"}`;
 }
 
 export function LimitTheoryPanel({ result }) {
   const tramos = result?.tramos || [];
+  const classification = result?.continuidad?.clasificacion;
 
   return (
     <section className="rounded-3xl bg-white p-5 shadow-md ring-1 ring-slate-200">
@@ -17,8 +24,8 @@ export function LimitTheoryPanel({ result }) {
           <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-700">Regla</p>
           <h2 className="mt-1 text-xl font-black text-blue-950">Construccion de la funcion por tramos</h2>
         </div>
-        <span className={`rounded-full px-3 py-1 text-xs font-black uppercase tracking-wide text-white ${badgeClass(result?.caso)}`}>
-          {result?.caso || "Sin resultado"}
+        <span className={`rounded-full px-3 py-1 text-xs font-black uppercase tracking-wide text-white ${badgeClass(classification || result?.caso)}`}>
+          {classification || result?.caso || "Sin resultado"}
         </span>
       </div>
 
@@ -61,7 +68,7 @@ export function LimitTheoryPanel({ result }) {
 
           <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
             <p className="text-sm font-bold text-slate-600">Clasificacion</p>
-            <p className="mt-2 text-lg font-black text-blue-950">Discontinuidad {result.continuidad?.clasificacion}</p>
+            <p className="mt-2 text-lg font-black text-blue-950">{classificationText(classification)}</p>
             <p className="mt-1 text-sm text-slate-600">
               Definida en a: <span className="font-bold text-slate-900">{result.continuidad?.definida_en_a ? "Si" : "No"}</span>
             </p>

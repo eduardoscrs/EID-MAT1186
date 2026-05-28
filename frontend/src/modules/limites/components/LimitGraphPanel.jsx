@@ -517,7 +517,7 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
             </div>
             <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
               <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Tipo de discontinuidad</p>
-              <p className="mt-2 text-xl font-black capitalize text-blue-950">{caso}</p>
+              <p className="mt-2 text-xl font-black capitalize text-blue-950">{caso === "continua" ? "No hay discontinuidad" : caso}</p>
             </div>
           </div>
         </div>
