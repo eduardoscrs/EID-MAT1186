@@ -39,33 +39,37 @@ def formatear_forma_canonica(resultado):
 
     if tipo == "Circunferencia":
         h, k = resultado["centro"]
-        radio = resultado["radio"]
+        radio_cuadrado = resultado.get("radio_cuadrado", resultado["radio"] ** 2)
         return (
             f"{formatear_binomio('x', h)}^2 + "
-            f"{formatear_binomio('y', k)}^2 = {formatear_numero(radio ** 2)}"
+            f"{formatear_binomio('y', k)}^2 = {formatear_numero(radio_cuadrado)}"
         )
 
     if tipo == "Elipse":
         h, k = resultado["centro"]
-        a = resultado["a"]
-        b = resultado["b"]
+        semieje_x = resultado.get("semieje_x", resultado["a"])
+        semieje_y = resultado.get("semieje_y", resultado["b"])
+        if semieje_x <= 0 or semieje_y <= 0:
+            return "No hay forma canonica real de elipse porque algun semieje no es positivo"
         return (
-            f"{formatear_binomio('x', h)}^2/{formatear_numero(a ** 2)} + "
-            f"{formatear_binomio('y', k)}^2/{formatear_numero(b ** 2)} = 1"
+            f"{formatear_binomio('x', h)}^2/{formatear_numero(semieje_x ** 2)} + "
+            f"{formatear_binomio('y', k)}^2/{formatear_numero(semieje_y ** 2)} = 1"
         )
 
     if tipo == "Hipérbola":
         h, k = resultado["centro"]
         a = resultado["a"]
         b = resultado["b"]
+        if a <= 0 or b <= 0:
+            return "La hiperbola queda degenerada y no tiene forma canonica real estandar"
         if resultado.get("orientacion") == "Horizontal":
             return (
                 f"{formatear_binomio('x', h)}^2/{formatear_numero(a ** 2)} - "
                 f"{formatear_binomio('y', k)}^2/{formatear_numero(b ** 2)} = 1"
             )
         return (
-            f"{formatear_binomio('y', k)}^2/{formatear_numero(b ** 2)} - "
-            f"{formatear_binomio('x', h)}^2/{formatear_numero(a ** 2)} = 1"
+            f"{formatear_binomio('y', k)}^2/{formatear_numero(a ** 2)} - "
+            f"{formatear_binomio('x', h)}^2/{formatear_numero(b ** 2)} = 1"
         )
 
     if tipo == "Parábola":

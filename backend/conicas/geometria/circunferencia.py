@@ -8,4 +8,4 @@ def analizar_circunferencia(h_x, h_y, constante_derecha, A):
     r_cuadrado = constante_derecha / A
     radio = r_cuadrado ** 0.5 if r_cuadrado > 0 else 0
     
-    return centro, radio
+    return centro, radio, r_cuadrado

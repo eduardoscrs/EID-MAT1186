@@ -29,7 +29,11 @@ function getMetrics(result) {
   }
 
   if (result.tipo_conica === "Circunferencia") {
-    return [metric("Centro C(h,k)", formatPoint(result.centro)), metric("Radio r", formatNumber(result.radio))];
+    return [
+      metric("Centro C(h,k)", formatPoint(result.centro)),
+      metric("Radio r", formatNumber(result.radio)),
+      metric("Estado", result.estado_conica || "real"),
+    ];
   }
 
   if (result.tipo_conica === "Parabola") {
@@ -100,6 +104,7 @@ export function SummaryPanel({ result }) {
         {result
           ? `Se genero una ${result.tipo_conica} a partir del RUT ingresado. Componentes calculados: ${getMetrics(result).length}.`
           : "Aun no hay conica calculada. Valida un RUT para activar los resultados."}
+        {result?.observacion ? ` ${result.observacion}` : ""}
       </p>
     </section>
   );
