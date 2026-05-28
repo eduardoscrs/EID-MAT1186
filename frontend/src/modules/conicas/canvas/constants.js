@@ -1,6 +1,4 @@
 export const PADDING = 56;
-export const MAX_SCALE = 58;
-export const MIN_SCALE = 12;
 
 export const COLORS = {
   backgroundTop: "#f8fafc",

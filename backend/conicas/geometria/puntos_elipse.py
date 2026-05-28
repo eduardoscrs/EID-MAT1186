@@ -5,9 +5,12 @@ def generar_puntos_elipse(h, k, rx, ry, puntos=1000):
         return [h], [k], [k]
 
     paso = (2 * rx) / puntos
-    x_actual = h - rx
 
-    while x_actual <= h + rx:
+    for indice in range(puntos + 1):
+        x_actual = h - rx + paso * indice
+        if indice == puntos:
+            x_actual = h + rx
+
         x_vals.append(x_actual)
         interior = 1 - ((x_actual - h) ** 2) / (rx**2)
 
@@ -17,6 +20,5 @@ def generar_puntos_elipse(h, k, rx, ry, puntos=1000):
         raiz = (ry**2 * interior) ** 0.5
         y_pos.append(k + raiz)
         y_neg.append(k - raiz)
-        x_actual += paso
 
     return x_vals, y_pos, y_neg

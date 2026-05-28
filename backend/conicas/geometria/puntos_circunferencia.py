@@ -11,9 +11,12 @@ def generar_puntos_circunferencia(h, k, r, puntos=1000):
         return [h], [k], [k]
 
     paso = (2 * r) / puntos
-    x_actual = h - r
 
-    while x_actual <= h + r:
+    for indice in range(puntos + 1):
+        x_actual = h - r + paso * indice
+        if indice == puntos:
+            x_actual = h + r
+
         x_vals.append(x_actual)
         interior_raiz = (r**2) - ((x_actual - h) ** 2)
 
@@ -23,6 +26,5 @@ def generar_puntos_circunferencia(h, k, r, puntos=1000):
         raiz = interior_raiz**0.5
         y_vals_pos.append(k + raiz)
         y_vals_neg.append(k - raiz)
-        x_actual += paso
 
     return x_vals, y_vals_pos, y_vals_neg

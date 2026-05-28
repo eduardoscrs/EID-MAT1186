@@ -103,5 +103,16 @@ function drawAxes(ctx, width, height, viewport, step) {
 }
 
 function formatTick(value) {
-  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+  if (Number.isInteger(value)) return String(value);
+
+  const absValue = Math.abs(value);
+  if (absValue >= 10) return trimNumber(value.toFixed(0));
+  if (absValue >= 1) return trimNumber(value.toFixed(1));
+  if (absValue >= 0.1) return trimNumber(value.toFixed(2));
+  if (absValue >= 0.01) return trimNumber(value.toFixed(3));
+  return trimNumber(value.toPrecision(2));
+}
+
+function trimNumber(value) {
+  return value.replace(/\.?0+$/, "");
 }

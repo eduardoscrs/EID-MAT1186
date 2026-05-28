@@ -1,4 +1,4 @@
-import { MAX_SCALE, MIN_SCALE, PADDING } from "./constants";
+import { PADDING } from "./constants";
 import { collectGraphPoints, collectKeyPoints } from "./collectors";
 
 export function calculateViewport(data, width, height) {
@@ -33,9 +33,9 @@ export function calculateViewport(data, width, height) {
   minY -= marginY;
   maxY += marginY;
 
-  const scale = Math.max(
-    MIN_SCALE,
-    Math.min(MAX_SCALE, (width - PADDING * 2) / (maxX - minX), (height - PADDING * 2) / (maxY - minY)),
+  const scale = Math.min(
+    (width - PADDING * 2) / (maxX - minX),
+    (height - PADDING * 2) / (maxY - minY),
   );
 
   const midX = (minX + maxX) / 2;
