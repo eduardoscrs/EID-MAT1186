@@ -10,7 +10,7 @@ export function drawFallbackCircle(ctx, width, height) {
 }
 
 export function drawNoRealGraphMessage(ctx, data, width, height) {
-  const message = data?.observacion || "La conica no tiene grafica real.";
+  const message = data?.observacion || "La cónica no tiene gráfica real.";
   const boxWidth = Math.min(width - 80, 520);
   const boxHeight = 86;
   const x = (width - boxWidth) / 2;
@@ -28,7 +28,7 @@ export function drawNoRealGraphMessage(ctx, data, width, height) {
   ctx.font = "700 16px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Sin grafica real", width / 2, y + 30);
+  ctx.fillText("Sin gráfica real", width / 2, y + 30);
 
   ctx.fillStyle = COLORS.text;
   ctx.font = "500 13px Inter, ui-sans-serif, system-ui, sans-serif";

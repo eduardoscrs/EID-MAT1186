@@ -39,7 +39,7 @@ export function collectKeyPoints(data) {
   const points = [];
 
   if (data?.centro) points.push({ label: "Centro", value: data.centro, color: COLORS.center });
-  if (data?.vertice) points.push({ label: "Vertice", value: data.vertice, color: COLORS.vertex });
+  if (data?.vertice) points.push({ label: "Vértice", value: data.vertice, color: COLORS.vertex });
   if (Array.isArray(data?.vertices)) {
     data.vertices.forEach((value, index) => points.push({ label: `V${index + 1}`, value, color: COLORS.vertex }));
   }

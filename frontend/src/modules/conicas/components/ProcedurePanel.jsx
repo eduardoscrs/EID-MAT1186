@@ -8,20 +8,27 @@ const procedureBlocks = [
 
 export function ProcedurePanel({ result }) {
   return (
-    <section className="rounded-3xl bg-white p-5 shadow-md ring-1 ring-slate-200">
-      <h2 className="text-xl font-black text-blue-950">Desarrollo matemático</h2>
-      <div className="mt-4 grid gap-4">
+    <section className="panel p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="section-kicker">Proceso</p>
+          <h2 className="mt-1 text-xl font-black text-slate-950">Desarrollo matemático</h2>
+        </div>
+        <span className="chip">{result ? "calculado" : "pendiente"}</span>
+      </div>
+
+      <div className="mt-5 grid gap-4">
         {procedureBlocks.map((block) => {
           const steps = result?.[block.key];
 
           return (
-            <div key={block.title} className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-              <h3 className="font-black text-blue-950">{block.title}</h3>
+            <div key={block.title} className="panel-muted p-4">
+              <h3 className="font-black text-slate-950">{block.title}</h3>
               {steps?.length ? (
                 <ol className="mt-3 space-y-2 text-sm text-slate-700">
                   {steps.map((step, index) => (
-                    <li key={`${block.title}-${index}`} className="rounded-xl bg-white px-3 py-2 shadow-sm">
-                      <span className="mr-2 font-black text-blue-900">{index + 1}.</span>
+                    <li key={`${block.title}-${index}`} className="rounded-lg border border-slate-200 bg-white px-3 py-2">
+                      <span className="mr-2 font-black text-teal-700">{index + 1}.</span>
                       <MathText value={step} />
                     </li>
                   ))}

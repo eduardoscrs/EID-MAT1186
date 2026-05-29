@@ -1,14 +1,26 @@
-export function RutFormPanel({ rut, loading, validation, extractedDigits, onRutChange, onSubmit }) {
-  return (
-    <section className="rounded-3xl bg-white p-5 shadow-md ring-1 ring-slate-200">
-      <div className="grid gap-5 lg:grid-cols-[1fr_260px_220px] lg:items-end">
-        <div>
-          <h2 className="text-xl font-black text-blue-950">Validación RUT</h2>
-          <p className="mt-1 text-sm text-slate-500">Ingresa el RUT y la aplicación consultará el backend para generar la cónica.</p>
+function validationCopy(validation) {
+  if (!validation) return { label: "Sin validar", className: "text-slate-600", badge: "--" };
+  if (validation.valido) return { label: "RUT válido", className: "text-emerald-700", badge: "OK" };
+  return { label: "RUT inválido", className: "text-rose-700", badge: "Revisar" };
+}
 
-          <form className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]" onSubmit={onSubmit}>
+export function RutFormPanel({ rut, loading, validation, extractedDigits, onRutChange, onSubmit }) {
+  const state = validationCopy(validation);
+  const digits = extractedDigits.length ? extractedDigits : ["_", "_", "_", "_", "_", "_", "_", "_", "_"];
+
+  return (
+    <section className="panel overflow-hidden">
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="p-5 md:p-6">
+          <p className="section-kicker">Entrada</p>
+          <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">Validación RUT</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+            Ingresa el RUT para generar la cónica, ordenar sus elementos y activar la gráfica.
+          </p>
+
+          <form className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" onSubmit={onSubmit}>
             <div className="space-y-2">
-              <label htmlFor="rut" className="text-sm font-bold text-slate-600">
+              <label htmlFor="rut" className="text-sm font-extrabold text-slate-700">
                 RUT
               </label>
               <input
@@ -16,36 +28,45 @@ export function RutFormPanel({ rut, loading, validation, extractedDigits, onRutC
                 value={rut}
                 onChange={(event) => onRutChange(event.target.value)}
                 placeholder="12345678-5"
-                className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-800 focus:ring-4 focus:ring-blue-100"
+                className="field-control text-base font-semibold text-slate-900 placeholder:text-slate-400"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || !rut.trim()}
-              className="self-end rounded-2xl bg-blue-900 px-5 py-3 font-black text-white shadow-sm transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400"
-            >
-              {loading ? "Calculando..." : "Validar y graficar"}
+            <button type="submit" disabled={loading || !rut.trim()} className="primary-action self-end px-5 py-3">
+              {loading ? "Calculando..." : "Calcular cónica"}
             </button>
           </form>
         </div>
 
-        <div className={`rounded-2xl border p-4 ${validation?.valido ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-slate-50"}`}>
-          <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Resultado</div>
-          <div className="mt-1 flex items-center justify-between gap-3 font-bold text-blue-950">
-            <span>{validation ? (validation.valido ? "RUT válido" : "RUT inválido") : "Sin validar"}</span>
-            <span className={`rounded-full px-2.5 py-1 text-xs text-white ${validation?.valido ? "bg-emerald-600" : "bg-slate-500"}`}>
-              {validation ? (validation.valido ? "OK" : "No OK") : "--"}
+        <aside className="border-t border-slate-200 bg-slate-50/80 p-5 lg:border-l lg:border-t-0">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Resultado</p>
+              <p className={`mt-1 text-lg font-black ${state.className}`}>{state.label}</p>
+            </div>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-black uppercase tracking-wide text-white ${
+                validation?.valido ? "bg-emerald-600" : validation ? "bg-rose-600" : "bg-slate-500"
+              }`}
+            >
+              {state.badge}
             </span>
           </div>
-        </div>
 
-        <div className="rounded-2xl bg-slate-100 p-4">
-          <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Dígitos extraídos</div>
-          <div className="mt-2 min-h-8 font-mono text-lg tracking-[0.25em] text-blue-950">
-            {extractedDigits.length ? extractedDigits.join(" ") : "_ _ _ _ _ _ _ _"}
+          <div className="mt-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Dígitos extraídos</p>
+            <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-8 lg:grid-cols-4">
+              {digits.map((digit, index) => (
+                <span
+                  key={`${digit}-${index}`}
+                  className="flex aspect-square items-center justify-center rounded-lg border border-slate-200 bg-white font-mono text-lg font-black text-slate-800 shadow-sm"
+                >
+                  {digit}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        </aside>
       </div>
     </section>
   );

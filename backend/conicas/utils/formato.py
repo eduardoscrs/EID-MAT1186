@@ -1,4 +1,4 @@
-def formatear_numero(valor, decimales=4):
+def formatear_numero(valor, decimales=3):
     """Devuelve numeros legibles sin depender de librerias matematicas."""
     if isinstance(valor, int):
         return str(valor)

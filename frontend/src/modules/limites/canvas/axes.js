@@ -5,14 +5,14 @@ export function drawAxes(ctx, width, height, viewport, map) {
   const originX = map.x(0);
   const originY = map.y(0);
 
-  ctx.fillStyle = "#f8fafc";
+  ctx.fillStyle = "#fbfdff";
   ctx.fillRect(GRAPH_PADDING, GRAPH_PADDING, width - GRAPH_PADDING * 2, height - GRAPH_PADDING * 2);
 
   for (let i = 0; i <= TICKS; i++) {
     const yVal = minY + (maxY - minY) * (i / TICKS);
     const yPos = map.y(yVal);
 
-    ctx.strokeStyle = "#e2e8f0";
+    ctx.strokeStyle = "#e5edf5";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(GRAPH_PADDING, yPos);
@@ -20,7 +20,7 @@ export function drawAxes(ctx, width, height, viewport, map) {
     ctx.stroke();
 
     ctx.fillStyle = "#64748b";
-    ctx.font = "11px Arial";
+    ctx.font = "11px Inter, ui-sans-serif, system-ui, sans-serif";
     ctx.textAlign = "right";
     ctx.fillText(yVal.toFixed(2), GRAPH_PADDING - 15, yPos + 4);
     ctx.textAlign = "left";
@@ -30,7 +30,7 @@ export function drawAxes(ctx, width, height, viewport, map) {
     const xVal = minX + (maxX - minX) * (i / TICKS);
     const xPos = map.x(xVal);
 
-    ctx.strokeStyle = "#e2e8f0";
+    ctx.strokeStyle = "#e5edf5";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(xPos, GRAPH_PADDING);
@@ -38,7 +38,7 @@ export function drawAxes(ctx, width, height, viewport, map) {
     ctx.stroke();
   }
 
-  ctx.strokeStyle = "#1f2937";
+  ctx.strokeStyle = "#0f172a";
   ctx.lineWidth = 2.5;
   ctx.beginPath();
   ctx.moveTo(GRAPH_PADDING, originY);
@@ -49,15 +49,15 @@ export function drawAxes(ctx, width, height, viewport, map) {
 
   drawAxisArrowheads(ctx, width, originX, originY);
 
-  ctx.font = "bold 14px Arial";
+  ctx.font = "700 14px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText("x", width - GRAPH_PADDING - 28, originY + 20);
   ctx.fillText("y", originX + 12, GRAPH_PADDING - 15);
-  ctx.font = "11px Arial";
+  ctx.font = "11px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText("O", originX - 14, originY + 20);
 }
 
 function drawAxisArrowheads(ctx, width, originX, originY) {
-  ctx.fillStyle = "#1f2937";
+  ctx.fillStyle = "#0f172a";
   ctx.beginPath();
   ctx.moveTo(width - GRAPH_PADDING, originY);
   ctx.lineTo(width - GRAPH_PADDING - 8, originY - 6);

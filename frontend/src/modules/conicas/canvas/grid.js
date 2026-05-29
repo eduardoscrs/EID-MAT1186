@@ -99,7 +99,7 @@ function drawAxes(ctx, width, height, viewport, step) {
   ctx.fillStyle = COLORS.text;
   ctx.textAlign = "right";
   ctx.textBaseline = "bottom";
-  ctx.fillText(`1 cuadricula = ${formatTick(step)} u`, width - 18, 24);
+  ctx.fillText(`1 cuadrícula = ${formatTick(step)} u`, width - 18, 24);
 }
 
 function formatTick(value) {

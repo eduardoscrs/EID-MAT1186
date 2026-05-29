@@ -1,38 +1,52 @@
+const navigationItems = [
+  { id: "conicas", label: "Cónicas", accent: "bg-teal-500" },
+  { id: "limites", label: "Límites", accent: "bg-amber-500" },
+];
+
 export function AppHeader({ activePage, status, onPageChange }) {
   return (
-    <header className="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-800 px-6 py-8 text-white shadow-lg">
-      <div className="mx-auto flex max-w-7xl flex-col gap-5 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-blue-200">MAT1186</p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight md:text-5xl">Evaluación Integrada de Desempeño N°1</h1>
-          <p className="mt-2 max-w-2xl text-blue-100">
-            Análisis y Modelamiento de Secciones Cónicas y Funciones por Tramos a partir
-del RUT
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <button
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
-                activePage === "conicas" ? "bg-white text-blue-950" : "bg-white/10 text-blue-100 hover:bg-white/20"
-              }`}
-              onClick={() => onPageChange("conicas")}
-              type="button"
-            >
-              Análisis de cónicas
-            </button>
-            <button
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
-                activePage === "limites" ? "bg-white text-blue-950" : "bg-white/10 text-blue-100 hover:bg-white/20"
-              }`}
-              onClick={() => onPageChange("limites")}
-              type="button"
-            >
-              Límites
-            </button>
+    <header className="border-b border-slate-200/80 bg-white/90 px-4 py-5 shadow-sm backdrop-blur">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="section-kicker">MAT1186</span>
+            <span className="hidden h-1.5 w-1.5 rounded-full bg-slate-300 sm:inline-block" />
+            <span className="text-sm font-semibold text-slate-500">Evaluación Integrada de Desempeño N°1</span>
           </div>
+          <h1 className="mt-2 max-w-4xl text-2xl font-black leading-tight tracking-tight text-slate-950 md:text-4xl">
+            Cónicas y funciones por tramos desde el RUT
+          </h1>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
+            Calcula, grafica y organiza la evidencia matemática para la defensa oral.
+          </p>
         </div>
-        <div className="rounded-2xl bg-white/10 px-5 py-4 text-sm backdrop-blur">
-          <p className="font-semibold text-blue-100">Estado actual</p>
-          <p className="mt-1 font-bold text-white">{status}</p>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:justify-end">
+          <nav className="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-1" aria-label="Módulos">
+            {navigationItems.map((item) => {
+              const isActive = activePage === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  aria-pressed={isActive}
+                  className={`inline-flex min-w-28 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-extrabold transition ${
+                    isActive ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-900"
+                  }`}
+                  onClick={() => onPageChange(item.id)}
+                  type="button"
+                >
+                  <span className={`h-2 w-2 rounded-full ${isActive ? item.accent : "bg-slate-300"}`} />
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Estado</p>
+            <p className="mt-1 max-w-sm font-semibold text-slate-800">{status}</p>
+          </div>
         </div>
       </div>
     </header>

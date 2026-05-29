@@ -21,7 +21,7 @@ export function drawAuxiliaryElements(ctx, data, viewport) {
 
   if (data.tipo_conica === "Hiperbola") {
     data.asintotas?.forEach((line, index) => {
-      drawObliqueLine(ctx, line, viewport, COLORS.asymptote, [9, 7], `Asintota ${index + 1}`);
+      drawObliqueLine(ctx, line, viewport, COLORS.asymptote, [9, 7], `Asíntota ${index + 1}`);
     });
     drawLineObject(ctx, data.eje_transversal_recta, viewport, COLORS.axisMajor, [10, 8], "Eje real");
     drawLineObject(ctx, data.eje_conjugado_recta, viewport, COLORS.axisMinor, [10, 8], "Eje conj.");

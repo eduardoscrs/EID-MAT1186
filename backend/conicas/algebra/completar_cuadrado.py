@@ -1,3 +1,6 @@
+from conicas.utils.formato import formatear_numero
+
+
 def completar_cuadrado(coef_cuad, coef_lineal, variable):
     """
     Completa el cuadrado para una variable dada.
@@ -6,26 +9,43 @@ def completar_cuadrado(coef_cuad, coef_lineal, variable):
     """
     pasos = []
     if coef_cuad == 0:
-        return 0, 0, coef_lineal, pasos # No hay término cuadrático
-        
-    pasos.append(f"Agrupando términos de {variable}: {coef_cuad}{variable}^2 + {coef_lineal}{variable}")
-    
-    # Factorizar el coeficiente cuadrático
+        return 0, 0, coef_lineal, pasos
+
+    pasos.append(
+        f"Agrupando terminos de {variable}: "
+        f"{formatear_numero(coef_cuad)}{variable}^2 + "
+        f"{formatear_numero(coef_lineal)}{variable}"
+    )
+
     factor = coef_lineal / coef_cuad
-    pasos.append(f"Factorizando {coef_cuad}: {coef_cuad}({variable}^2 + {factor}{variable})")
-    
-    # Encontrar el valor a sumar y restar (mitad del término lineal al cuadrado)
+    pasos.append(
+        f"Factorizando {formatear_numero(coef_cuad)}: "
+        f"{formatear_numero(coef_cuad)}("
+        f"{variable}^2 + {formatear_numero(factor)}{variable})"
+    )
+
     mitad = factor / 2
     cuadrado_mitad = mitad ** 2
-    
-    pasos.append(f"Sumando y restando ({factor}/2)^2 = {cuadrado_mitad} dentro del paréntesis")
-    pasos.append(f"{coef_cuad}({variable}^2 + {factor}{variable} + {cuadrado_mitad} - {cuadrado_mitad})")
-    
-    # Extraer la parte negativa multiplicada por el coeficiente cuadrático
-    k_fuera = - (cuadrado_mitad * coef_cuad)
-    h = -mitad # Para que la forma sea (x - h)
-    
+
+    pasos.append(
+        f"Sumando y restando ({formatear_numero(factor)}/2)^2 = "
+        f"{formatear_numero(cuadrado_mitad)} dentro del parentesis"
+    )
+    pasos.append(
+        f"{formatear_numero(coef_cuad)}("
+        f"{variable}^2 + {formatear_numero(factor)}{variable} + "
+        f"{formatear_numero(cuadrado_mitad)} - "
+        f"{formatear_numero(cuadrado_mitad)})"
+    )
+
+    k_fuera = -(cuadrado_mitad * coef_cuad)
+    h = -mitad
+
     signo_h = "+" if mitad >= 0 else "-"
-    pasos.append(f"Trinomio cuadrado perfecto: {coef_cuad}({variable} {signo_h} {abs(mitad)})^2 {k_fuera}")
-    
+    pasos.append(
+        f"Trinomio cuadrado perfecto: {formatear_numero(coef_cuad)}"
+        f"({variable} {signo_h} {formatear_numero(abs(mitad))})^2 "
+        f"{formatear_numero(k_fuera)}"
+    )
+
     return coef_cuad, h, k_fuera, pasos

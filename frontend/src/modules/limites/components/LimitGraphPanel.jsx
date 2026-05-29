@@ -16,7 +16,7 @@ function parsePiecewiseFunction(funcionStr) {
 
 function LegendDot({ color, label }) {
   return (
-    <span className="flex items-center gap-2">
+    <span className="chip">
       <span className={`h-3 w-3 rounded-full ${color}`} />
       {label}
     </span>
@@ -25,9 +25,9 @@ function LegendDot({ color, label }) {
 
 function LimitMetric({ label, value }) {
   return (
-    <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-2 text-xl font-black text-blue-950">{value}</p>
+    <div className="rounded-lg border border-slate-200 bg-white p-4">
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">{label}</p>
+      <p className="mt-2 text-xl font-black text-slate-950">{value}</p>
     </div>
   );
 }
@@ -40,48 +40,54 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
     drawLimitGraph(canvasRef.current, { samples, caso });
   }, [samples, caso]);
 
-  if (!samples) return null;
+  if (!samples) {
+    return (
+      <section className="panel p-5">
+        <p className="section-kicker text-amber-700">Gráfica</p>
+        <h2 className="mt-1 text-xl font-black text-slate-950">Análisis gráfico de límites</h2>
+        <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+          La gráfica aparecerá cuando se construya la función por tramos.
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-slate-200">
-      <div className="border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5">
-        <h2 className="text-2xl font-black text-slate-900">Analisis grafico de limites</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Representacion visual del comportamiento lateral, discontinuidades y continuidad en torno al punto critico.
-        </p>
-
-        <div className="mt-4 grid grid-cols-2 gap-4 text-sm font-semibold md:grid-cols-4">
-          <LegendDot color="bg-blue-600" label="Tramo izquierdo" />
-          <LegendDot color="bg-green-600" label="Tramo derecho" />
-          <LegendDot color="bg-red-600" label="Punto critico" />
-          <span className="flex items-center gap-2">
-            <span className="inline-block h-3 w-3 rounded-full border-2 border-slate-700" />
-            Punto no definido
-          </span>
-        </div>
-
-        <div className="mt-3 grid grid-cols-2 gap-4 text-xs text-slate-500 md:grid-cols-4">
+    <section className="panel overflow-hidden">
+      <div className="border-b border-slate-200 bg-white px-5 py-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <span className="font-semibold">●</span> = Punto definido
+            <p className="section-kicker text-amber-700">Gráfica</p>
+            <h2 className="mt-1 text-xl font-black text-slate-950">Análisis gráfico de límites</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Comportamiento lateral, discontinuidades y continuidad cerca del punto crítico.
+            </p>
           </div>
-          <div>
-            <span className="font-semibold">○</span> = Punto no definido
+
+          <div className="flex flex-wrap gap-2">
+            <LegendDot color="bg-blue-600" label="Tramo izquierdo" />
+            <LegendDot color="bg-green-600" label="Tramo derecho" />
+            <LegendDot color="bg-red-600" label="Punto crítico" />
+            <span className="chip">
+              <span className="inline-block h-3 w-3 rounded-full border-2 border-slate-700" />
+              Punto no definido
+            </span>
           </div>
         </div>
       </div>
 
       {funcionPorTramos ? (
-        <div className="border-b border-slate-200 bg-blue-50 px-6 py-5">
-          <p className="text-xs font-black uppercase tracking-wide text-blue-700">Funcion por ramas</p>
-          <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-blue-200">
+        <div className="border-b border-slate-200 bg-amber-50/70 px-5 py-5">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-700">Función por ramas</p>
+          <div className="mt-4 rounded-lg border border-amber-200 bg-white p-5">
             {piecewiseRows ? (
               <div className="flex items-center justify-center overflow-x-auto font-mono text-sm text-slate-900 sm:text-base">
                 <span className="mr-3 font-sans text-lg font-black">f(x) =</span>
-                <span className="mr-3 font-serif text-6xl leading-none text-blue-900">{"{"}</span>
+                <span className="mr-3 font-serif text-6xl leading-none text-amber-700">{"{"}</span>
                 <div className="grid gap-2">
                   {piecewiseRows.map((row) => (
                     <div key={`${row.expression}-${row.condition}`} className="grid grid-cols-[minmax(80px,auto)_auto] gap-5">
-                      <span className="font-bold">{row.expression}</span>
+                      <span className="font-black">{row.expression}</span>
                       <span className="text-slate-600">si {row.condition}</span>
                     </div>
                   ))}
@@ -94,24 +100,18 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
         </div>
       ) : null}
 
-      <div className="flex justify-center bg-slate-100 p-6">
-        <canvas
-          ref={canvasRef}
-          width={LIMIT_CANVAS_WIDTH}
-          height={LIMIT_CANVAS_HEIGHT}
-          className="w-full max-w-[1000px] rounded-2xl bg-white shadow-inner ring-1 ring-slate-200"
-        />
+      <div className="bg-slate-100/80 p-3 sm:p-5">
+        <div className="mx-auto w-full max-w-[1000px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-inner">
+          <canvas ref={canvasRef} width={LIMIT_CANVAS_WIDTH} height={LIMIT_CANVAS_HEIGHT} className="w-full bg-white" />
+        </div>
       </div>
 
       {caso && limites ? (
-        <div className="border-t border-slate-200 bg-slate-50 px-6 py-5">
+        <div className="border-t border-slate-200 bg-slate-50 px-5 py-5">
           <div className="grid gap-4 md:grid-cols-3">
-            <LimitMetric label="Limite izquierdo" value={limites.izquierdo} />
-            <LimitMetric label="Limite derecho" value={limites.derecho} />
-            <LimitMetric
-              label="Tipo de discontinuidad"
-              value={caso === "continua" ? "No hay discontinuidad" : caso}
-            />
+            <LimitMetric label="Límite izquierdo" value={limites.izquierdo} />
+            <LimitMetric label="Límite derecho" value={limites.derecho} />
+            <LimitMetric label="Tipo de discontinuidad" value={caso === "continua" ? "No hay discontinuidad" : caso} />
           </div>
         </div>
       ) : null}

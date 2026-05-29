@@ -20,9 +20,9 @@ export function drawCriticalLine(ctx, height, a, map) {
   ctx.shadowBlur = 0;
   ctx.setLineDash([]);
   ctx.fillStyle = "#dc2626";
-  ctx.font = "bold 14px Arial";
+  ctx.font = "700 14px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText(`x = ${a}`, ax + 15, GRAPH_PADDING + 28);
-  ctx.fillText("Punto critico", ax + 15, GRAPH_PADDING + 46);
+  ctx.fillText("Punto crítico", ax + 15, GRAPH_PADDING + 46);
 }
 
 export function drawLimitLines(ctx, width, a, analIzq, analDer, map) {
@@ -53,6 +53,6 @@ function drawLimitLine(ctx, width, a, value, color, label, labelOffset, map) {
 
   ctx.globalAlpha = 1;
   ctx.fillStyle = color;
-  ctx.font = "bold 12px Arial";
+  ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText(`${label} = ${value.toFixed(4)}`, GRAPH_PADDING + 12, y + labelOffset);
 }

@@ -23,7 +23,7 @@ function drawRemovable(ctx, a, analIzq, map) {
 
   drawOpenCircle(ctx, map, a, analIzq, "#0f172a");
   ctx.fillStyle = "#0f172a";
-  ctx.font = "bold 12px Arial";
+  ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText("Discontinuidad removible", map.x(a) + 20, map.y(analIzq) - 20);
 }
 
@@ -33,12 +33,12 @@ function drawJump(ctx, a, analIzq, analDer, map) {
 
   const midY = isFiniteNumber(analIzq) && isFiniteNumber(analDer) ? (analIzq + analDer) / 2 : analIzq ?? analDer;
   ctx.fillStyle = "#000";
-  ctx.font = "bold 12px Arial";
+  ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
   ctx.fillText("Discontinuidad de salto", map.x(a) + 20, map.y(midY));
 }
 
 function drawInfinite(ctx, a, map) {
   ctx.fillStyle = "#dc2626";
-  ctx.font = "bold 12px Arial";
-  ctx.fillText("Asintota vertical", map.x(a) + 20, GRAPH_PADDING + 70);
+  ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
+  ctx.fillText("Asíntota vertical", map.x(a) + 20, GRAPH_PADDING + 70);
 }

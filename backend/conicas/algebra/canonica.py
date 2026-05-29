@@ -18,13 +18,18 @@ def transformar_a_canonica(A, B, C, D, E):
     
     # Término independiente final
     constante_derecha = -E - k_x - k_y
-    pasos_totales.append(f"Pasando las constantes a la derecha: -E - K_x - K_y = {-E} - ({k_x}) - ({k_y}) = {constante_derecha}")
+    pasos_totales.append(
+        "Pasando las constantes a la derecha: "
+        f"-E - K_x - K_y = {formatear_numero(-E)} - "
+        f"({formatear_numero(k_x)}) - ({formatear_numero(k_y)}) = "
+        f"{formatear_numero(constante_derecha)}"
+    )
     
     # Para elipse, hipérbola y circunferencia, dividimos todo por constante_derecha (si es distinto de 0)
     if constante_derecha != 0 and a_x != 0 and a_y != 0:
         denom_x = constante_derecha / a_x
         denom_y = constante_derecha / a_y
-        pasos_totales.append(f"Dividiendo todo por {constante_derecha}:")
+        pasos_totales.append(f"Dividiendo todo por {formatear_numero(constante_derecha)}:")
         pasos_totales.append(
             _formatear_paso_canonico(h_x, h_y, denom_x, denom_y)
         )

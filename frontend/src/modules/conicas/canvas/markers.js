@@ -81,7 +81,7 @@ function getLabelPosition(label, point) {
     };
   }
 
-  if (label === "Vertice" || label.startsWith("V")) {
+  if (label === "Vértice" || label.startsWith("V")) {
     return {
       x: point.x + 22,
       y: point.y,

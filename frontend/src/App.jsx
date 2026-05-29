@@ -102,7 +102,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800">
+    <div className="app-bg min-h-screen text-slate-800 antialiased">
       <AppHeader activePage={activePage} status={status} onPageChange={setActivePage} />
 
       {activePage === "conicas" ? (
