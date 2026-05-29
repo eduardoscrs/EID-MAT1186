@@ -2,9 +2,9 @@ import { MathText } from "../../../components/MathText";
 
 export function EquationPanel({ result }) {
   return (
-    <section className="rounded-3xl bg-gradient-to-br from-white to-blue-50 p-6 text-center shadow-md ring-1 ring-slate-200">
+    <section className="flex h-full flex-col rounded-3xl bg-gradient-to-br from-white to-blue-50 p-6 text-center shadow-md ring-1 ring-slate-200">
       <div className="text-xs font-black uppercase tracking-[0.2em] text-blue-700">Ecuación de la cónica</div>
-      <div className="mt-3 overflow-x-auto text-2xl font-black text-blue-950 md:text-4xl">
+      <div className="mt-3 flex flex-1 items-center justify-center overflow-x-auto text-2xl font-black text-blue-950 md:text-4xl">
         <MathText value={result?.ecuacion || "Ax^2 + By^2 + Cx + Dy + E = 0"} display />
       </div>
       <div className="mt-5 rounded-2xl bg-white/80 p-4 text-left shadow-sm ring-1 ring-blue-100">

@@ -19,7 +19,7 @@ function App() {
   const [limitsResult, setLimitsResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const activeType = result?.tipo_conica || "Circunferencia";
+  const activeType = result?.tipo_conica || null;
   const extractedDigits = useMemo(() => rut.replace(/[^0-9kK]/g, "").toUpperCase().split(""), [rut]);
 
   useEffect(() => {
@@ -97,6 +97,10 @@ function App() {
     }
   }
 
+  function handleRutChange(value) {
+    setRut(formatRutInput(value));
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <AppHeader activePage={activePage} status={status} onPageChange={setActivePage} />
@@ -110,7 +114,7 @@ function App() {
           result={result}
           rut={rut}
           validation={validation}
-          onRutChange={setRut}
+          onRutChange={handleRutChange}
           onSubmit={handleSubmit}
         />
       ) : (
@@ -120,7 +124,7 @@ function App() {
           rut={rut}
           status={status}
           validation={validation}
-          onRutChange={setRut}
+          onRutChange={handleRutChange}
           onSubmit={handleLimitsSubmit}
         />
       )}
@@ -128,6 +132,15 @@ function App() {
       <AppFooter />
     </div>
   );
+}
+
+function formatRutInput(value) {
+  const cleaned = value.replace(/[^0-9kK]/g, "").toUpperCase().slice(0, 9);
+
+  if (!cleaned) return "";
+  if (cleaned.length === 1) return `-${cleaned}`;
+
+  return `${cleaned.slice(0, -1)}-${cleaned.slice(-1)}`;
 }
 
 export default App;
