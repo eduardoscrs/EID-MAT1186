@@ -1,3 +1,5 @@
+import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
+import { conicDefenseFields } from "../../../constants/ui";
 import { ClassificationPanel } from "../components/ClassificationPanel";
 import { MetricsPanel, SummaryPanel } from "../components/MetricsSidebar";
 import { EquationPanel } from "../components/EquationPanel";
@@ -52,6 +54,14 @@ export function ConicsPage({ activeType, canvasRef, extractedDigits, loading, re
           <h2 className="mt-1 text-2xl font-black text-blue-950">Grafica</h2>
         </div>
         <GraphPanel canvasRef={canvasRef} large />
+      </section>
+
+      <section className="space-y-6">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-700">Seccion 4</p>
+          <h2 className="mt-1 text-2xl font-black text-blue-950">Defensa oral</h2>
+        </div>
+        <DefenseFieldsPanel title="Campos de conica" fields={conicDefenseFields} />
       </section>
     </main>
   );

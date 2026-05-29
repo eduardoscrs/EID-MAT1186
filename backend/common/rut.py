@@ -1,24 +1,55 @@
+class RutValidationError(ValueError):
+    """Error esperado cuando el RUT no cumple el formato requerido."""
+
+
 def limpiar_rut(rut_ingresado):
-    """Limpia puntos y guiones del RUT."""
+    """Limpia puntos, guiones y espacios del RUT."""
     if rut_ingresado is None:
         return ""
-    return str(rut_ingresado).strip().replace(".", "").replace("-", "").upper()
+    return str(rut_ingresado).strip().replace(".", "").replace("-", "").replace(" ", "").upper()
+
+
+def validar_estructura_rut(rut_limpio):
+    if not rut_limpio:
+        raise RutValidationError("Ingresa un RUT antes de validar.")
+
+    cuerpo = rut_limpio[:-1]
+    dv_ingresado = rut_limpio[-1:]
+
+    if not cuerpo or not dv_ingresado:
+        raise RutValidationError("El RUT debe incluir cuerpo y digito verificador.")
+
+    if not cuerpo.isdigit() or not _dv_es_valido(dv_ingresado):
+        raise RutValidationError("El RUT contiene caracteres invalidos.")
+
+    if len(cuerpo) not in (7, 8):
+        raise RutValidationError("El cuerpo del RUT debe tener 7 u 8 digitos.")
+
+    numero_cuerpo = int(cuerpo)
+    if numero_cuerpo == 0:
+        raise RutValidationError("El cuerpo del RUT no puede ser cero.")
+
+    if numero_cuerpo >= 50_000_000:
+        raise RutValidationError("Ingresa un RUT de persona natural, no de empresa.")
+
+    return cuerpo, dv_ingresado
+
+
+def validar_cuerpo_dv_para_procesar(cuerpo, dv):
+    cuerpo_normalizado = _normalizar_cuerpo(cuerpo)
+    dv_normalizado = "" if dv is None else str(dv).strip().upper()
+    rut_limpio = limpiar_rut(f"{cuerpo_normalizado}{dv_normalizado}")
+    es_valido, pasos, cuerpo_validado, dv_validado = validar_rut_paso_a_paso(rut_limpio)
+
+    if not es_valido:
+        raise RutValidationError("No se puede procesar el RUT porque no supera la validacion previa.")
+
+    return cuerpo_validado, dv_validado, pasos
 
 
 def validar_rut_paso_a_paso(rut_limpio):
     """Valida el RUT usando el Modulo 11 y retorna el paso a paso."""
-    if len(rut_limpio) < 2:
-        raise ValueError("Ingrese el cuerpo del RUT y su digito verificador.")
-
-    cuerpo = rut_limpio[:-1]
-    dv_ingresado = rut_limpio[-1]
-
-    if not cuerpo.isdigit():
-        raise ValueError("El cuerpo del RUT debe contener solo digitos.")
-    if len(cuerpo) > 8:
-        raise ValueError("El cuerpo del RUT no puede tener mas de 8 digitos.")
-    if dv_ingresado not in "0123456789K":
-        raise ValueError("El digito verificador debe ser un numero o K.")
+    cuerpo, dv_ingresado = validar_estructura_rut(rut_limpio)
 
     pasos = []
     pasos.append(f"1. RUT a validar (sin DV): {cuerpo}")
@@ -59,3 +90,15 @@ def validar_rut_paso_a_paso(rut_limpio):
     pasos.append(f"7. Coincide el DV ingresado ({dv_ingresado}) con el calculado? {coincide}")
 
     return es_valido, pasos, cuerpo, dv_ingresado
+
+
+def _normalizar_cuerpo(cuerpo):
+    if isinstance(cuerpo, list):
+        return "".join([str(x) for x in cuerpo])
+    if cuerpo is None:
+        return ""
+    return str(cuerpo).strip()
+
+
+def _dv_es_valido(dv):
+    return len(dv) == 1 and (dv.isdigit() or dv == "K")

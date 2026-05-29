@@ -1,7 +1,8 @@
 # Revision de geometria analitica segun PDF
 
-Alcance revisado: secciones conicas generadas desde RUT. No incluye el modulo
-de limites ni funciones por tramos.
+Alcance revisado: secciones conicas generadas desde RUT. El estado del modulo
+de limites se registra por separado en `docs/revision-limites.md` y en
+`progreso.md`.
 
 ## Requerimientos cubiertos
 
@@ -29,12 +30,14 @@ mostrar variedad de conicas durante la defensa:
 | --- | --- |
 | Circunferencia | `11070434-8` |
 | Elipse | `17439150-5` |
-| Parabola | `63170669-K` |
+| Parabola | `17010350-5` |
 | Hiperbola | `29141777-9` |
 
-## Pendiente fuera de este alcance
+## Estado actual
 
-- Modulo de funciones por tramos.
-- Analisis de limites laterales, continuidad y discontinuidades.
-- Grafica y campos de defensa del modulo de limites.
-
+- La parte de geometria analitica esta integrada en la interfaz principal.
+- El backend valida el RUT antes de procesar la conica.
+- La interfaz muestra procedimiento, forma canonica, grafica y campos vacios
+  para defensa oral.
+- Queda recomendado hacer una revision grupal final con los cuatro RUTs antes
+  de la entrega.

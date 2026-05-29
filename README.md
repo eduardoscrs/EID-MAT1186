@@ -5,6 +5,17 @@
 
 Este proyecto representa el **25%** de la calificacion final del curso MAT1186 - Introduccion al Calculo. Integra contenidos matematicos con programacion, razonamiento logico y trabajo colaborativo.
 
+### Estado Actual
+
+La rama `main` queda como base integrada del proyecto. Actualmente incluye:
+
+- Backend Flask con endpoints para validar RUT, procesar conicas y analizar limites.
+- Frontend React/Vite con pantallas separadas para geometria analitica y limites.
+- Validacion de RUT con modulo 11, control de formato, largo correcto y rechazo de RUTs de empresa.
+- Construccion, clasificacion, transformacion y grafica de conicas.
+- Modulo de limites con funcion por tramos, limites laterales, tabla de valores, continuidad, discontinuidad, pasos y grafica.
+- Campos vacios editables para completar respuestas durante la defensa oral.
+
 ### Estructura del Proyecto
 
 La aplicacion separa el backend Flask del frontend React para que cada parte tenga sus dependencias y comandos propios.
@@ -90,7 +101,7 @@ Requerimientos principales:
 - Graficacion correcta de la conica
 - Interfaz intuitiva y visualmente cuidada
 
-**Restriccion importante:** Prohibido el uso de librerias matematicas (numpy, math, sympy). Todos los calculos deben ser implementados manualmente.
+**Restriccion importante:** Prohibido el uso de librerias matematicas o de algebra computacional (`numpy`, `math`, `sympy`, `scipy`, `pandas` u otras equivalentes). Todos los calculos deben ser implementados manualmente.
 
 #### Fase 3: Desarrollo Profesional
 - Codigo modular y organizado (no un unico archivo)
@@ -117,4 +128,4 @@ Requerimientos principales:
 - React + Vite para la interfaz web
 - Git/GitHub para control de versiones
 
-El codigo del proyecto no importa `numpy`, `math` ni `sympy`; los calculos matematicos se implementan manualmente.
+El codigo del proyecto no importa `numpy`, `math`, `sympy`, `scipy` ni `pandas`; los calculos matematicos se implementan manualmente.

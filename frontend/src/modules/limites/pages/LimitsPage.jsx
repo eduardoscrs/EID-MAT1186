@@ -1,4 +1,5 @@
-
+import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
+import { limitDefenseFields } from "../../../constants/ui";
 import { LimitTheoryPanel } from "../components/LimitTheoryPanel";
 import { LimitGraphPanel } from "../components/LimitGraphPanel";
 
@@ -66,6 +67,7 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
         caso={result?.continuidad?.clasificacion || result?.caso}
         limites={result?.limites}
       />
+      <DefenseFieldsPanel title="Campos de limites" fields={limitDefenseFields} />
     </main>
   );
 }
