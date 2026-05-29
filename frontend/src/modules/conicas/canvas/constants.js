@@ -19,5 +19,5 @@ export const COLORS = {
   axisMajor: "#7c3aed",
   axisMinor: "#0891b2",
   text: "#334155",
-  labelBg: "rgba(255, 255, 255, 0.86)",
+  labelBg: "rgba(255, 255, 255, 0.96)",
 };

@@ -21,7 +21,7 @@ export function drawGraph(ctx, data, width, height) {
     return;
   }
 
-  drawAuxiliaryElements(ctx, data, viewport);
   drawConicPaths(ctx, data, viewport);
+  drawAuxiliaryElements(ctx, data, viewport);
   drawKeyPoints(ctx, data, viewport);
 }

@@ -33,6 +33,23 @@ export function calculateViewport(data, width, height) {
   minY -= marginY;
   maxY += marginY;
 
+  const viewport = createViewportFromBounds(minX, maxX, minY, maxY, width, height);
+
+  if (shouldUseDetailZoom(data, keyPoints, viewport)) {
+    return createDetailViewport(data, keyPoints, viewport, width, height);
+  }
+
+  return viewport;
+}
+
+export function toCanvas(point, viewport) {
+  return {
+    x: viewport.offsetX + point[0] * viewport.scale,
+    y: viewport.offsetY - point[1] * viewport.scale,
+  };
+}
+
+function createViewportFromBounds(minX, maxX, minY, maxY, width, height) {
   const scale = Math.min(
     (width - PADDING * 2) / (maxX - minX),
     (height - PADDING * 2) / (maxY - minY),
@@ -52,9 +69,49 @@ export function calculateViewport(data, width, height) {
   };
 }
 
-export function toCanvas(point, viewport) {
-  return {
-    x: viewport.offsetX + point[0] * viewport.scale,
-    y: viewport.offsetY - point[1] * viewport.scale,
-  };
+function shouldUseDetailZoom(data, keyPoints, viewport) {
+  if (!["Hiperbola", "Parabola"].includes(data?.tipo_conica)) return false;
+  if (keyPoints.length < 4) return false;
+
+  return minScreenDistance(keyPoints, viewport) < 50;
+}
+
+function createDetailViewport(data, keyPoints, viewport, width, height) {
+  const minDistance = Math.max(minScreenDistance(keyPoints, viewport), 1);
+  const targetDistance = data?.tipo_conica === "Hiperbola" ? 56 : 54;
+  const maxZoomFactor = data?.tipo_conica === "Hiperbola" ? 2.2 : 1.8;
+  const zoomFactor = Math.min(Math.max(targetDistance / minDistance, 1.12), maxZoomFactor);
+  const scale = viewport.scale * zoomFactor;
+  const mathWidth = (width - PADDING * 2) / scale;
+  const mathHeight = (height - PADDING * 2) / scale;
+  const centerX = average(keyPoints.map(([x]) => x));
+  const centerY = average(keyPoints.map(([, y]) => y));
+
+  return createViewportFromBounds(
+    centerX - mathWidth / 2,
+    centerX + mathWidth / 2,
+    centerY - mathHeight / 2,
+    centerY + mathHeight / 2,
+    width,
+    height,
+  );
+}
+
+function minScreenDistance(points, viewport) {
+  let minDistance = Infinity;
+
+  for (let i = 0; i < points.length; i += 1) {
+    for (let j = i + 1; j < points.length; j += 1) {
+      const pointA = toCanvas(points[i], viewport);
+      const pointB = toCanvas(points[j], viewport);
+      const distance = Math.hypot(pointA.x - pointB.x, pointA.y - pointB.y);
+      if (distance > 0 && distance < minDistance) minDistance = distance;
+    }
+  }
+
+  return Number.isFinite(minDistance) ? minDistance : Infinity;
+}
+
+function average(values) {
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
