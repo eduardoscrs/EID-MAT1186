@@ -1,5 +1,5 @@
 import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
-import { conicDefenseFields } from "../../../constants/ui";
+import { conicDefenseFields, conicExampleRuts } from "../../../constants/ui";
 import { ClassificationPanel } from "../components/ClassificationPanel";
 import { EquationPanel } from "../components/EquationPanel";
 import { GraphPanel } from "../components/GraphPanel";
@@ -26,6 +26,7 @@ export function ConicsPage({ activeType, canvasRef, extractedDigits, loading, re
         loading={loading}
         validation={validation}
         extractedDigits={extractedDigits}
+        examples={conicExampleRuts}
         onRutChange={onRutChange}
         onSubmit={onSubmit}
       />

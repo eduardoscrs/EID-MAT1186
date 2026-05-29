@@ -7,6 +7,19 @@ export const classificationItems = [
   { icon: "H", name: "Hipérbola", keys: ["Hiperbola"], hint: "dos ramas" },
 ];
 
+export const conicExampleRuts = [
+  { rut: "11231420-2", label: "Circunferencia", detail: "caso removible" },
+  { rut: "12314664-6", label: "Elipse", detail: "caso salto" },
+  { rut: "12314568-2", label: "Parábola", detail: "caso infinito" },
+  { rut: "12314667-0", label: "Hipérbola", detail: "caso salto" },
+];
+
+export const limitExampleRuts = [
+  { rut: "11231420-2", label: "Removible", detail: "circunferencia" },
+  { rut: "12314664-6", label: "Salto", detail: "elipse" },
+  { rut: "12314568-2", label: "Infinita", detail: "parábola" },
+];
+
 export const conicDefenseFields = [
   { name: "centro_vertice", label: "Centro o vértice" },
   { name: "vertices", label: "Vértices" },

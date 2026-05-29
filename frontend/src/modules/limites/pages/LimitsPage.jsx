@@ -1,5 +1,6 @@
 import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
-import { limitDefenseFields } from "../../../constants/ui";
+import { ExampleRutStrip } from "../../../components/ExampleRutStrip";
+import { limitDefenseFields, limitExampleRuts } from "../../../constants/ui";
 import { LimitGraphPanel } from "../components/LimitGraphPanel";
 import { LimitStepsPanel, LimitTheoryPanel } from "../components/LimitTheoryPanel";
 
@@ -44,6 +45,8 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
                 {loading ? "Analizando..." : "Construir función"}
               </button>
             </form>
+
+            <ExampleRutStrip examples={limitExampleRuts} onSelect={onRutChange} tone="amber" />
           </div>
 
           <aside className="border-t border-slate-200 bg-slate-50/80 p-5 lg:border-l lg:border-t-0">

@@ -1,10 +1,12 @@
+import { ExampleRutStrip } from "../../../components/ExampleRutStrip";
+
 function validationCopy(validation) {
   if (!validation) return { label: "Sin validar", className: "text-slate-600", badge: "--" };
   if (validation.valido) return { label: "RUT válido", className: "text-emerald-700", badge: "OK" };
   return { label: "RUT inválido", className: "text-rose-700", badge: "Revisar" };
 }
 
-export function RutFormPanel({ rut, loading, validation, extractedDigits, onRutChange, onSubmit }) {
+export function RutFormPanel({ rut, loading, validation, extractedDigits, examples = [], onRutChange, onSubmit }) {
   const state = validationCopy(validation);
   const digits = extractedDigits.length ? extractedDigits : ["_", "_", "_", "_", "_", "_", "_", "_", "_"];
 
@@ -36,6 +38,8 @@ export function RutFormPanel({ rut, loading, validation, extractedDigits, onRutC
               {loading ? "Calculando..." : "Calcular cónica"}
             </button>
           </form>
+
+          {examples.length ? <ExampleRutStrip examples={examples} onSelect={onRutChange} /> : null}
         </div>
 
         <aside className="border-t border-slate-200 bg-slate-50/80 p-5 lg:border-l lg:border-t-0">
