@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
 import { ExampleRutStrip } from "../../../components/ExampleRutStrip";
 import { limitDefenseFields, limitExampleRuts } from "../../../constants/ui";
+import { useElementHeight } from "../../../hooks/useElementHeight";
 import { LimitGraphPanel } from "../components/LimitGraphPanel";
 import { LimitStepsPanel, LimitTheoryPanel } from "../components/LimitTheoryPanel";
 
@@ -9,7 +11,25 @@ function validationLabel(validation) {
   return validation.valido ? "RUT válido" : "RUT inválido";
 }
 
-export function LimitsPage({ loading, result, rut, status, validation, onRutChange, onSubmit }) {
+export function LimitsPage({
+  defenseChecks,
+  defenseValues,
+  loading,
+  result,
+  rut,
+  status,
+  validation,
+  onDefenseChange,
+  onDefenseValidate,
+  onRutChange,
+  onSubmit,
+}) {
+  const graphPanelRef = useRef(null);
+  const graphPanelHeight = useElementHeight(graphPanelRef);
+  const defensePanelStyle = graphPanelHeight
+    ? { "--defense-panel-max-height": `${graphPanelHeight}px` }
+    : undefined;
+
   return (
     <main className="mx-auto max-w-7xl space-y-7 px-4 py-7">
       <section className="panel overflow-hidden">
@@ -74,14 +94,28 @@ export function LimitsPage({ loading, result, rut, status, validation, onRutChan
       </section>
 
       <LimitTheoryPanel result={result} />
-      <LimitGraphPanel
-        samples={result?.samples}
-        funcionPorTramos={result?.funcion_por_tramos}
-        caso={result?.continuidad?.clasificacion || result?.caso}
-        limites={result?.limites}
-      />
+      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div ref={graphPanelRef}>
+          <LimitGraphPanel
+            samples={result?.samples}
+            funcionPorTramos={result?.funcion_por_tramos}
+            caso={result?.continuidad?.clasificacion || result?.caso}
+            limites={result?.limites}
+          />
+        </div>
+        <div className="defense-scroll-panel" style={defensePanelStyle}>
+          <DefenseFieldsPanel
+            checks={defenseChecks}
+            compact
+            fields={limitDefenseFields}
+            title="Campos de límites"
+            values={defenseValues}
+            onChange={onDefenseChange}
+            onValidate={onDefenseValidate}
+          />
+        </div>
+      </div>
       <LimitStepsPanel pasos={result?.pasos} />
-      <DefenseFieldsPanel title="Campos de límites" fields={limitDefenseFields} />
     </main>
   );
 }

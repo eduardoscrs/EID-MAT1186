@@ -7,7 +7,7 @@ function LegendItem({ color, label }) {
   );
 }
 
-export function GraphPanel({ canvasRef, result, large = false }) {
+export function GraphPanel({ canvasRef, result, large = false, onCanvasMouseLeave, onCanvasMouseMove }) {
   const width = large ? 1120 : 760;
   const height = large ? 620 : 460;
 
@@ -37,6 +37,8 @@ export function GraphPanel({ canvasRef, result, large = false }) {
             width={width}
             height={height}
             className={`h-auto w-full bg-white ${large ? "max-w-[1120px]" : "max-w-[760px]"}`}
+            onMouseLeave={onCanvasMouseLeave}
+            onMouseMove={onCanvasMouseMove}
           />
         </div>
       </div>

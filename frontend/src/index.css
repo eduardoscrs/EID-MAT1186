@@ -138,5 +138,42 @@
     overflow-x: auto;
     scrollbar-width: thin;
   }
-}
 
+  .defense-scroll-panel {
+    border-radius: 0.5rem;
+    overflow: visible;
+  }
+
+  @media (min-width: 1280px) {
+    .defense-scroll-panel {
+      position: relative;
+      max-height: var(--defense-panel-max-height, 820px);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .defense-scroll-panel > .panel {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      padding-bottom: 3rem;
+    }
+
+    .defense-scroll-panel::after {
+      position: sticky;
+      bottom: 0;
+      display: block;
+      height: 2.25rem;
+      margin-top: -2.25rem;
+      border-bottom-right-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0), #ffffff 50%);
+      content: "";
+      pointer-events: none;
+    }
+  }
+}

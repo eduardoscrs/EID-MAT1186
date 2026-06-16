@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
 import { conicDefenseFields, conicExampleRuts } from "../../../constants/ui";
+import { useElementHeight } from "../../../hooks/useElementHeight";
 import { ClassificationPanel } from "../components/ClassificationPanel";
 import { EquationPanel } from "../components/EquationPanel";
 import { GraphPanel } from "../components/GraphPanel";
@@ -18,7 +20,29 @@ function SectionHeading({ eyebrow, title, copy }) {
   );
 }
 
-export function ConicsPage({ activeType, canvasRef, extractedDigits, loading, result, rut, validation, onRutChange, onSubmit }) {
+export function ConicsPage({
+  activeType,
+  canvasRef,
+  defenseChecks,
+  defenseValues,
+  extractedDigits,
+  loading,
+  result,
+  rut,
+  validation,
+  onCanvasMouseLeave,
+  onCanvasMouseMove,
+  onDefenseChange,
+  onDefenseValidate,
+  onRutChange,
+  onSubmit,
+}) {
+  const graphPanelRef = useRef(null);
+  const graphPanelHeight = useElementHeight(graphPanelRef);
+  const defensePanelStyle = graphPanelHeight
+    ? { "--defense-panel-max-height": `${graphPanelHeight}px` }
+    : undefined;
+
   return (
     <main className="mx-auto max-w-7xl space-y-9 px-4 py-7">
       <RutFormPanel
@@ -53,7 +77,28 @@ export function ConicsPage({ activeType, canvasRef, extractedDigits, loading, re
           title="Gráfica"
           copy="El plano se ajusta a los puntos calculados y resalta focos, vértices, centro y líneas auxiliares."
         />
-        <GraphPanel canvasRef={canvasRef} result={result} large />
+        <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div ref={graphPanelRef}>
+            <GraphPanel
+              canvasRef={canvasRef}
+              result={result}
+              large
+              onCanvasMouseLeave={onCanvasMouseLeave}
+              onCanvasMouseMove={onCanvasMouseMove}
+            />
+          </div>
+          <div className="defense-scroll-panel" style={defensePanelStyle}>
+            <DefenseFieldsPanel
+              checks={defenseChecks}
+              compact
+              fields={conicDefenseFields}
+              title="Campos de cónica"
+              values={defenseValues}
+              onChange={onDefenseChange}
+              onValidate={onDefenseValidate}
+            />
+          </div>
+        </div>
       </section>
 
       <section className="space-y-5">
@@ -66,10 +111,6 @@ export function ConicsPage({ activeType, canvasRef, extractedDigits, loading, re
           <ModuleStepsPanel validation={validation} />
           <ProcedurePanel result={result} />
         </div>
-      </section>
-
-      <section className="space-y-5">
-        <DefenseFieldsPanel title="Campos de cónica" fields={conicDefenseFields} />
       </section>
     </main>
   );

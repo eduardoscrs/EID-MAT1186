@@ -1,5 +1,4 @@
 import { COLORS } from "./constants";
-import { drawLabel } from "./labels";
 import { finiteNumber } from "./utils";
 import { toCanvas } from "./viewport";
 
@@ -9,42 +8,40 @@ export function drawAuxiliaryElements(ctx, data, viewport) {
   ctx.lineJoin = "round";
 
   if (data.tipo_conica === "Parabola") {
-    drawLineObject(ctx, data.eje_simetria, viewport, COLORS.symmetry, [10, 8], "Eje");
-    drawLineObject(ctx, data.directriz_recta, viewport, COLORS.directrix, [7, 7], "Directriz");
-    drawSegment(ctx, data.extremos_lado_recto, viewport, COLORS.latus, 3, "Lado recto");
+    drawLineObject(ctx, data.eje_simetria, viewport, COLORS.symmetry, [10, 8]);
+    drawLineObject(ctx, data.directriz_recta, viewport, COLORS.directrix, [7, 7]);
+    drawSegment(ctx, data.extremos_lado_recto, viewport, COLORS.latus, 3);
   }
 
   if (data.tipo_conica === "Elipse") {
-    drawSegment(ctx, data.vertices, viewport, COLORS.axisMajor, 2.5, "Eje mayor");
-    drawSegment(ctx, data.covertices, viewport, COLORS.axisMinor, 2.5, "Eje menor");
+    drawSegment(ctx, data.vertices, viewport, COLORS.axisMajor, 2.5);
+    drawSegment(ctx, data.covertices, viewport, COLORS.axisMinor, 2.5);
   }
 
   if (data.tipo_conica === "Hiperbola") {
-    data.asintotas?.forEach((line, index) => {
-      drawObliqueLine(ctx, line, viewport, COLORS.asymptote, [9, 7], `Asíntota ${index + 1}`);
+    data.asintotas?.forEach((line) => {
+      drawObliqueLine(ctx, line, viewport, COLORS.asymptote, [9, 7]);
     });
-    drawLineObject(ctx, data.eje_transversal_recta, viewport, COLORS.axisMajor, [10, 8], "Eje real");
-    drawLineObject(ctx, data.eje_conjugado_recta, viewport, COLORS.axisMinor, [10, 8], "Eje conj.");
+    drawLineObject(ctx, data.eje_transversal_recta, viewport, COLORS.axisMajor, [10, 8]);
+    drawLineObject(ctx, data.eje_conjugado_recta, viewport, COLORS.axisMinor, [10, 8]);
   }
 
   ctx.restore();
 }
 
-function drawLineObject(ctx, line, viewport, color, dash, label) {
+function drawLineObject(ctx, line, viewport, color, dash) {
   if (!line) return;
   if (line.tipo === "vertical") {
     const x = viewport.offsetX + line.x * viewport.scale;
     drawCanvasLine(ctx, x, 0, x, ctx.canvas.height, color, dash);
-    drawLabel(ctx, label, x + 10, 18, color);
   }
   if (line.tipo === "horizontal") {
     const y = viewport.offsetY - line.y * viewport.scale;
     drawCanvasLine(ctx, 0, y, ctx.canvas.width, y, color, dash);
-    drawLabel(ctx, label, ctx.canvas.width - 96, y + 10, color);
   }
 }
 
-function drawObliqueLine(ctx, line, viewport, color, dash, label) {
+function drawObliqueLine(ctx, line, viewport, color, dash) {
   if (!line || !finiteNumber(line.m)) return;
 
   const endpoints = getObliqueLineCanvasEndpoints(ctx, line, viewport);
@@ -52,15 +49,9 @@ function drawObliqueLine(ctx, line, viewport, color, dash, label) {
 
   const [point1, point2] = endpoints;
   drawCanvasLine(ctx, point1.x, point1.y, point2.x, point2.y, color, dash);
-
-  const labelPoint = {
-    x: point1.x + (point2.x - point1.x) * 0.78,
-    y: point1.y + (point2.y - point1.y) * 0.78,
-  };
-  drawLabel(ctx, label, labelPoint.x, labelPoint.y, color, { anchorX: "center", anchorY: "center" });
 }
 
-function drawSegment(ctx, points, viewport, color, lineWidth = 2, label) {
+function drawSegment(ctx, points, viewport, color, lineWidth = 2) {
   if (!points?.[0] || !points?.[1]) return;
 
   const start = toCanvas(points[0], viewport);
@@ -74,10 +65,6 @@ function drawSegment(ctx, points, viewport, color, lineWidth = 2, label) {
   ctx.lineTo(end.x, end.y);
   ctx.stroke();
   ctx.restore();
-
-  if (label) {
-    drawLabel(ctx, label, (start.x + end.x) / 2 + 10, (start.y + end.y) / 2 + 22, color, { anchorY: "center" });
-  }
 }
 
 function drawCanvasLine(ctx, x1, y1, x2, y2, color, dash) {
