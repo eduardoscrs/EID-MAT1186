@@ -29,6 +29,21 @@ Avance estimado:
 | S4-06 Actualizar documentacion de estado | Completada | Se actualizo README y se agregaron documentos de revision. |
 | S4-07 Revisar ramas del equipo antes de integrar | Completada | `main` conserva el trabajo mas completo; las demas ramas sirven como referencia pero no conviene fusionarlas completas. |
 
+## Tareas S7
+
+Revision realizada contra el PDF de enunciado completo y la rama `main` actual.
+Los puntos se registraron primero como pendientes y luego se fueron cerrando en
+la rama `santana` segun prioridad de defensa.
+
+| Tarea | Estado | Observacion |
+| --- | --- | --- |
+| S7-01 Quitar los resultados de los puntos | Pendiente | En la seccion 1 se muestran tarjetas con coordenadas y resultados como vertice, foco, directriz, eje, parametro, lado recto y extremos del lado recto. Si la defensa debe resolverlos manualmente, conviene retirarlos o moverlos fuera de la vista principal. |
+| S7-02 Quitar los nombres de los puntos en el grafico | Pendiente | El canvas de conicas dibuja etiquetas sobre los puntos calculados, por ejemplo `Centro`, `Vertice`, `Foco`, `F1`, `V1`, `LR1` y `LR2`. Se deben dejar los puntos/lineas sin nombres si el objetivo es que el estudiante los identifique. |
+| S7-03 Redisenar apartado de Desarrollo Matematico | Pendiente | El desarrollo aparece en tarjetas/listas separadas. El PDF exige evidenciar el procedimiento paso a paso; se recomienda reordenarlo como desarrollo de cuaderno: datos del RUT, coeficientes, ajustes, clasificacion, completar cuadrados, forma canonica y procedimiento inverso. |
+| S7-04 Hacer funcionales los inputs de defensa | Completada | En conicas, los campos de defensa se movieron a la derecha del plano cartesiano. En conicas y limites, al presionar Enter se valida la respuesta: borde verde si coincide con el resultado calculado y borde rojo si no coincide. En conicas, las respuestas correctas de puntos y rectas tambien se marcan en el plano. |
+| S7-05 Revisar grafica del modulo de limites | Pendiente | Para el caso de discontinuidad infinita, la tabla muestra valores cercanos a `a`, pero la grafica usa muestras mas espaciadas. Conviene densificar puntos cerca de la asintota para evidenciar mejor la tendencia a `+/- infinito` y verificar visualmente removible, salto e infinita. |
+| S7-06 Calcular automaticamente al cambiar de modulo | Completada | Al cambiar entre Conicas y Limites, si ya hay un RUT valido ingresado, la app calcula el modulo faltante sin exigir volver a presionar el boton de construccion. |
+
 ## Verificacion local
 
 - Backend probado con RUTs validos para circunferencia, elipse, parabola e hiperbola.
