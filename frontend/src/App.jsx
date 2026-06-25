@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AppFooter } from "./components/AppFooter";
 import { AppHeader } from "./components/AppHeader";
 import { initialMessage } from "./constants/ui";
-import { processRut, validateRut } from "./modules/conicas/api/conics";
+import { processRut } from "./modules/conicas/api/conics";
 import { findDefensePointAtCanvasPosition } from "./modules/conicas/canvas/defenseOverlay";
 import { drawGraph } from "./modules/conicas/canvas/drawGraph";
 import { calculateViewport } from "./modules/conicas/canvas/viewport";
@@ -12,6 +12,8 @@ import { buildConicDefenseOverlay, validateConicDefenseField } from "./modules/c
 import { processLimits } from "./modules/limites/api/limits";
 import { LimitsPage } from "./modules/limites/pages/LimitsPage";
 import { validateLimitDefenseField } from "./modules/limites/utils/defense";
+import { cleanRutInput, formatRutInput, getRutKey } from "./modules/shared/rut";
+import { validateRut } from "./modules/shared/rutApi";
 
 function App() {
   const canvasRef = useRef(null);
@@ -32,7 +34,6 @@ function App() {
 
   const activeType = result?.tipo_conica || null;
   const rutKey = useMemo(() => cleanRutInput(rut), [rut]);
-  const extractedDigits = useMemo(() => rut.replace(/[^0-9kK]/g, "").toUpperCase().split(""), [rut]);
   const conicDefenseOverlay = useMemo(
     () => buildConicDefenseOverlay(result, conicDefenseChecks, conicDefenseValues),
     [result, conicDefenseChecks, conicDefenseValues],
@@ -286,7 +287,6 @@ function App() {
           canvasRef={canvasRef}
           defenseChecks={conicDefenseChecks}
           defenseValues={conicDefenseValues}
-          extractedDigits={extractedDigits}
           loading={loading}
           result={result}
           rut={rut}
@@ -317,30 +317,6 @@ function App() {
       <AppFooter />
     </div>
   );
-}
-
-function formatRutInput(value) {
-  const cleaned = cleanRutInput(value).slice(0, 9);
-
-  if (!cleaned) return "";
-  if (cleaned.length === 1) return `-${cleaned}`;
-
-  return `${cleaned.slice(0, -1)}-${cleaned.slice(-1)}`;
-}
-
-function cleanRutInput(value) {
-  return String(value || "")
-    .replace(/[^0-9kK]/g, "")
-    .toUpperCase();
-}
-
-function getRutKey(validarData, fallbackRut) {
-  const rutFromParts =
-    validarData?.cuerpo && validarData?.digito_verificador
-      ? `${validarData.cuerpo}${validarData.digito_verificador}`
-      : "";
-
-  return cleanRutInput(validarData?.rut_limpio || rutFromParts || fallbackRut);
 }
 
 export default App;

@@ -1,3 +1,10 @@
+import {
+  closeTo,
+  normalizeAnswerText,
+  parseDecimal,
+  validateMinimumTextLength,
+} from "../../shared/defense";
+
 const NUMERIC_TOLERANCE = 0.06;
 
 export function validateLimitDefenseField(result, fieldName, rawValue) {
@@ -104,7 +111,7 @@ function validateValueAtA(value, result) {
 }
 
 function validateContinuity(value, expectedContinuous) {
-  const normalized = normalizeText(value);
+  const normalized = normalizeAnswerText(value);
   const saysContinuous = normalized.includes("continua") && !normalized.includes("discontinua") && !normalized.includes("no continua");
   const saysDiscontinuous = normalized.includes("discontinua") || normalized.includes("no continua") || normalized === "no";
 
@@ -122,8 +129,8 @@ function validateContinuity(value, expectedContinuous) {
 }
 
 function validateDiscontinuityType(value, expectedType) {
-  const normalized = normalizeText(value);
-  const expected = normalizeText(expectedType);
+  const normalized = normalizeAnswerText(value);
+  const expected = normalizeAnswerText(expectedType);
 
   if (expected === "continua") {
     const saysNoDiscontinuity =
@@ -151,17 +158,7 @@ function validateDiscontinuityType(value, expectedType) {
 }
 
 function validateJustification(value) {
-  if (value.length >= 18) {
-    return {
-      status: "correct",
-      message: "Respuesta registrada.",
-    };
-  }
-
-  return {
-    status: "incorrect",
-    message: "Escribe una justificación más completa.",
-  };
+  return validateMinimumTextLength(value, 18);
 }
 
 function matchesExpectedValue(value, expected) {
@@ -178,18 +175,18 @@ function matchesExpectedValue(value, expected) {
   const expectedNumber = parseNumeric(expected);
 
   if (!Number.isFinite(answerNumber) || !Number.isFinite(expectedNumber)) return false;
-  return Math.abs(answerNumber - expectedNumber) <= NUMERIC_TOLERANCE;
+  return closeTo(answerNumber, expectedNumber, NUMERIC_TOLERANCE);
 }
 
 function parseBooleanAnswer(value) {
-  const normalized = normalizeText(value);
+  const normalized = normalizeAnswerText(value);
   if (["si", "sí", "existe", "verdadero", "true"].includes(normalized)) return true;
   if (["no", "no existe", "falso", "false"].includes(normalized)) return false;
   return null;
 }
 
 function isUndefinedAnswer(value) {
-  const normalized = normalizeText(value);
+  const normalized = normalizeAnswerText(value);
   return [
     "",
     "--",
@@ -213,16 +210,8 @@ function normalizeMathText(value) {
     .replace(",", ".");
 }
 
-function normalizeText(value) {
-  return String(value ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-}
-
 function parseNumeric(value) {
   const normalized = normalizeMathText(value);
   if (!normalized || normalized.includes("inf")) return NaN;
-  return Number(normalized);
+  return parseDecimal(normalized);
 }

@@ -1,3 +1,10 @@
+import {
+  closeTo as isCloseTo,
+  normalizeAnswerText,
+  parseDecimal,
+  validateMinimumTextLength,
+} from "../../shared/defense";
+
 const POINT_TOLERANCE = 0.06;
 
 export function validateConicDefenseField(result, fieldName, rawValue) {
@@ -194,21 +201,11 @@ function validateLineAnswer(value, expectedLine) {
 }
 
 function validateJustification(value) {
-  if (value.length >= 12) {
-    return {
-      status: "correct",
-      message: "Respuesta registrada.",
-    };
-  }
-
-  return {
-    status: "incorrect",
-    message: "Escribe una justificación más completa.",
-  };
+  return validateMinimumTextLength(value, 12);
 }
 
 function validateNotApplicable(value) {
-  const normalized = normalizeText(value);
+  const normalized = normalizeAnswerText(value);
   const isEmpty = normalized.length === 0;
   const saysNotApplicable = ["no aplica", "n/a", "na", "--", "no corresponde"].includes(normalized);
 
@@ -244,7 +241,7 @@ function parseLine(value) {
 
   if (!match) return null;
 
-  const numericValue = parseNumeric(match[2]);
+  const numericValue = parseDecimal(match[2]);
   if (!Number.isFinite(numericValue)) return null;
 
   return {
@@ -255,12 +252,8 @@ function parseLine(value) {
 
 function extractNumbers(value) {
   return (String(value).match(/-?\d+(?:[.,]\d+)?/g) || [])
-    .map(parseNumeric)
+    .map(parseDecimal)
     .filter(Number.isFinite);
-}
-
-function parseNumeric(value) {
-  return Number(String(value).replace(",", "."));
 }
 
 function samePointSet(answerPoints, expectedPoints) {
@@ -284,17 +277,9 @@ function samePoint(pointA, pointB) {
 }
 
 function closeTo(valueA, valueB) {
-  return Math.abs(Number(valueA) - Number(valueB)) <= POINT_TOLERANCE;
+  return isCloseTo(valueA, valueB, POINT_TOLERANCE);
 }
 
 function isPoint(point) {
   return Array.isArray(point) && Number.isFinite(Number(point[0])) && Number.isFinite(Number(point[1]));
-}
-
-function normalizeText(value) {
-  return String(value)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
 }
