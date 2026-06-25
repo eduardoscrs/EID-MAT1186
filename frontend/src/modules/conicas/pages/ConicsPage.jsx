@@ -5,7 +5,7 @@ import { useElementHeight } from "../../../hooks/useElementHeight";
 import { ClassificationPanel } from "../components/ClassificationPanel";
 import { EquationPanel } from "../components/EquationPanel";
 import { GraphPanel } from "../components/GraphPanel";
-import { MetricsPanel, SummaryPanel } from "../components/MetricsSidebar";
+import { MetricsPanel } from "../components/MetricsSidebar";
 import { ModuleStepsPanel } from "../components/ModuleStepsPanel";
 import { ProcedurePanel } from "../components/ProcedurePanel";
 import { RutFormPanel } from "../components/RutFormPanel";
@@ -65,10 +65,7 @@ export function ConicsPage({
           <EquationPanel result={result} />
           <ClassificationPanel activeType={activeType} result={result} />
         </div>
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-          <MetricsPanel result={result} />
-          <SummaryPanel result={result} />
-        </div>
+        <MetricsPanel defenseChecks={defenseChecks} result={result} />
       </section>
 
       <section className="space-y-5">
