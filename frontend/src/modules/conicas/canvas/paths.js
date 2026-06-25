@@ -20,10 +20,15 @@ export function drawConicPaths(ctx, data, viewport) {
 
 function drawCurveByType(ctx, data, viewport) {
   const tipo = data.tipo_conica;
-  const puntos = data.puntos_grafica;
 
-  if (tipo === "Circunferencia" || tipo === "Elipse") {
-    drawClosedTopBottomPath(ctx, puntos, viewport);
+  if (tipo === "Circunferencia") {
+    drawCirclePath(ctx, data, viewport);
+    return;
+  }
+
+  if (tipo === "Elipse") {
+    drawEllipsePath(ctx, data, viewport);
+    return;
   }
 
   if (tipo === "Parabola") {
@@ -35,7 +40,42 @@ function drawCurveByType(ctx, data, viewport) {
   }
 }
 
+function drawCirclePath(ctx, data, viewport) {
+  const h = data?.centro?.[0];
+  const k = data?.centro?.[1];
+  const radio = data?.radio;
+
+  if (!Number.isFinite(h) || !Number.isFinite(k) || !Number.isFinite(radio) || radio <= 0) {
+    drawClosedTopBottomPath(ctx, data?.puntos_grafica, viewport);
+    return;
+  }
+
+  const center = toCanvas([h, k], viewport);
+  ctx.beginPath();
+  ctx.ellipse(center.x, center.y, radio * viewport.scale, radio * viewport.scale, 0, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function drawEllipsePath(ctx, data, viewport) {
+  const h = data?.centro?.[0];
+  const k = data?.centro?.[1];
+  const radioX = data?.semieje_x;
+  const radioY = data?.semieje_y;
+
+  if (!Number.isFinite(h) || !Number.isFinite(k) || !Number.isFinite(radioX) || !Number.isFinite(radioY) || radioX <= 0 || radioY <= 0) {
+    drawClosedTopBottomPath(ctx, data?.puntos_grafica, viewport);
+    return;
+  }
+
+  const center = toCanvas([h, k], viewport);
+  ctx.beginPath();
+  ctx.ellipse(center.x, center.y, radioX * viewport.scale, radioY * viewport.scale, 0, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
 function drawClosedTopBottomPath(ctx, points, viewport) {
+  if (!points) return;
+
   const upper = collectValidPathPoints({ x: points.x, y: points.y_pos });
   const lower = collectValidPathPoints({ x: points.x, y: points.y_neg }).reverse();
   const canvasPoints = [...upper, ...lower].map((point) => toCanvas(point, viewport));

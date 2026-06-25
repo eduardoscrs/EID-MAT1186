@@ -58,22 +58,35 @@ def validar_rut_api():
         return _error_response(error, 500)
 
 
-@api_bp.route("/api/procesar", methods=["POST"])
-def procesar_api():
-    """Endpoint que procesa el RUT completo y calcula la conica."""
+@api_bp.route("/api/conicas", methods=["POST"])
+def conicas_api():
+    """Endpoint que procesa el RUT y calcula la conica."""
     data = _json_body()
 
     try:
-        resultado = procesar_conica(
-            data.get("cuerpo"),
-            data.get("digito_verificador") or data.get("dv"),
-        )
+        cuerpo, dv = _partes_rut_para_conicas(data)
+        resultado = procesar_conica(cuerpo, dv)
         return jsonify(resultado)
     except ValueError as error:
         return _error_response(error)
     except Exception as error:
         current_app.logger.exception("Error inesperado procesando conica")
         return _error_response(error, 500)
+
+
+def _partes_rut_para_conicas(data):
+    rut_input = data.get("rut")
+
+    if rut_input:
+        rut_limpio = limpiar_rut(rut_input)
+        es_valido, _pasos_rut, cuerpo, dv = validar_rut_paso_a_paso(rut_limpio)
+
+        if not es_valido:
+            raise ValueError("No se puede procesar el RUT porque no supera la validacion previa.")
+
+        return cuerpo, dv
+
+    return data.get("cuerpo"), data.get("digito_verificador") or data.get("dv")
 
 
 @api_bp.route("/api/limites", methods=["POST"])

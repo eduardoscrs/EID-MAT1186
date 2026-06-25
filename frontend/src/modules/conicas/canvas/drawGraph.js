@@ -17,7 +17,7 @@ export function drawGraph(ctx, data, width, height, defenseOverlay, hoveredDefen
     return;
   }
 
-  if (!data?.puntos_grafica) {
+  if (!data) {
     drawFallbackCircle(ctx, width, height);
     return;
   }

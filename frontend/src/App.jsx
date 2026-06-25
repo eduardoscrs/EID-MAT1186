@@ -173,10 +173,7 @@ function App() {
     setStatus("RUT válido. Calculando cónica...");
     resetConicDefense();
 
-    const procesarData = await processRut({
-      cuerpo: validarData.cuerpo,
-      digito_verificador: validarData.digito_verificador,
-    });
+    const procesarData = await processRut(rut);
 
     setResult({
       ...procesarData,
@@ -231,7 +228,7 @@ function App() {
   }
 
   function handleConicCanvasMouseMove(event) {
-    if (!result?.puntos_grafica || !conicDefenseOverlay.points?.length) {
+    if (!result || !conicDefenseOverlay.points?.length) {
       event.currentTarget.style.cursor = "default";
       setHoveredConicDefensePoint(null);
       return;

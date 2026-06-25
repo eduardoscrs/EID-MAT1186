@@ -56,7 +56,8 @@ React llama a rutas como:
 
 ```js
 fetch('/api/validar_rut')
-fetch('/api/procesar')
+fetch('/api/conicas')
+fetch('/api/limites')
 ```
 
 Vite redirige esas llamadas al backend Flask mediante el proxy configurado en

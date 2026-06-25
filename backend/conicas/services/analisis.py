@@ -2,12 +2,6 @@ from conicas.geometria.circunferencia import analizar_circunferencia
 from conicas.geometria.elipse import analizar_elipse
 from conicas.geometria.hiperbola import analizar_hiperbola
 from conicas.geometria.parabola import analizar_parabola
-from conicas.services.graficas import (
-    puntos_circunferencia,
-    puntos_elipse,
-    puntos_hiperbola,
-    puntos_parabola,
-)
 
 
 def agregar_analisis_central(resultado, A, B, C, D, E, datos_canonicos):
@@ -52,7 +46,6 @@ def agregar_analisis_parabola(resultado, A, B, C, D, E):
             "lado_recto": float(abs(4 * p_val)),
             "extremos_lado_recto": _extremos_lado_recto(vertice, p_val, orientacion),
             "orientacion": orientacion,
-            "puntos_grafica": puntos_parabola(vertice, p_val, orientacion),
         }
     )
     return resultado
@@ -86,7 +79,6 @@ def _datos_circunferencia(h_x, h_y, const_der, A):
                 "estado_conica": "degenerada",
                 "tiene_grafica_real": True,
                 "observacion": "La circunferencia se reduce a un punto.",
-                "puntos_grafica": puntos_circunferencia(centro_val, radio_val),
             }
         )
         return datos
@@ -95,7 +87,6 @@ def _datos_circunferencia(h_x, h_y, const_der, A):
         {
             "estado_conica": "real",
             "tiene_grafica_real": True,
-            "puntos_grafica": puntos_circunferencia(centro_val, radio_val),
         }
     )
     return datos
@@ -148,7 +139,6 @@ def _datos_elipse(h_x, h_y, const_der, A, B):
         "eje_menor_recta": _eje_central(centro_val, _orientacion_perpendicular(orientacion)),
         "estado_conica": "real",
         "tiene_grafica_real": True,
-        "puntos_grafica": puntos_elipse(centro_val, radio_x_val, radio_y_val),
     })
     return datos
 
@@ -201,7 +191,6 @@ def _datos_hiperbola(h_x, h_y, const_der, A, B):
         "eje_conjugado_recta": _eje_central(centro_val, _orientacion_perpendicular(orientacion)),
         "estado_conica": "real",
         "tiene_grafica_real": True,
-        "puntos_grafica": puntos_hiperbola(centro_val, a_val, b_val, orientacion),
     })
     return datos
 
