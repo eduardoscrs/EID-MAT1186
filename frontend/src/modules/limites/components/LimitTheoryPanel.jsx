@@ -22,9 +22,40 @@ function MetricCell({ label, value }) {
   );
 }
 
+function formatEvidenceValue(value) {
+  if (value === null || value === undefined) return "--";
+  return value;
+}
+
+function buildEvidenceColumns(evidence = [], a) {
+  const numericA = Number(a);
+  const ordered = [...evidence].sort((first, second) => Number(first.x) - Number(second.x));
+
+  if (!Number.isFinite(numericA)) {
+    return ordered.map((row) => ({ ...row, side: "sample" }));
+  }
+
+  const left = ordered.filter((row) => Number(row.x) < numericA);
+  const right = ordered.filter((row) => Number(row.x) > numericA);
+
+  return [
+    ...left.map((row) => ({ ...row, side: "left" })),
+    { x: a, y: null, side: "center" },
+    ...right.map((row) => ({ ...row, side: "right" })),
+  ];
+}
+
+function evidenceSideLabel(side) {
+  if (side === "center") return "Centro";
+  if (side === "left") return "Izq.";
+  if (side === "right") return "Der.";
+  return "Valor";
+}
+
 export function LimitTheoryPanel({ result }) {
   const tramos = result?.tramos || [];
   const classification = result?.continuidad?.clasificacion;
+  const evidenceColumns = buildEvidenceColumns(result?.evidence || [], result?.a);
 
   return (
     <section className="panel p-5">
@@ -91,22 +122,51 @@ export function LimitTheoryPanel({ result }) {
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
               <p className="text-sm font-black text-slate-700">Evidencia numérica</p>
-              <p className="mt-1 text-sm text-slate-600">Tabla de valores alrededor de a, de izquierda a derecha.</p>
+              <p className="mt-1 text-sm text-slate-600">Tabla de valores alrededor de a, con el centro destacado.</p>
               <div className="mt-3 overflow-auto rounded-lg border border-slate-200 bg-white">
-                <table className="w-full text-sm">
+                <table className="min-w-[760px] w-full text-sm">
                   <thead className="bg-slate-100">
-                    <tr className="text-left text-xs uppercase tracking-[0.12em] text-slate-500">
-                      <th className="px-3 py-2">x</th>
-                      <th className="px-3 py-2">f(x)</th>
+                    <tr className="text-center text-xs uppercase tracking-[0.12em] text-slate-500">
+                      <th className="w-20 px-3 py-2 text-left">Lado</th>
+                      {evidenceColumns.map((column, i) => (
+                        <th
+                          key={`side-${column.x}-${i}`}
+                          className={`px-3 py-2 ${
+                            column.side === "center" ? "border-x border-amber-200 bg-amber-100 text-amber-900" : ""
+                          }`}
+                        >
+                          {evidenceSideLabel(column.side)}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {result.evidence?.map((row, i) => (
-                      <tr key={i} className="border-t border-slate-100">
-                        <td className="px-3 py-2 font-mono">{row.x}</td>
-                        <td className="px-3 py-2 font-mono">{row.y === null ? "--" : row.y}</td>
-                      </tr>
-                    ))}
+                    <tr className="border-t border-slate-100">
+                      <th className="px-3 py-2 text-left font-black text-slate-600">x</th>
+                      {evidenceColumns.map((column, i) => (
+                        <td
+                          key={`x-${column.x}-${i}`}
+                          className={`px-3 py-2 text-center font-mono ${
+                            column.side === "center" ? "border-x border-amber-200 bg-amber-50 font-black text-amber-900" : ""
+                          }`}
+                        >
+                          {column.side === "center" ? `a = ${column.x}` : column.x}
+                        </td>
+                      ))}
+                    </tr>
+                    <tr className="border-t border-slate-100">
+                      <th className="px-3 py-2 text-left font-black text-slate-600">f(x)</th>
+                      {evidenceColumns.map((column, i) => (
+                        <td
+                          key={`y-${column.x}-${i}`}
+                          className={`px-3 py-2 text-center font-mono ${
+                            column.side === "center" ? "border-x border-amber-200 bg-amber-50 font-black text-amber-900" : ""
+                          }`}
+                        >
+                          {formatEvidenceValue(column.y)}
+                        </td>
+                      ))}
+                    </tr>
                   </tbody>
                 </table>
               </div>
