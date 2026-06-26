@@ -39,6 +39,18 @@ function formatEvidenceValue(value) {
   return formatDisplayValue(value);
 }
 
+function formatEvidenceXValue(value, a) {
+  const defaultText = formatDisplayValue(value);
+  const number = Number(value);
+  const center = Number(a);
+
+  if (Number.isFinite(number) && Number.isFinite(center) && number !== center && defaultText === formatDisplayValue(a)) {
+    return formatDisplayValue(value, 3);
+  }
+
+  return defaultText;
+}
+
 function buildEvidenceColumns(evidence = [], a) {
   const numericA = Number(a);
   const ordered = [...evidence].sort((first, second) => Number(first.x) - Number(second.x));
@@ -220,7 +232,7 @@ export function LimitTheoryPanel({ defenseChecks = {}, result }) {
                           }`}
                           key={`x-${column.x}-${i}`}
                         >
-                          {column.side === "center" ? `a = ${formatDisplayValue(column.x)}` : formatDisplayValue(column.x)}
+                          {column.side === "center" ? `a = ${formatDisplayValue(column.x)}` : formatEvidenceXValue(column.x, result.a)}
                         </td>
                       ))}
                     </tr>
