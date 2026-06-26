@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import { MathText } from "../../../components/MathText";
+import { formatDisplayValue } from "../../../utils/displayNumbers";
 import { LIMIT_CANVAS_HEIGHT, LIMIT_CANVAS_WIDTH, drawLimitGraph } from "../canvas/drawLimitGraph";
 
 function parsePiecewiseFunction(funcionStr) {
@@ -23,16 +25,24 @@ function LegendDot({ color, label }) {
   );
 }
 
-function LimitMetric({ label, value }) {
+function isCorrect(checks, fieldName) {
+  return checks?.[fieldName]?.status === "correct";
+}
+
+function LimitMetric({ label, value, fieldName, defenseChecks }) {
+  const revealed = isCorrect(defenseChecks, fieldName);
+
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">{label}</p>
-      <p className="mt-2 text-xl font-black text-slate-950">{value}</p>
+      <p className={`mt-2 text-xl font-black ${revealed ? "text-slate-950" : "text-slate-400"}`}>
+        {revealed ? value : "--"}
+      </p>
     </div>
   );
 }
 
-export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
+export function LimitGraphPanel({ defenseChecks = {}, samples, funcionPorTramos, caso, limites }) {
   const canvasRef = useRef(null);
   const piecewiseRows = parsePiecewiseFunction(funcionPorTramos);
 
@@ -87,8 +97,12 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
                 <div className="grid gap-2">
                   {piecewiseRows.map((row) => (
                     <div key={`${row.expression}-${row.condition}`} className="grid grid-cols-[minmax(80px,auto)_auto] gap-5">
-                      <span className="font-black">{row.expression}</span>
-                      <span className="text-slate-600">si {row.condition}</span>
+                      <span className="font-black">
+                        <MathText value={formatDisplayValue(row.expression)} />
+                      </span>
+                      <span className="text-slate-600">
+                        si <MathText value={formatDisplayValue(row.condition)} />
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -109,9 +123,14 @@ export function LimitGraphPanel({ samples, funcionPorTramos, caso, limites }) {
       {caso && limites ? (
         <div className="border-t border-slate-200 bg-slate-50 px-5 py-5">
           <div className="grid gap-4 md:grid-cols-3">
-            <LimitMetric label="Límite izquierdo" value={limites.izquierdo} />
-            <LimitMetric label="Límite derecho" value={limites.derecho} />
-            <LimitMetric label="Tipo de discontinuidad" value={caso === "continua" ? "No hay discontinuidad" : caso} />
+            <LimitMetric defenseChecks={defenseChecks} fieldName="limite_izquierdo" label="Límite izquierdo" value={formatDisplayValue(limites.izquierdo)} />
+            <LimitMetric defenseChecks={defenseChecks} fieldName="limite_derecho" label="Límite derecho" value={formatDisplayValue(limites.derecho)} />
+            <LimitMetric
+              defenseChecks={defenseChecks}
+              fieldName="tipo_discontinuidad"
+              label="Tipo de discontinuidad"
+              value={caso === "continua" ? "No hay discontinuidad" : caso}
+            />
           </div>
         </div>
       ) : null}

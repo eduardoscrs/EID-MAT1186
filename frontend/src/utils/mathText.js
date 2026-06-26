@@ -1,3 +1,5 @@
+import { roundDecimalText } from "./displayNumbers";
+
 const replacements = [
   [/²/g, "^2"],
   [/³/g, "^3"],
@@ -7,6 +9,8 @@ const replacements = [
   [/−/g, "-"],
   [/->/g, "\\to "],
   [/→/g, "\\to "],
+  [/>=/g, "\\ge "],
+  [/<=/g, "\\le "],
   [/%/g, "\\bmod "],
   [/\*/g, "\\cdot "],
   [/π/g, "\\pi"],
@@ -27,7 +31,7 @@ const mathWords = new Map([
 export function toLatex(value) {
   if (value === null || value === undefined) return "--";
 
-  let expression = String(value).trim();
+  let expression = roundDecimalText(String(value).trim());
   replacements.forEach(([pattern, replacement]) => {
     expression = expression.replace(pattern, replacement);
   });
@@ -60,10 +64,29 @@ export function isStandaloneMath(value) {
 
   const text = String(value).trim();
   const words = text.match(/[A-Za-zÁÉÍÓÚáéíóúñÑ]{3,}/g) || [];
-  const allowedWords = new Set(["RUT", "sin", "DV"]);
+  const allowedWords = new Set([
+    "RUT",
+    "sin",
+    "DV",
+    "bmod",
+    "begin",
+    "cases",
+    "cdot",
+    "definida",
+    "end",
+    "existe",
+    "frac",
+    "ingresado",
+    "infty",
+    "lim",
+    "quad",
+    "si",
+    "text",
+    "to",
+  ]);
   if (words.some((word) => !allowedWords.has(word))) return false;
 
-  return /^[0-9A-Za-z_.,\s=^²³()+\-*/|\\{}%]+$/.test(text);
+  return /^[0-9A-Za-z_.,\s=^²³()+\-*/|\\{}%<>&∞]+$/.test(text);
 }
 
 export function splitMathSentence(value) {
@@ -115,7 +138,7 @@ function collectInlineMathMatches(text) {
   addMatches(candidates, text, /\bDV\s*=\s*[0-9K]\b/gi);
   addMatches(candidates, text, /\bd\d\b/g);
   addMatches(candidates, text, /\bK_[xy]\b/g);
-  addMatches(candidates, text, /\b[ABCDExp]\b/g);
+  addMatches(candidates, text, /(?<![A-Za-zÁÉÍÓÚáéíóúñÑ])\b[ABCDExp]\b(?![A-Za-zÁÉÍÓÚáéíóúñÑ])/g);
   addMatches(candidates, text, /(?<![\w])-?\d+(?:[.,]\d+)?(?![\w])/g);
 
   return candidates

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { DefenseFieldsPanel } from "../../../components/DefenseFieldsPanel";
+import { ModuleStepsPanel } from "../../../components/ModuleStepsPanel";
 import { RutFormPanel } from "../../../components/RutFormPanel";
 import { conicDefenseFields, conicExampleRuts } from "../../../constants/ui";
 import { useElementHeight } from "../../../hooks/useElementHeight";
@@ -7,7 +8,6 @@ import { ClassificationPanel } from "../components/ClassificationPanel";
 import { EquationPanel } from "../components/EquationPanel";
 import { GraphPanel } from "../components/GraphPanel";
 import { MetricsPanel } from "../components/MetricsSidebar";
-import { ModuleStepsPanel } from "../components/ModuleStepsPanel";
 import { ProcedurePanel } from "../components/ProcedurePanel";
 
 function SectionHeading({ eyebrow, title, copy }) {
