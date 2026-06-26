@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { MathText } from "../../../components/MathText";
 import { formatDisplayValue } from "../../../utils/displayNumbers";
 import { LIMIT_CANVAS_HEIGHT, LIMIT_CANVAS_WIDTH, drawLimitGraph } from "../canvas/drawLimitGraph";
+import { getRemovabilityLabel } from "../utils/discontinuity";
 
 function parsePiecewiseFunction(funcionStr) {
   if (!funcionStr) return null;
@@ -128,8 +129,8 @@ export function LimitGraphPanel({ defenseChecks = {}, samples, funcionPorTramos,
             <LimitMetric
               defenseChecks={defenseChecks}
               fieldName="tipo_discontinuidad"
-              label="Tipo de discontinuidad"
-              value={caso === "continua" ? "No hay discontinuidad" : caso}
+              label="Removibilidad"
+              value={getRemovabilityLabel(caso)}
             />
           </div>
         </div>

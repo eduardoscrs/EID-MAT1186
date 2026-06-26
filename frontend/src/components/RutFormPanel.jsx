@@ -77,13 +77,18 @@ export function RutFormPanel({
           <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">{title}</h2>
           {description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{description}</p> : null}
 
-          <form className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" onSubmit={onSubmit}>
+          <form className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" autoComplete="off" onSubmit={onSubmit}>
             <div className="space-y-2">
               <label htmlFor={fieldId} className="text-sm font-extrabold text-slate-700">
                 RUT
               </label>
               <input
                 id={fieldId}
+                name={`${fieldId}-manual`}
+                autoCapitalize="off"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
                 value={rut}
                 onChange={(event) => onRutChange(event.target.value)}
                 placeholder="12345678-5"

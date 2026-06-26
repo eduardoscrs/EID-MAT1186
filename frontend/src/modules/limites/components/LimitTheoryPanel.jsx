@@ -1,5 +1,6 @@
 import { MathText } from "../../../components/MathText";
 import { formatDisplayValue } from "../../../utils/displayNumbers";
+import { getRemovabilityLabel } from "../utils/discontinuity";
 
 function badgeClass(kind) {
   if (kind === "removible") return "bg-emerald-600 text-white";
@@ -10,8 +11,7 @@ function badgeClass(kind) {
 }
 
 function classificationText(kind) {
-  if (kind === "continua") return "Continua";
-  return `Discontinuidad ${kind || "--"}`;
+  return getRemovabilityLabel(kind);
 }
 
 function isCorrect(checks, fieldName) {
@@ -181,7 +181,7 @@ export function LimitTheoryPanel({ defenseChecks = {}, result }) {
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-black text-slate-700">Clasificación</p>
+              <p className="text-sm font-black text-slate-700">Removibilidad</p>
               <p className={`mt-2 text-lg font-black ${classificationRevealed ? "text-slate-950" : "text-slate-400"}`}>
                 {classificationRevealed ? classificationText(classification) : "--"}
               </p>

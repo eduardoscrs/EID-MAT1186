@@ -1,9 +1,27 @@
 import { GRAPH_PADDING, TICKS } from "./constants";
 
-export function drawAxes(ctx, width, height, viewport, map) {
+function formatAxisValue(value) {
+  return Number(value).toFixed(2);
+}
+
+function setupTickText(ctx, align) {
+  ctx.fillStyle = "#64748b";
+  ctx.font = "11px Inter, ui-sans-serif, system-ui, sans-serif";
+  ctx.textAlign = align;
+}
+
+function isNearForcedValue(value, forcedValues, threshold) {
+  return forcedValues.some((forcedValue) => Math.abs(value - forcedValue) <= threshold);
+}
+
+export function drawAxes(ctx, width, height, viewport, map, forcedXValues = []) {
   const { minX, maxX, minY, maxY } = viewport;
   const originX = map.x(0);
   const originY = map.y(0);
+  const xLabelY = height - GRAPH_PADDING + 22;
+  const finiteForcedXValues = forcedXValues.filter(Number.isFinite);
+  const xTickStep = (maxX - minX) / TICKS;
+  const forcedThreshold = Math.abs(xTickStep) * 0.2;
 
   ctx.fillStyle = "#fbfdff";
   ctx.fillRect(GRAPH_PADDING, GRAPH_PADDING, width - GRAPH_PADDING * 2, height - GRAPH_PADDING * 2);
@@ -19,10 +37,8 @@ export function drawAxes(ctx, width, height, viewport, map) {
     ctx.lineTo(width - GRAPH_PADDING, yPos);
     ctx.stroke();
 
-    ctx.fillStyle = "#64748b";
-    ctx.font = "11px Inter, ui-sans-serif, system-ui, sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText(yVal.toFixed(2), GRAPH_PADDING - 15, yPos + 4);
+    setupTickText(ctx, "right");
+    ctx.fillText(formatAxisValue(yVal), GRAPH_PADDING - 15, yPos + 4);
     ctx.textAlign = "left";
   }
 
@@ -36,7 +52,22 @@ export function drawAxes(ctx, width, height, viewport, map) {
     ctx.moveTo(xPos, GRAPH_PADDING);
     ctx.lineTo(xPos, height - GRAPH_PADDING);
     ctx.stroke();
+
+    if (!isNearForcedValue(xVal, finiteForcedXValues, forcedThreshold)) {
+      setupTickText(ctx, "center");
+      ctx.fillText(formatAxisValue(xVal), xPos, xLabelY);
+    }
+    ctx.textAlign = "left";
   }
+
+  finiteForcedXValues.forEach((xValue) => {
+    const xPos = map.x(xValue);
+    if (xPos < GRAPH_PADDING || xPos > width - GRAPH_PADDING) return;
+
+    setupTickText(ctx, "center");
+    ctx.fillText(formatAxisValue(xValue), xPos, xLabelY);
+    ctx.textAlign = "left";
+  });
 
   ctx.strokeStyle = "#0f172a";
   ctx.lineWidth = 2.5;

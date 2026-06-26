@@ -4,6 +4,7 @@ import {
   parseDecimal,
   validateMinimumTextLength,
 } from "../../shared/defense";
+import { getRemovabilityKind } from "./discontinuity";
 
 const NUMERIC_TOLERANCE = 0.06;
 
@@ -130,7 +131,7 @@ function validateContinuity(value, expectedContinuous) {
 
 function validateDiscontinuityType(value, expectedType) {
   const normalized = normalizeAnswerText(value);
-  const expected = normalizeAnswerText(expectedType);
+  const expected = getRemovabilityKind(expectedType);
 
   if (expected === "continua") {
     const saysNoDiscontinuity =
@@ -144,17 +145,41 @@ function validateDiscontinuityType(value, expectedType) {
         message: "Correcto. No hay discontinuidad.",
       };
     }
-  } else if (normalized.includes(expected)) {
+  } else if (expected === "removible" && saysRemovable(normalized)) {
     return {
       status: "correct",
-      message: "Correcto. Tipo de discontinuidad bien indicado.",
+      message: "Correcto. La discontinuidad es removible.",
+    };
+  } else if (expected === "irremovible" && saysIrremovable(normalized)) {
+    return {
+      status: "correct",
+      message: "Correcto. La discontinuidad es irremovible.",
     };
   }
 
   return {
     status: "incorrect",
-    message: "Revisa el tipo de discontinuidad.",
+    message: "Revisa si la discontinuidad es removible o irremovible.",
   };
+}
+
+function saysRemovable(normalized) {
+  return (
+    normalized === "removible" ||
+    normalized.includes("discontinuidad removible") ||
+    (normalized.includes("removible") &&
+      !normalized.includes("irremovible") &&
+      !normalized.includes("no removible"))
+  );
+}
+
+function saysIrremovable(normalized) {
+  return (
+    normalized === "irremovible" ||
+    normalized.includes("irremovible") ||
+    normalized.includes("no removible") ||
+    normalized.includes("no es removible")
+  );
 }
 
 function validateJustification(value) {
