@@ -1,4 +1,4 @@
-import { MathText } from "../../../components/MathText";
+import { MathText } from "./MathText";
 
 export function ModuleStepsPanel({ validation }) {
   const steps = buildValidationSteps(validation?.pasos);

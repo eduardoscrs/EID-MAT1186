@@ -81,12 +81,16 @@ function ProcedureLine({ value }) {
   const splitLine = splitStepTitleAndFormula(value);
 
   if (splitLine) {
+    const formulas = splitLine.formulas || [splitLine.formula];
+
     return (
       <div className="space-y-2">
         <p className="text-sm font-semibold leading-6 text-slate-600">
           <MathText value={splitLine.title} />
         </p>
-        <FormulaBox value={splitLine.formula} />
+        {formulas.map((formula) => (
+          <FormulaBox key={formula} value={formula} />
+        ))}
       </div>
     );
   }
@@ -123,7 +127,7 @@ function buildProcedureGroups(steps = []) {
     if (titleFormula && !titleFormula.isBullet) {
       groups.push({
         title: titleFormula.title,
-        lines: [titleFormula.formula],
+        lines: titleFormula.formulas || [titleFormula.formula],
       });
       continue;
     }
@@ -200,6 +204,18 @@ function shouldPairWithNext(step, nextStep) {
 }
 
 function splitStepTitleAndFormula(step) {
+  const centerExpansion = step.match(/^\(x - h\)\^2 se expande como (.+?),\s*y\s*\(y - k\)\^2 como (.+?)\.?$/i);
+  if (centerExpansion) {
+    return {
+      formulas: [
+        `(x - h)^2 = ${removeTrailingPeriod(centerExpansion[1])}`,
+        `(y - k)^2 = ${removeTrailingPeriod(centerExpansion[2])}`,
+      ],
+      isBullet: false,
+      title: "Se expanden los cuadrados",
+    };
+  }
+
   const comparison = step.match(/^Por comparación con\s+(.+?)(?:\.)?$/i);
   if (comparison) {
     return {

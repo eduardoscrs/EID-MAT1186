@@ -54,5 +54,5 @@ function drawLimitLine(ctx, width, a, value, color, label, labelOffset, map) {
   ctx.globalAlpha = 1;
   ctx.fillStyle = color;
   ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
-  ctx.fillText(`${label} = ${value.toFixed(4)}`, GRAPH_PADDING + 12, y + labelOffset);
+  ctx.fillText(`${label} = ${value.toFixed(2)}`, GRAPH_PADDING + 12, y + labelOffset);
 }
