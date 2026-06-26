@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 function inputClass(status) {
   const base = "field-control mt-2 text-sm";
 
@@ -27,6 +29,16 @@ function handleEnterValidation(event, field, onValidate) {
   onValidate(field.name);
 }
 
+function browserInputMemoryProps(fieldName, memoryKey) {
+  return {
+    autoCapitalize: "off",
+    autoComplete: "off",
+    autoCorrect: "off",
+    name: `defense-${memoryKey}-${fieldName}`,
+    spellCheck: false,
+  };
+}
+
 export function DefenseFieldsPanel({
   checks,
   compact = false,
@@ -37,6 +49,7 @@ export function DefenseFieldsPanel({
   values,
 }) {
   const isControlled = Boolean(values && onChange);
+  const memoryKey = useId().replaceAll(":", "");
 
   return (
     <section className="panel p-5">
@@ -63,9 +76,9 @@ export function DefenseFieldsPanel({
             <span className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">{field.label}</span>
             {field.type === "textarea" ? (
               <textarea
-                name={field.name}
                 rows={4}
                 className={`${inputClass(checks?.[field.name]?.status)} min-h-28 resize-y`}
+                {...browserInputMemoryProps(field.name, memoryKey)}
                 onKeyDown={(event) => handleEnterValidation(event, field, onValidate)}
                 {...(isControlled
                   ? {
@@ -76,8 +89,8 @@ export function DefenseFieldsPanel({
               />
             ) : (
               <input
-                name={field.name}
                 className={inputClass(checks?.[field.name]?.status)}
+                {...browserInputMemoryProps(field.name, memoryKey)}
                 onKeyDown={(event) => handleEnterValidation(event, field, onValidate)}
                 {...(isControlled
                   ? {

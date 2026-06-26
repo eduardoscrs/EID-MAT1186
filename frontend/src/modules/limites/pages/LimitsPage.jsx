@@ -7,6 +7,7 @@ import { useElementHeight } from "../../../hooks/useElementHeight";
 import { getRutValidationState } from "../../shared/rut";
 import { LimitGraphPanel } from "../components/LimitGraphPanel";
 import { LimitStepsPanel, LimitTheoryPanel } from "../components/LimitTheoryPanel";
+import { getRemovabilityLabel } from "../utils/discontinuity";
 
 function SectionHeading({ eyebrow, title, copy }) {
   return (
@@ -38,9 +39,11 @@ function LimitsRutSummary({ defenseChecks, result, status, validation }) {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg border border-slate-200 bg-white p-4">
-            <div className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Caso</div>
+            <div className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Removibilidad</div>
             <div className="mt-1 font-black text-slate-950">
-              {defenseChecks?.tipo_discontinuidad?.status === "correct" ? result?.caso || "--" : "--"}
+              {defenseChecks?.tipo_discontinuidad?.status === "correct"
+                ? getRemovabilityLabel(result?.continuidad?.clasificacion || result?.caso)
+                : "--"}
             </div>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-4">

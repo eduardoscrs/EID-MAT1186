@@ -26,8 +26,8 @@ export function drawLimitLines(ctx, width, a, analIzq, analDer, map) {
   ctx.setLineDash([6, 3]);
   ctx.lineWidth = 2.5;
 
-  drawLimitLine(ctx, width, a, analIzq, "#2563eb", "lim x->a-", -10, map);
-  drawLimitLine(ctx, width, a, analDer, "#16a34a", "lim x->a+", 14, map);
+  drawLimitLine(ctx, width, analIzq, "#2563eb", map);
+  drawLimitLine(ctx, width, analDer, "#16a34a", map);
 
   if (isFiniteNumber(analIzq) && analDer !== analIzq) drawOpenCircle(ctx, map, a, analIzq, "#2563eb");
   if (isFiniteNumber(analDer) && analIzq !== analDer) drawOpenCircle(ctx, map, a, analDer, "#16a34a");
@@ -36,7 +36,7 @@ export function drawLimitLines(ctx, width, a, analIzq, analDer, map) {
   ctx.globalAlpha = 1;
 }
 
-function drawLimitLine(ctx, width, a, value, color, label, labelOffset, map) {
+function drawLimitLine(ctx, width, value, color, map) {
   if (!isFiniteNumber(value)) return;
 
   const y = map.y(value);
@@ -49,7 +49,9 @@ function drawLimitLine(ctx, width, a, value, color, label, labelOffset, map) {
   ctx.stroke();
 
   ctx.globalAlpha = 1;
-  ctx.fillStyle = color;
-  ctx.font = "700 12px Inter, ui-sans-serif, system-ui, sans-serif";
-  ctx.fillText(`${label} = ${value.toFixed(2)}`, GRAPH_PADDING + 12, y + labelOffset);
+  ctx.fillStyle = "#64748b";
+  ctx.font = "11px Inter, ui-sans-serif, system-ui, sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillText(value.toFixed(2), GRAPH_PADDING - 15, y + 4);
+  ctx.textAlign = "left";
 }

@@ -36,6 +36,6 @@ export const limitDefenseFields = [
   { name: "existe_limite", label: "Existe el límite" },
   { name: "valor_en_a", label: "Valor de la función en a" },
   { name: "continuidad", label: "Continuidad" },
-  { name: "tipo_discontinuidad", label: "Tipo de discontinuidad" },
+  { name: "tipo_discontinuidad", label: "Removible o irremovible" },
   { name: "justificacion", label: "Justificación escrita", type: "textarea" },
 ];
