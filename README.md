@@ -1,131 +1,257 @@
 # EID-MAT1186 - Introduccion al Calculo
-## Evaluacion Integrada de Desempeno Nro. 1: Analisis y Modelamiento de Secciones Conicas y Funciones por Tramos
 
-### Descripcion del Proyecto
+Aplicacion web para la Evaluacion Integrada de Desempeno Nro. 1 de
+MAT1186. El proyecto valida RUTs chilenos y, a partir de sus digitos,
+construye evidencia matematica para dos modulos: secciones conicas y funciones
+por tramos con limites.
 
-Este proyecto representa el **25%** de la calificacion final del curso MAT1186 - Introduccion al Calculo. Integra contenidos matematicos con programacion, razonamiento logico y trabajo colaborativo.
+La solucion separa un backend Flask, encargado de la validacion y los calculos,
+de un frontend React/Vite, encargado de la experiencia visual, graficos,
+procedimientos y campos de defensa oral.
 
-### Estado Actual
+## Estado actual
 
-La rama `main` queda como base integrada del proyecto. Actualmente incluye:
+La rama `main` contiene la version integrada del proyecto:
 
-- Backend Flask con endpoints para validar RUT, procesar conicas y analizar limites.
-- Frontend React/Vite con pantallas separadas para geometria analitica y limites.
-- Validacion de RUT con modulo 11, control de formato, largo correcto y rechazo de RUTs de empresa.
-- Construccion, clasificacion, transformacion y grafica de conicas.
-- Modulo de limites con funcion por tramos, limites laterales, tabla de valores, continuidad, discontinuidad, pasos y grafica.
-- Campos vacios editables para completar respuestas durante la defensa oral.
+- API Flask con endpoints para validar RUT, procesar conicas y analizar
+  limites.
+- Frontend React/Vite con navegacion entre los modulos `Conicas` y `Limites`.
+- Validacion de RUT chileno con algoritmo de modulo 11, limpieza de formato,
+  control de largo, caracteres invalidos y rechazo de RUTs de empresa.
+- Desarrollo matematico con KaTeX para validacion, construccion algebraica,
+  forma canonica y procedimiento inverso.
+- Graficos en canvas para conicas y limites, con escalas ajustadas a los
+  elementos relevantes.
+- Campos vacios para defensa oral: al ingresar respuestas y validar con Enter,
+  la interfaz marca correcto/incorrecto y revela los valores asociados.
+- Recalculo automatico al cambiar entre modulos cuando ya existe un RUT valido.
 
-### Estructura del Proyecto
+## Funcionalidades
 
-La aplicacion separa el backend Flask del frontend React para que cada parte tenga sus dependencias y comandos propios.
+### Validacion RUT
+
+- Acepta entradas con o sin puntos y guion.
+- Calcula el digito verificador mediante modulo 11.
+- Muestra el procedimiento paso a paso.
+- Expone el cuerpo del RUT, el DV y los digitos usados por los modulos.
+
+### Conicas
+
+- Extrae los digitos del RUT.
+- Construye la ecuacion general:
+
+```text
+Ax^2 + By^2 + Cx + Dy + E = 0
+```
+
+- Clasifica la conica como circunferencia, elipse, parabola o hiperbola.
+- Transforma la ecuacion general a forma canonica.
+- Muestra el procedimiento inverso desde forma canonica a ecuacion general.
+- Calcula elementos geometricos: centro o vertice, vertices, focos, ejes,
+  radio, excentricidad, directriz, asintotas o lado recto segun corresponda.
+- Grafica la conica y sus elementos principales en el plano cartesiano.
+- Incluye campos de defensa para completar elementos sin ver inicialmente todos
+  los resultados.
+
+### Limites
+
+- Genera una funcion por tramos desde el mismo RUT validado.
+- Define el punto de analisis como `a = d3`.
+- Selecciona el caso de discontinuidad con la regla `d8 % 3`.
+- Calcula limites laterales, existencia del limite, valor de la funcion en `a`,
+  continuidad y tipo de discontinuidad.
+- Muestra tabla de valores alrededor del punto critico.
+- Grafica el comportamiento por izquierda y derecha con ejes, punto critico y
+  lineas auxiliares.
+- Incluye campos de defensa para limites laterales, continuidad,
+  removibilidad/irremovibilidad y justificacion.
+
+## Restriccion matematica
+
+El proyecto no usa librerias externas de algebra o calculo numerico como
+`numpy`, `math`, `sympy`, `scipy` o `pandas`. Los procedimientos matematicos
+del backend se implementan manualmente.
+
+## Tecnologias
+
+- Python 3
+- Flask
+- React 19
+- Vite
+- Tailwind CSS
+- KaTeX
+- pnpm
+
+## Estructura
 
 ```text
 .
-|-- backend/                # API Flask y logica matematica
-|   |-- app.py              # Punto de entrada de Flask
-|   |-- requirements.txt    # Dependencias Python
-|   |-- api/                # Rutas HTTP y respuestas JSON
-|   |-- common/             # Validacion de RUT y utilidades compartidas
-|   |-- conicas/            # Secciones conicas: algebra, clasificacion, geometria y servicios
-|   |-- limites/            # Funciones por tramos, limites, continuidad y discontinuidades
-|   `-- infra/              # Arranque y cierre del frontend de desarrollo
-|-- frontend/               # Interfaz React + Vite
+|-- backend/
+|   |-- app.py                  # Punto de entrada de Flask
+|   |-- requirements.txt        # Dependencias Python
+|   |-- api/                    # Rutas HTTP
+|   |-- common/                 # Validacion de RUT y utilidades compartidas
+|   |-- conicas/                # Algebra, clasificacion, geometria y servicios
+|   |-- limites/                # Funciones por tramos, limites y continuidad
+|   `-- infra/                  # Arranque del frontend de desarrollo
+|-- frontend/
+|   |-- package.json            # Scripts y dependencias del frontend
+|   |-- vite.config.js          # Proxy local hacia Flask
 |   `-- src/
-|       |-- components/     # Componentes compartidos
+|       |-- components/         # Componentes compartidos
 |       |-- modules/
-|       |   |-- conicas/    # UI, API, canvas y utilidades de conicas
-|       |   `-- limites/    # UI y API del modulo de limites
-|       |-- constants/      # Textos/listas compartidas
-|       `-- utils/          # Render y transformacion de texto matematico
-`-- docs/                   # Enunciado y documentacion de apoyo
+|       |   |-- conicas/        # UI, API, canvas y utilidades de conicas
+|       |   `-- limites/        # UI, API, canvas y utilidades de limites
+|       |-- constants/          # Textos y listas compartidas
+|       `-- utils/              # Formato numerico y render matematico
+|-- docs/                       # Pauta y enunciado original en PDF
+|-- progreso.md                 # Registro de avance y tareas
+`-- README.md
 ```
 
-### Ejecucion Local
+## Instalacion
 
-Backend Flask:
+### Backend
+
+macOS/Linux:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r backend/requirements.txt
-cd backend
-python app.py
 ```
 
-Ese comando inicia el backend Flask en `http://127.0.0.1:5000` y el frontend React/Vite. Vite mostrara en consola la URL disponible, normalmente `http://127.0.0.1:5173`.
+Windows PowerShell:
 
-Para instalar las dependencias del frontend la primera vez:
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r backend\requirements.txt
+```
+
+### Frontend
+
+El frontend usa `pnpm`. Si no esta disponible, activar Corepack:
+
+```bash
+corepack enable
+```
+
+Instalar dependencias:
 
 ```bash
 cd frontend
 pnpm install
 ```
 
-Si `pnpm` no esta disponible como comando directo, use Corepack:
+## Ejecucion local
+
+Forma recomendada:
 
 ```bash
-corepack pnpm install
+cd backend
+python app.py
 ```
 
-Luego abra la URL que muestre Vite en el navegador. El frontend se comunica con Flask mediante el proxy configurado en Vite.
+Al ejecutar `backend/app.py`, Flask inicia el backend en
+`http://127.0.0.1:5000` y tambien intenta levantar Vite automaticamente. La URL
+del frontend aparece en consola, normalmente `http://127.0.0.1:5173`.
 
-### Objetivo Principal
+Si necesita iniciar el frontend manualmente en otra terminal:
 
-Desarrollar una aplicacion en **Python** que:
-1. **Valide RUTs chilenos** usando el algoritmo oficial del modulo 11
-2. **Construya automaticamente** una ecuacion general de segundo grado (Ax^2 + By^2 + Cx + Dy + E = 0) a partir de los digitos del RUT
-3. **Clasifique la conica** (circunferencia, elipse, hiperbola o parabola)
-4. **Transforme a forma canonica** mostrando paso a paso el procedimiento algebraico
-5. **Grafique la conica** en el plano cartesiano
-6. **Analice funciones por tramos** generadas desde el RUT, estudiando limites laterales, continuidad y discontinuidades
+```bash
+cd frontend
+pnpm run dev
+```
 
-### Fases de Trabajo
+## Scripts utiles
 
-#### Fase 1: Fundamento Matematico
-- Validacion de RUT mediante digito verificador
-- Construccion de ecuacion general a partir de digitos del RUT
-- Aplicacion de reglas de ajuste (hiperbolas, circunferencias, parabolas)
-- Clasificacion automatica de conicas
-- Transformacion entre ecuacion general y forma canonica
+Desde `frontend/`:
 
-#### Fase 2: Desarrollo del Programa
-Requerimientos principales:
-- Ingreso y validacion de RUT chileno valido
-- Mostrar procedimiento paso a paso de validacion
-- Extraccion correcta de digitos del RUT
-- Construccion de ecuacion general con procedimiento visible
-- Determinacion automatica del tipo de conica
-- Transformacion a forma canonica (paso a paso)
-- Procedimiento inverso (canonica a general)
-- Graficacion correcta de la conica
-- Interfaz intuitiva y visualmente cuidada
+```bash
+pnpm run dev
+pnpm run lint
+pnpm run build
+pnpm run preview
+```
 
-**Restriccion importante:** Prohibido el uso de librerias matematicas o de algebra computacional (`numpy`, `math`, `sympy`, `scipy`, `pandas` u otras equivalentes). Todos los calculos deben ser implementados manualmente.
+## API
 
-#### Fase 3: Desarrollo Profesional
-- Codigo modular y organizado (no un unico archivo)
-- Distribucion real de tareas entre integrantes
-- Uso de GitHub como control de versiones
-- Estructura de organizacion interna con lider designado
-- Codigo de etica propio para regular colaboracion
+| Metodo | Ruta | Descripcion |
+| --- | --- | --- |
+| `GET` | `/` | Comprueba que Flask esta activo. |
+| `POST` | `/api/validar_rut` | Valida un RUT y devuelve pasos de modulo 11. |
+| `POST` | `/api/conicas` | Genera ecuacion, clasificacion, forma canonica, elementos y grafica de conica. |
+| `POST` | `/api/limites` | Genera funcion por tramos, limites, continuidad, tabla y muestras para grafica. |
 
-### Competencias a Desarrollar
+Ejemplo de cuerpo JSON:
 
-**Genericas:**
-- Actuacion etica
-- Aprendizaje autonomo
+```json
+{
+  "rut": "21750677-8"
+}
+```
 
-**Especificas:**
-- Aplica ciencias de la Ingenieria (implementa modelos matematicos, razonamiento logico deductivo)
+## Casos de prueba
 
-**Resultado de Aprendizaje (RA1):**
-- Implementa, conoce y maneja elementos de geometria analitica y limites aplicando aprendizaje autonomo
+Los siguientes RUTs estan disponibles como ejemplos dentro de la interfaz.
 
-### Tecnologias Permitidas
-- Python
-- Flask para el backend/API
-- React + Vite para la interfaz web
-- Git/GitHub para control de versiones
+### Conicas
 
-El codigo del proyecto no importa `numpy`, `math`, `sympy`, `scipy` ni `pandas`; los calculos matematicos se implementan manualmente.
+| Tipo esperado | RUT valido |
+| --- | --- |
+| Circunferencia | `11231420-2` |
+| Elipse | `12314664-6` |
+| Parabola | `12314568-2` |
+| Hiperbola | `12314667-0` |
+
+### Limites
+
+| Caso esperado | RUT valido |
+| --- | --- |
+| Discontinuidad removible | `11231420-2` |
+| Discontinuidad de salto | `12314664-6` |
+| Discontinuidad infinita | `12314568-2` |
+
+## Defensa oral
+
+La interfaz incluye campos inicialmente vacios para simular la defensa. El
+estudiante debe completar valores como centro, focos, limites laterales,
+continuidad o justificacion. Al presionar Enter, la app valida contra el
+calculo interno:
+
+- Borde verde: respuesta correcta.
+- Borde rojo: respuesta incorrecta.
+- Resultado revelado: aparece solo cuando el campo asociado fue respondido
+  correctamente.
+
+En campos de texto largo, Enter conserva el salto de linea; para validar se usa
+`Ctrl + Enter` o `Cmd + Enter`.
+
+## Documentacion disponible
+
+La carpeta `docs/` conserva solo los documentos fuente del encargo:
+
+- `docs/enunciado-eid-introduccion-calculo.pdf`
+- `docs/Pauta_de_Evaluación_EID___Introducción_al_Calculo (1).pdf`
+
+El avance operativo del proyecto se registra en `progreso.md`.
+
+## Verificacion antes de entregar
+
+Recomendado antes de una defensa o entrega:
+
+```bash
+cd frontend
+pnpm run lint
+pnpm run build
+```
+
+Luego probar visualmente:
+
+- Validacion de RUT.
+- Un caso de cada conica.
+- Un caso removible, de salto e infinito en limites.
+- Campos de defensa en ambos modulos.
+- Cambio entre `Conicas` y `Limites` sin tener que volver a construir desde
+  cero.

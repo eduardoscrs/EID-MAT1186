@@ -30,7 +30,7 @@ export function drawLimitGraph(canvas, { samples, caso }) {
   const viewport = buildViewport(xs, ys, a, analIzq, analDer, caso);
   const map = createMapper(width, height, viewport);
 
-  drawAxes(ctx, width, height, viewport, map, [a]);
+  drawAxes(ctx, width, height, viewport, map, { x: [a], y: [analIzq, analDer] });
   drawLimitLines(ctx, width, a, analIzq, analDer, map);
   drawCriticalLine(ctx, height, a, map);
   drawBranch(ctx, xs, ys, a, "left", caso, analIzq, analDer, map);

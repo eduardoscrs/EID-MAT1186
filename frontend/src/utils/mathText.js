@@ -43,6 +43,10 @@ export function toLatex(value) {
   expression = expression.replace(/\bd(\d)\b/g, "d_{$1}");
   expression = expression.replace(/\(([^()]+)\)\^2/g, "{($1)}^2");
   expression = expression.replace(/([A-Za-z])\^(\d+)/g, "$1^{$2}");
+  expression = expression.replace(
+    /((?:\{?\([^()]+\)\}?\^\{?\d+\}?)|(?:[A-Za-z]\^\{\d+\}))\s*\/\s*([+-]?\d+(?:\.\d+)?)/g,
+    "\\frac{$1}{$2}"
+  );
   expression = expression.replace(/([+-]?\d+(?:\.\d+)?)\/([+-]?\d+(?:\.\d+)?)/g, "\\frac{$1}{$2}");
 
   mathWords.forEach((latex, word) => {

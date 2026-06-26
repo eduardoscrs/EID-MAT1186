@@ -1,5 +1,7 @@
 import { GRAPH_PADDING, TICKS } from "./constants";
 
+const LABEL_GAP = 24;
+
 function formatAxisValue(value) {
   return Number(value).toFixed(2);
 }
@@ -14,20 +16,58 @@ function isNearForcedValue(value, forcedValues, threshold) {
   return forcedValues.some((forcedValue) => Math.abs(value - forcedValue) <= threshold);
 }
 
-export function drawAxes(ctx, width, height, viewport, map, forcedXValues = []) {
+function finiteValuesInRange(values, min, max) {
+  return values.filter((value) => Number.isFinite(value) && value >= min && value <= max);
+}
+
+function niceStep(rawStep) {
+  if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
+
+  const power = 10 ** Math.floor(Math.log10(rawStep));
+  const normalized = rawStep / power;
+
+  if (normalized <= 1) return power;
+  if (normalized <= 2) return 2 * power;
+  if (normalized <= 2.5) return 2.5 * power;
+  if (normalized <= 5) return 5 * power;
+  return 10 * power;
+}
+
+function buildAnchoredTicks(min, max, forcedValues) {
+  const range = max - min || 1;
+  const step = niceStep(range / TICKS);
+  const anchor = forcedValues.length ? forcedValues[0] : 0;
+  const start = anchor + Math.ceil((min - anchor) / step) * step;
+  const ticks = [];
+
+  for (let value = start; value <= max + step * 0.001; value += step) {
+    ticks.push(Number(value.toFixed(10)));
+  }
+
+  return ticks;
+}
+
+function shouldDrawLabel(position, occupiedPositions) {
+  return occupiedPositions.every((occupied) => Math.abs(position - occupied) >= LABEL_GAP);
+}
+
+export function drawAxes(ctx, width, height, viewport, map, forcedValues = {}) {
   const { minX, maxX, minY, maxY } = viewport;
   const originX = map.x(0);
   const originY = map.y(0);
   const xLabelY = height - GRAPH_PADDING + 22;
-  const finiteForcedXValues = forcedXValues.filter(Number.isFinite);
+  const finiteForcedXValues = finiteValuesInRange(forcedValues.x || [], minX, maxX);
+  const finiteForcedYValues = finiteValuesInRange(forcedValues.y || [], minY, maxY);
+  const forcedYPositions = finiteForcedYValues.map(map.y);
+  const xTicks = buildAnchoredTicks(minX, maxX, finiteForcedXValues);
+  const yTicks = buildAnchoredTicks(minY, maxY, finiteForcedYValues);
   const xTickStep = (maxX - minX) / TICKS;
   const forcedThreshold = Math.abs(xTickStep) * 0.2;
 
   ctx.fillStyle = "#fbfdff";
   ctx.fillRect(GRAPH_PADDING, GRAPH_PADDING, width - GRAPH_PADDING * 2, height - GRAPH_PADDING * 2);
 
-  for (let i = 0; i <= TICKS; i++) {
-    const yVal = minY + (maxY - minY) * (i / TICKS);
+  yTicks.forEach((yVal) => {
     const yPos = map.y(yVal);
 
     ctx.strokeStyle = "#e5edf5";
@@ -37,13 +77,14 @@ export function drawAxes(ctx, width, height, viewport, map, forcedXValues = []) 
     ctx.lineTo(width - GRAPH_PADDING, yPos);
     ctx.stroke();
 
-    setupTickText(ctx, "right");
-    ctx.fillText(formatAxisValue(yVal), GRAPH_PADDING - 15, yPos + 4);
-    ctx.textAlign = "left";
-  }
+    if (shouldDrawLabel(yPos, forcedYPositions)) {
+      setupTickText(ctx, "right");
+      ctx.fillText(formatAxisValue(yVal), GRAPH_PADDING - 15, yPos + 4);
+      ctx.textAlign = "left";
+    }
+  });
 
-  for (let i = 0; i <= TICKS; i++) {
-    const xVal = minX + (maxX - minX) * (i / TICKS);
+  xTicks.forEach((xVal) => {
     const xPos = map.x(xVal);
 
     ctx.strokeStyle = "#e5edf5";
@@ -58,7 +99,7 @@ export function drawAxes(ctx, width, height, viewport, map, forcedXValues = []) 
       ctx.fillText(formatAxisValue(xVal), xPos, xLabelY);
     }
     ctx.textAlign = "left";
-  }
+  });
 
   finiteForcedXValues.forEach((xValue) => {
     const xPos = map.x(xValue);
