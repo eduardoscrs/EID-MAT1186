@@ -7,8 +7,6 @@ export function drawCriticalLine(ctx, height, a, map) {
 
   const ax = map.x(a);
 
-  ctx.shadowColor = "rgba(239, 68, 68, 0.6)";
-  ctx.shadowBlur = 15;
   ctx.strokeStyle = "#dc2626";
   ctx.lineWidth = 4;
   ctx.setLineDash([12, 6]);
@@ -17,7 +15,6 @@ export function drawCriticalLine(ctx, height, a, map) {
   ctx.lineTo(ax, height - GRAPH_PADDING);
   ctx.stroke();
 
-  ctx.shadowBlur = 0;
   ctx.setLineDash([]);
   ctx.fillStyle = "#dc2626";
   ctx.font = "700 14px Inter, ui-sans-serif, system-ui, sans-serif";

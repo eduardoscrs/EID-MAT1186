@@ -27,7 +27,7 @@ export function drawLimitGraph(canvas, { samples, caso }) {
   const a = Number(samples.a);
   const analIzq = samples?.analytic?.izq;
   const analDer = samples?.analytic?.der;
-  const viewport = buildViewport(xs, ys, a, analIzq, analDer);
+  const viewport = buildViewport(xs, ys, a, analIzq, analDer, caso);
   const map = createMapper(width, height, viewport);
 
   drawAxes(ctx, width, height, viewport, map);

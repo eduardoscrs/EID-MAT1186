@@ -28,30 +28,27 @@ export function drawBranch(ctx, xs, ys, a, side, caso, analIzq, analDer, map) {
   const points = collectBranchPoints(xs, ys, a, side, caso, analIzq, analDer, map);
   if (points.length < 2) return;
 
-  ctx.strokeStyle = side === "left" ? "#2563eb" : "#16a34a";
-  ctx.lineWidth = 4;
+  const color = side === "left" ? "#2563eb" : "#16a34a";
+
+  ctx.save();
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.shadowColor = ctx.strokeStyle;
-  ctx.shadowBlur = 8;
 
+  drawPolyline(ctx, points, color);
+
+  ctx.restore();
+}
+
+function drawPolyline(ctx, points, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
   ctx.beginPath();
   ctx.moveTo(points[0].px, points[0].py);
 
   for (let i = 1; i < points.length; i++) {
     const curr = points[i];
-    const prev = points[i - 1];
-
-    if (caso === "infinita" && Math.abs(curr.x - a) < 0.5) {
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(curr.px, curr.py);
-      continue;
-    }
-
-    ctx.quadraticCurveTo((prev.px + curr.px) / 2, (prev.py + curr.py) / 2, curr.px, curr.py);
+    ctx.lineTo(curr.px, curr.py);
   }
 
   ctx.stroke();
-  ctx.shadowBlur = 0;
 }
